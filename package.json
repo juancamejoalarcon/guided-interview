@@ -14,7 +14,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build --mode production",
-    "build-demo": "tsc && vite build --mode demo --base=/demo",
+    "build-demo": "tsc && vite build --mode demo --base=/guided-interview/demo",
     "preview": "vite preview"
   },
   "dependencies": {
