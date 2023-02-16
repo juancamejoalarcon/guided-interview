@@ -15,7 +15,8 @@
     "dev": "vite",
     "build": "tsc && vite build --mode production",
     "build-demo": "tsc && vite build --mode demo --base=/guided-interview/demo",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": ""
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
