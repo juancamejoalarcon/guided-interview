@@ -1,6 +1,6 @@
 {
   "name": "guided-interview",
-  "private": true,
+  "private": false,
   "version": "0.0.1",
   "type": "module",
   "main": "./guided-interview.umd.cjs",
