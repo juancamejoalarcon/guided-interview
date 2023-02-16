@@ -1,0 +1,15 @@
+.InputText {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.InputText .container {
+    background-color: white;
+    background-color: white;
+    flex-direction: column;
+    max-height: 200px;
+    border-radius: 10px;
+    margin: 1rem;
+    padding: 1rem;
+}

@@ -1,0 +1,10 @@
+.menu {
+    background-color: transparent;
+    position: absolute;
+    width: 100%;
+    &-container {
+        padding: 0.5rem;
+        display: flex;
+        justify-content: flex-end;
+    }
+}
