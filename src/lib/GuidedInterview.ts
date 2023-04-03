@@ -1,12 +1,14 @@
 import { Question, QuestionProp } from "./interfaces/Question.interface";
-import { MultipleChoice } from "./interfaces/MultipleChoice.interface";
-import { generateRandomId } from "./services/create.service";
+import { MultipleChoice, MultipleChoiceProp } from "./interfaces/MultipleChoice.interface";
+import { DateProp } from "./interfaces/Date.interface";
+import { generateRandomId, validateParams } from "./services/create.service";
 import { EventBus, EventList } from "./services/event-bus.service";
 
 const QuestionTypes = {
   text: true,
   multipleChoice: true,
   number: true,
+  date: true,
 };
 
 type interviewParams = { [id: string]: QuestionProp };
@@ -25,29 +27,58 @@ export class GuidedInterview {
   }
 
   init(interview: interviewParams) {
+    if (!validateParams(interview)) return
+    
     for (const value of Object.values(interview)) {
       this.add(value);
     }
   }
 
-  add(params: QuestionProp, setAsCurrent: boolean = false) {
+  add(params: QuestionProp | MultipleChoiceProp | DateProp, setAsCurrent: boolean = false) {
     if (!QuestionTypes[params.type]) {
       throw new Error("Invalid question type");
     }
     const id: string = params.id || generateRandomId();
+    let typeParams;
+    if (params.type === 'text') typeParams = this.buildTextQuestion(params)
+    if (params.type === 'date') typeParams = this.buildDateQuestion(params)
+    else if (params.type === 'multipleChoice') typeParams = this.buildMultipleChoiceQuestion(params as MultipleChoiceProp)
+    else typeParams = this.buildTextQuestion(params)
     const question = {
       id,
       type: params.type,
-      subType: params.subType || "",
       title: params.title || "",
-      required: Boolean(params.required),
       indications: params.indications || "",
-      value: params.value || "",
-      logic: params.logic || {}
+      logic: params.logic || {},
+      ...typeParams
     };
     this.interview.set(id, question);
     this.events.dispatch("question-added", question);
     return question;
+  }
+
+  buildTextQuestion(params: QuestionProp) {
+    return  {
+      value: params.value || "",
+      required: Boolean(params.required),
+      placeholder: params.placeholder || "",
+      subType: params.subType || "",
+    };
+  }
+
+  buildDateQuestion(params: DateProp) {
+    return  {
+      format: params.format || "dd/mm/yyyy",
+      ...this.buildTextQuestion(params),
+    };
+  }
+
+  buildMultipleChoiceQuestion(params: MultipleChoiceProp) {
+    return  {
+      value: params.choices.find(choice => choice.checked === true)?.label || "",
+      choices: params.choices || [],
+      subType: params.subType || "radio",
+    };
   }
 
   canBeShown(question: Question): boolean {
@@ -127,8 +158,20 @@ export class GuidedInterview {
     if (!this.interview.has(id)) {
       throw new Error("No question with id:" + id);
     }
-    this.interview.get(id)!.value = value;
+    const question = this.interview.get(id);
+    question!.value = value;
+    
+    if (question?.type === 'multipleChoice') {
+      this.setRadioChecked(question as MultipleChoice, value as string)
+    }
+    
     this.events.dispatch("set-value", this.interview.get(id));
+  }
+
+  setRadioChecked(question: MultipleChoice, value: string) {
+    question.choices.forEach(choice => {
+      choice.checked = choice.label === value
+    })
   }
 
   on(event: EventList, callback: Function) {

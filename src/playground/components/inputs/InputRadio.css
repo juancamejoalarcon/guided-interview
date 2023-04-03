@@ -1,4 +1,4 @@
-.InputText {
+.InputRadio {
     height: 100%;
     display: flex;
     align-items: center;
@@ -10,11 +10,11 @@
     to   { opacity: 1; }
 }
 
-.InputText .container {
+.InputRadio .container {
     background-color: white;
     background-color: white;
     flex-direction: column;
-    max-height: 200px;
+    max-height: 250px;
     border-radius: 10px;
     margin: 1rem;
     padding: 1rem;

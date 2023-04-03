@@ -6,7 +6,7 @@ import TextField from '@mui/material/TextField';
 import Container from '@mui/material/Container';
 
 function InputText(props: { interview: GuidedInterview, question: Question }) {
-    const { id, title, required, value } = props.question
+    const { id, title, required, value, placeholder } = props.question
 
   useEffect(() => {
   }, [])
@@ -20,6 +20,7 @@ function InputText(props: { interview: GuidedInterview, question: Question }) {
                 value={value}
                 fullWidth 
                 label={title}
+                placeholder={placeholder}
                 id="fullWidth"
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                     props.interview.setValue(id, event.target.value)

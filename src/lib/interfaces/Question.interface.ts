@@ -1,11 +1,12 @@
 export interface Question {
     id: string;
-    type: 'text' | 'number' | 'multipleChoice';
+    type: 'text' | 'number' | 'date' | 'multipleChoice';
     subType?: string;
     title: string;
-    required: boolean;
+    required?: boolean;
     indications?: string;
     value: string | number;
+    placeholder?: string;
     logic?: {
         showIf?: any
     }
@@ -16,4 +17,5 @@ export interface QuestionProp extends Omit<Question, 'id' | 'title' | 'required'
     title?: string;
     required?: boolean;
     value?: string;
+    placeholder?: string;
   }
