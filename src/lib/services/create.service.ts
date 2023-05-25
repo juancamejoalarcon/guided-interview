@@ -1,38 +1,78 @@
 import { Question, QuestionProp } from "../interfaces/Question.interface";
-import { interviewParams } from "../types/General";
-import Str from '@supercharge/strings'
+import {
+  MultipleChoice,
+  MultipleChoiceProp,
+} from "../interfaces/MultipleChoice.interface";
+import { DateProp } from "../interfaces/Date.interface";
+import { RepeatProp } from "../interfaces/Repeat.interface";
+import { generateRandomId } from "./create-utils.service";
 
-export const generateRandomId = (): string => {
-  return "id-" + (Math.random() + 1).toString(36).substring(7);
+const QuestionTypes = {
+  text: true,
+  multipleChoice: true,
+  number: true,
+  date: true,
+  repeat: true,
 };
 
-const findIdsNotInCamelCase = (params: interviewParams): string | null => {
-  let idNotInCamelCase = null
-  Object.keys(params).forEach((id) => {
-    if (!Str(id).isCamel()) idNotInCamelCase = id
-  })
-  return idNotInCamelCase
-}
-const findDuplicatedIdValues = (params: interviewParams): (QuestionProp | undefined)[] => {
-  const array = Object.values(params)
-  const duplicates = array
-  .map((el, i) => {
-      return array.find((element, index) => {
-          if (i !== index && element.id === el.id) return el
-      })
-  })
-  .filter(Boolean)
-  return duplicates;
-}
+export const getQuestion = (
+  params: QuestionProp | MultipleChoiceProp | DateProp | RepeatProp,
+  setAsCurrent: boolean = false
+) => {
+  if (!QuestionTypes[params.type]) {
+    throw new Error("Invalid question type");
+  }
+  const id: string = params.id || generateRandomId();
+  let typeParams;
 
-export const validateParams = (params: interviewParams): boolean => {
-  const duplicates = findDuplicatedIdValues(params)
-  if (duplicates.length) {
-    throw new Error(`Duplicated id values: ${duplicates[0]?.id}`);
-  }
-  const idNotInCamelCase = findIdsNotInCamelCase(params)
-  if (idNotInCamelCase) {
-    throw new Error(`ID must be in camel case: ${idNotInCamelCase}`);
-  }
-  return true;
-}
+  if (params.type === "text") typeParams = buildTextQuestion(params);
+  else if (params.type === "date") typeParams = buildDateQuestion(params as DateProp);
+  else if (params.type === "multipleChoice") typeParams = buildMultipleChoiceQuestion(params as MultipleChoiceProp);
+  else if (params.type === "repeat") typeParams = buildRepeatQuestion(params as RepeatProp);
+  else typeParams = buildTextQuestion(params);
+
+  const question = {
+    id,
+    type: params.type,
+    title: params.title || "",
+    indications: params.indications || "",
+    logic: params.logic || {},
+    ...typeParams,
+  };
+
+  return question;
+};
+
+export const buildTextQuestion = (params: QuestionProp) => {
+
+  return {
+    value: params.value || "",
+    required: Boolean(params.required),
+    placeholder: params.placeholder || "",
+    subType: params.subType || "",
+  };
+  
+};
+
+export const buildDateQuestion = (params: DateProp) => {
+  return {
+    format: params.format || "dd/mm/yyyy",
+    ...buildTextQuestion(params),
+  };
+};
+
+export const buildMultipleChoiceQuestion = (params: MultipleChoiceProp) => {
+  return {
+    value: params.choices.find((choice) => choice.checked === true)?.label || "",
+    choices: params.choices || [],
+    subType: params.subType || "radio",
+  };
+};
+
+export const buildRepeatQuestion = (params: RepeatProp) => {
+  return {
+    value: params.value || "",
+    range: params.range || { min: 0, max: 0 },
+    questions: params.questions || {},
+  };
+};

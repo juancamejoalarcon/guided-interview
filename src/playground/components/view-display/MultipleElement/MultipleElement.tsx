@@ -2,6 +2,7 @@ import './MultipleElement.scss'
 import InputText from '../../inputs/InputText'
 import InputRadio from '../../inputs/InputRadio'
 import InputDate from '../../inputs/InputDate'
+import InputRepeat from '../../inputs/InputRepeat'
 import { GuidedInterview } from '../../../../lib/GuidedInterview'
 
 function MultipleElement(props: { interview: GuidedInterview }) {
@@ -16,6 +17,7 @@ function MultipleElement(props: { interview: GuidedInterview }) {
                         {item.type === 'text' && <InputText interview={interview} question={item as any} />}
                         {item.type === 'date' && <InputDate interview={interview} question={item as any} />}
                         {item.type === 'multipleChoice' && <InputRadio interview={interview} question={item as any} />}
+                        {item.type === 'repeat' && <InputRepeat interview={interview} question={item as any} />}
                         <pre>{JSON.stringify(item, null, 4)}</pre>
                     </div>
                 )

@@ -1,0 +1,19 @@
+{
+    "data": {
+        "name": { "value": "Juan Camejo" },
+        "dni": { "value": "12345678" },
+        "numeroAsociados": {
+            "value": 2,
+            "content": {
+                "index-1": {
+                    "hidden": false,
+                    "name": { "value": "Pepito" }
+                },
+                "index-2": {
+                    "hidden": false,
+                    "name": { "value": "Pepito" }
+                }
+            }
+        }
+    }
+}

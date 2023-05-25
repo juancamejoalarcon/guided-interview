@@ -1,0 +1,22 @@
+{
+    "numeroAsociados": {
+        "id": "numeroAsociados",
+        "type": "repeat",
+        "title": "Número de asociados promotores:",
+        "value": "1",
+        "range": {
+            "min": 1,
+            "max": 10
+        },
+        "questions": {
+            "name": {
+                "id": "name",
+                "type": "text",
+                "title": "Nombre y apellidos del promotor <%= index %> (o denominación social en caso de ser una persona jurídica)",
+                "placeholder": "Ej. Luz Mena Varo",
+                "value": "",
+                "required": true
+            }
+        }
+    }
+}
