@@ -28,10 +28,21 @@ export default defineConfig(({ mode }) => {
   if (mode === 'demo') {
     return {
       plugins: [react()],
+      resolve: {
+        alias: {
+          "@": resolve(__dirname, "./src"),
+        },
+      },
       build: {
         outDir: 'demo'
       }
     }
   }
-  return {}
+  return {
+    resolve: {
+      alias: {
+        "@": resolve(__dirname, "./src"),
+      },
+    },
+  }
 });

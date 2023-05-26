@@ -3,7 +3,8 @@ import InputText from '../../inputs/InputText'
 import InputRadio from '../../inputs/InputRadio'
 import InputDate from '../../inputs/InputDate'
 import InputRepeat from '../../inputs/InputRepeat'
-import { GuidedInterview } from '../../../../lib/GuidedInterview'
+import { GuidedInterview } from '@/lib/GuidedInterview'
+
 
 function MultipleElement(props: { interview: GuidedInterview }) {
     const { interview } = props

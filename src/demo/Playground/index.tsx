@@ -1,25 +1,27 @@
 import { useEffect, useState } from 'react'
-import './Playground.scss'
-import { GuidedInterview } from '../lib/GuidedInterview'
+import './index.scss'
+import { GuidedInterview } from '@/lib/GuidedInterview'
 import SingleElement from './components/view-display/SingleElement/SingleElement';
 import MultipleElement from './components/view-display/MultipleElement/MultipleElement';
 import Menu from './components/menu/Menu'
-
-// Demos
-import data from './data/basic.json';
-import solicitudVacaciones from './data/solicitud-vacaciones.json';
-import repeatExample from './data/repeat-example.json';
-
-const urlSearchParams = new URLSearchParams(window.location.search);
-const params = Object.fromEntries(urlSearchParams.entries());
-let demoData: any = data
-if (params.demo === 'solicitud-vacaciones') demoData = solicitudVacaciones
-if (params.demo === 'repeat-example') demoData = repeatExample
+import { useLocation, useSearchParams } from 'react-router-dom';
+const demoFiles = import.meta.glob("@/data/*.json");
+import data from '@/data/basic.json';
 
 function Playground() {
 
-  const [interview, setInterview] = useState(new GuidedInterview(demoData));
-  const [current, setCurrent] = useState(demoData.name);
+  let location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    demoFiles[`/src/data/${searchParams.get('demo')}.json`]().then((data: any) => {
+      setInterview(new GuidedInterview(data.default))
+      setCurrent(data.default.name)
+    })
+  }, [location])
+
+  const [interview, setInterview] = useState(new GuidedInterview(data));
+  const [current, setCurrent] = useState(data.name);
   const [viewMode, setViewMode] = useState('list');
   useEffect(() => {
     ['set-current', 'set-value'].forEach((event: any) => {
@@ -27,7 +29,7 @@ function Playground() {
         setCurrent({...question})
       })
     })
-  }, [])
+  }, [interview])
 
   return (
     <div className="Playground">

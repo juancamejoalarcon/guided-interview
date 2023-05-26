@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./InputRadio.css";
-import { MultipleChoice } from "../../../lib/interfaces/MultipleChoice.interface";
-import { GuidedInterview } from "../../../lib/GuidedInterview";
+import { MultipleChoice } from "@/lib/interfaces/MultipleChoice.interface";
+import { GuidedInterview } from "@/lib/GuidedInterview";
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';

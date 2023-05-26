@@ -1,8 +1,8 @@
 import './SingleElement.scss'
 import Button from '@mui/material/Button';
 import InputText from '../../inputs/InputText'
-import { GuidedInterview } from '../../../../lib/GuidedInterview'
-import { Question } from '../../../../lib/interfaces/Question.interface'
+import { GuidedInterview } from '@/lib/GuidedInterview'
+import { Question } from '@/lib/interfaces/Question.interface'
 
 function SingleElement(props: { interview: GuidedInterview, current: Question }) {
     const { interview, current } = props

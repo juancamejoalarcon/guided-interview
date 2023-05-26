@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import './InputText.css'
-import { Question } from '../../../lib/interfaces/Question.interface'
-import { GuidedInterview } from '../../../lib/GuidedInterview'
+import { Question } from '@/lib/interfaces/Question.interface'
+import { GuidedInterview } from '@/lib/GuidedInterview'
 import TextField from '@mui/material/TextField';
 import Container from '@mui/material/Container';
 

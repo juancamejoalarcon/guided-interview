@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./InputRepeat.css";
-import { Repeat } from "../../../lib/interfaces/Repeat.interface";
-import { GuidedInterview } from "../../../lib/GuidedInterview";
+import { Repeat } from "@/lib/interfaces/Repeat.interface";
+import { GuidedInterview } from "@/lib/GuidedInterview";
 import Container from "@mui/material/Container";
 import Slider from "@mui/material/Slider";
 

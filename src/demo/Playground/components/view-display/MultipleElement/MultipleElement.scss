@@ -5,11 +5,11 @@
     .question-and-code {
         display: flex;
         width: 100%;
-        border-bottom: 1px solid grey;
+        border-bottom: 1px solid lightgray;
         .InputText, .InputRadio, .InputDate, .InputRepeat {
             height: 400px;
             width: 50%;
-            background-color: grey;
+            background-color: #ecedf1;
         }
         pre {
             width: 50%;

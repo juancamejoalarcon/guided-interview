@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import './InputDate.css'
-import { DateTime } from '../../../lib/interfaces/Date.interface'
-import { GuidedInterview } from '../../../lib/GuidedInterview'
+import { DateTime } from '@/lib/interfaces/Date.interface'
+import { GuidedInterview } from '@/lib/GuidedInterview'
 import TextField from '@mui/material/TextField';
 import DatePicker from "react-datepicker";
 
