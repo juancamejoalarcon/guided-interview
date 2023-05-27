@@ -15,8 +15,8 @@ export class GuidedInterview {
   private isRoot: boolean = true;
   private data: any = {};
 
-  constructor(interview: any, options: any = {}) {
-    if (interview) this.init(interview);
+  constructor(interview: any = "empty", options: any = {}) {
+    if (interview !== "empty") this.init(interview);
     if (options) {
       this.isRoot = options.isRoot || true;
     }
@@ -27,6 +27,7 @@ export class GuidedInterview {
   }
 
   init(interview: interviewParams) {
+    if (interview === null) throw new Error("Interview init param is null");
     if (!validateParams(interview)) return
     
     for (const value of Object.values(interview)) {

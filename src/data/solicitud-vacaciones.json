@@ -87,6 +87,14 @@
             "showIf": "sexoEmpleador.value === 'una persona jurídica'"
         }
     },
+    "direccionEmpleador": {
+        "id": "direccionEmpleador",
+        "type": "text",
+        "title": "Dirección completa del empresario a quien se solicitan las vacaciones:",
+        "placeholder": "Ej. Av. Diagonal 100, 3°C; 08006 Barcelona.",
+        "value": "",
+        "required": true
+    },
     "localidadRedaccion": {
         "id": "localidadRedaccion",
         "type": "text",
@@ -120,5 +128,30 @@
                 "checked": false
             }
         ]
+    },
+    "calendarioVacaciones": {
+        "id": "calendarioVacaciones",
+        "type": "multipleChoice",
+        "title": "¿En la empresa en la que trabaja el trabajador se ha elaborado un calendario de vacaciones (estableciendo los períodos y/o turnos de vacaciones de los trabajadores) para este año?",
+        "value": "",
+        "required": true,
+        "choices": [
+            {
+                "label": "Sí",
+                "checked": true
+            },
+            {
+                "label": "No",
+                "checked": false
+            }
+        ]
+    },
+    "diasDeVacaciones": {
+        "id": "diasDeVacaciones",
+        "type": "text",
+        "title": "¿A cuántos días de vacaciones tiene derecho el trabajador durante este año?",
+        "placeholder": "Ej. 30 días naturales",
+        "value": "",
+        "required": true
     }
 }
