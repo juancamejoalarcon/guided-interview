@@ -1,0 +1,97 @@
+{
+    "data": {
+        "personasPropietarias": {
+            "value": 3,
+            "content": {
+                "1": {
+                    "hidden": false,
+                    "questions": {
+                        "tipoPersona": { "value": "Persona física" },
+                        "actuaComo": { "value": "en su propio nombre y representación" },
+                        "nombreArrendador": { "value": "Luz Mena Varo" },
+                        "direccionArrendador": { "value": "Paseo de las Yeserías 11" },
+                        "tipoDocumento": { "value": "DNI" },
+                        "numeroDocAnterior": { "value": "83558071Z" },
+                        "nombreRepresentanteLegal": { "value": "" },
+                        "documentoRepresentanteLegal": { "value": "" },
+                        "numeroDocRepresentanteLegal": { "value": "" },
+                        "nombrePersonaJuridica": { "value": "" },
+                        "personasQueFirmanPersonJuridica": { 
+                            "value": "1",
+                            "content": {
+                                "1": {
+                                    "hidden": false,
+                                    "questions": {
+                                        "nombreRepresentantePersonaJuridica": { "value": "" },
+                                        "funcionRepresentantePersonaJuridica": { "value": "" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "2": {
+                    "hidden": false,
+                    "questions": {
+                        "tipoPersona": { "value": "Persona física" },
+                        "actuaComo": { "value": "por medio de un representante (legal o voluntario)" },
+                        "nombreArrendador": { "value": "Juan Camejo" },
+                        "direccionArrendador": { "value": "Calle Sierra Toledana" },
+                        "tipoDocumento": { "value": "DNI" },
+                        "numeroDocAnterior": { "value": "54113125J" },
+                        "nombreRepresentanteLegal": { "value": "Carmelo Cabrera" },
+                        "documentoRepresentanteLegal": { "value": "DNI" },
+                        "numeroDocRepresentanteLegal": { "value": "6413125N" },
+                        "nombrePersonaJuridica": { "value": "" },
+                        "personasQueFirmanPersonJuridica": { 
+                            "value": "1",
+                            "content": {
+                                "1": {
+                                    "hidden": false,
+                                    "questions": {
+                                        "nombreRepresentantePersonaJuridica": { "value": "" },
+                                        "funcionRepresentantePersonaJuridica": { "value": "" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "3": {
+                    "hidden": false,
+                    "questions": {
+                        "tipoPersona": { "value": "Persona jurídica" },
+                        "actuaComo": { "value": "" },
+                        "nombreArrendador": { "value": "" },
+                        "direccionArrendador": { "value": "" },
+                        "tipoDocumento": { "value": "" },
+                        "numeroDocAnterior": { "value": "" },
+                        "nombreRepresentanteLegal": { "value": "" },
+                        "documentoRepresentanteLegal": { "value": "" },
+                        "numeroDocRepresentanteLegal": { "value": "" },
+                        "nombrePersonaJuridica": { "value": "Formidable Docs S.L." },
+                        "personasQueFirmanPersonJuridica": { 
+                            "value": "2",
+                            "content": {
+                                "1": {
+                                    "hidden": false,
+                                    "questions": {
+                                        "nombreRepresentantePersonaJuridica": { "value": "Mariano Rajoy" },
+                                        "funcionRepresentantePersonaJuridica": { "value": "Ladrón" }
+                                    }
+                                },
+                                "2": {
+                                    "hidden": false,
+                                    "questions": {
+                                        "nombreRepresentantePersonaJuridica": { "value": "Jose Luis Zapatero" },
+                                        "funcionRepresentantePersonaJuridica": { "value": "Más ladrón" }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,3 +1,4 @@
+import { interviewParams } from "../types/General";
 import { Question } from "./Question.interface";
 
 export interface Repeat extends Question {
@@ -6,7 +7,7 @@ export interface Repeat extends Question {
     min: number;
     max: number;
   };
-  questions: any;
+  questions: interviewParams;
   value: number;
 }
 

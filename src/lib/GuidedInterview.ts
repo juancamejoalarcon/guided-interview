@@ -1,7 +1,7 @@
 import { Question, QuestionProp } from "./interfaces/Question.interface";
 import { MultipleChoice, MultipleChoiceProp } from "./interfaces/MultipleChoice.interface";
 import { DateProp } from "./interfaces/Date.interface";
-import { RepeatProp } from "./interfaces/Repeat.interface";
+import { Repeat, RepeatProp } from "./interfaces/Repeat.interface";
 import { validateParams } from "./services/create-utils.service";
 import { EventBus, EventList } from "./services/event-bus.service";
 import { getQuestion } from "./services/create.service";
@@ -10,38 +10,42 @@ type interviewParams = { [id: string]: QuestionProp };
 
 export class GuidedInterview {
   private interview = new Map<string, Question | MultipleChoice>();
-  private events = new EventBus();
+  private events!: EventBus;
   private current!: string;
   private isRoot: boolean = true;
   private data: any = {};
 
-  constructor(interview: any = "empty", options: any = {}) {
+  constructor(interview: any = "empty", options: any = { isRoot: true }) {
+    this.events = options.events || new EventBus();
+    this.isRoot = options.isRoot;
     if (interview !== "empty") this.init(interview);
-    if (options) {
-      this.isRoot = options.isRoot || true;
-    }
   }
 
   public get questionsMap(): Map<string, Question | MultipleChoice> {
     return this.interview;
   }
 
-  init(interview: interviewParams) {
-    if (interview === null) throw new Error("Interview init param is null");
-    if (!validateParams(interview)) return
+  init(interviewParams: interviewParams) {
+    if (interviewParams === null) throw new Error("Interview init param is null");
+    if (!validateParams(interviewParams)) return
     
-    for (const value of Object.values(interview)) {
+    for (const value of Object.values(interviewParams)) {
       this.add(value);
     }
   }
 
   add(params: QuestionProp | MultipleChoiceProp | DateProp | RepeatProp, setAsCurrent: boolean = false) {
     const question = getQuestion(params);
+    if (question.type === 'repeat') this.buildGuidedInterviewForRepeatQuestion(question as Repeat)
     this.interview.set(question.id, question);
     this.events.dispatch("question-added", question);
     return question;
   }
 
+  buildGuidedInterviewForRepeatQuestion(repeatQuestion: Repeat): void {
+    repeatQuestion.questions = new GuidedInterview(repeatQuestion.questions, { isRoot: false, events: this.events }) as any
+  }
+  
   canBeShown(question: Question): boolean {
     if (question.logic?.showIf) {
         const keys = this.interview.keys()

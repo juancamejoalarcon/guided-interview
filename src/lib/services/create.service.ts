@@ -4,7 +4,7 @@ import {
   MultipleChoiceProp,
 } from "../interfaces/MultipleChoice.interface";
 import { DateProp } from "../interfaces/Date.interface";
-import { RepeatProp } from "../interfaces/Repeat.interface";
+import { Repeat, RepeatProp } from "../interfaces/Repeat.interface";
 import { generateRandomId } from "./create-utils.service";
 
 const QuestionTypes = {
@@ -18,7 +18,7 @@ const QuestionTypes = {
 export const getQuestion = (
   params: QuestionProp | MultipleChoiceProp | DateProp | RepeatProp,
   setAsCurrent: boolean = false
-) => {
+): Question | MultipleChoice | Repeat => {
   if (!QuestionTypes[params.type]) {
     throw new Error("Invalid question type");
   }

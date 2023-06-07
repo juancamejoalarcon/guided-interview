@@ -1,0 +1,50 @@
+{
+    "numeroAsociados": {
+        "id": "numeroAsociados",
+        "type": "repeat",
+        "title": "Número de asociados promotores:",
+        "value": "1",
+        "range": {
+            "min": 1,
+            "max": 10
+        },
+        "questions": {
+            "name": {
+                "id": "name",
+                "type": "text",
+                "title": "Nombre y apellidos del promotor <%= index %> (o denominación social en caso de ser una persona jurídica)",
+                "placeholder": "Ej. Luz Mena Varo",
+                "value": "",
+                "required": true
+            },
+            "personasQueFirmanPersonJuridica": {
+                "id": "personasQueFirmanPersonJuridica",
+                "type": "repeat",
+                "title": "¿Cuántas personas firmarán el contrato en nombre y representación de la persona jurídica?",
+                "value": "1",
+                "range": {
+                    "min": 1,
+                    "max": 10
+                },
+                "questions": {
+                    "nombreRepresentantePersonaJuridica": {
+                        "id": "nombreRepresentantePersonaJuridica",
+                        "type": "text",
+                        "title": "Nombre completo, incluyendo apellidos, del representante <%= index %> de la persona jurídica:",
+                        "placeholder": "P. ej: 83558071Z",
+                        "value": "",
+                        "required": true
+                    },
+                    "funcionRepresentantePersonaJuridica": {
+                        "id": "nombreRepresentantePersonaJuridica",
+                        "type": "text",
+                        "title": "Función del representante de la persona jurídica:",
+                        "placeholder": "P. ej. administradora única",
+                        "value": "",
+                        "required": true
+                    }
+                }
+            }
+        }
+    }
+}

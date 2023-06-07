@@ -1,4 +1,5 @@
 import { Question, QuestionProp } from "../interfaces/Question.interface";
+import { RepeatProp } from '../interfaces/Repeat.interface'
 import { interviewParams } from "../types/General";
 import Str from '@supercharge/strings'
 
@@ -8,20 +9,31 @@ export const generateRandomId = (): string => {
 
 const findIdsNotInCamelCase = (params: interviewParams): string | null => {
   let idNotInCamelCase = null
-  Object.keys(params).forEach((id) => {
+  Object.entries(params).forEach(([id, value]) => {
+    if (value.type === "repeat") {
+      const repeatEl = value as RepeatProp
+      const repeatIdNotInCamelCase = findIdsNotInCamelCase(repeatEl.questions)
+      if (repeatIdNotInCamelCase) idNotInCamelCase = repeatIdNotInCamelCase
+    }
     if (!Str(id).isCamel()) idNotInCamelCase = id
   })
   return idNotInCamelCase
 }
 const findDuplicatedIdValues = (params: interviewParams): (QuestionProp | undefined)[] => {
   const array = Object.values(params)
+  let repeatDuplicates: (QuestionProp | undefined)[] = [];
   const duplicates = array
   .map((el, i) => {
       return array.find((element, index) => {
+        if (element.type === "repeat") {
+          const repeatEl = element as RepeatProp
+          repeatDuplicates = findDuplicatedIdValues(repeatEl.questions)
+        }
           if (i !== index && element.id === el.id) return el
       })
   })
   .filter(Boolean)
+  if (repeatDuplicates.length) duplicates.push(...repeatDuplicates)
   return duplicates;
 }
 
