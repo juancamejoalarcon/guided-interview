@@ -21,7 +21,6 @@ function InputText(props: { interview: GuidedInterview, question: Question }) {
                 fullWidth 
                 label={title}
                 placeholder={placeholder}
-                id="fullWidth"
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                     props.interview.setValue(id, event.target.value)
                 }}

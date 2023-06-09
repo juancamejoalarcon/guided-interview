@@ -8,6 +8,7 @@ export interface Repeat extends Question {
     max: number;
   };
   questions: interviewParams;
+  content: { [index: string]: { hidden: boolean, nestedInterview: any } }
   value: number;
 }
 

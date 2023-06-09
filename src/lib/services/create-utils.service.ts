@@ -48,3 +48,15 @@ export const validateParams = (params: interviewParams): boolean => {
   }
   return true;
 }
+
+export const getValueBetweenRanges = (value: number, min: number, max: number): number => {
+  if (value < min) {
+      console.warn(`Value ${value} is lower than min ${min}. Returning min.`)
+      return min
+  }
+  if (value > max) {
+      console.warn(`Value ${value} is higher than max ${max}. Returning max.`)
+      return max
+  }
+  return value
+}

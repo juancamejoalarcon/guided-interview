@@ -6,6 +6,7 @@ import {
 import { DateProp } from "../interfaces/Date.interface";
 import { Repeat, RepeatProp } from "../interfaces/Repeat.interface";
 import { generateRandomId } from "./create-utils.service";
+import { interviewParams } from "../types/General";
 
 const QuestionTypes = {
   text: true,
@@ -76,3 +77,14 @@ export const buildRepeatQuestion = (params: RepeatProp) => {
     questions: params.questions || {},
   };
 };
+
+export const replaceIndexInQuestionsOfRepeatQuestion = (questions: interviewParams, index: number): interviewParams => {
+  const copyOfQuestions: interviewParams = JSON.parse(JSON.stringify(questions))
+  Object.entries(copyOfQuestions).forEach(([id, value]) => {
+    const realIndex = index + 1
+    if (value.title) {
+      value.title = value.title.replace(/\<%= index %>/g, realIndex.toString())
+    } 
+  })
+  return copyOfQuestions
+}

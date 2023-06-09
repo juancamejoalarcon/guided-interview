@@ -1,27 +1,35 @@
-import { Question, QuestionProp } from "./interfaces/Question.interface";
-import { MultipleChoice, MultipleChoiceProp } from "./interfaces/MultipleChoice.interface";
-import { DateProp } from "./interfaces/Date.interface";
-import { Repeat, RepeatProp } from "./interfaces/Repeat.interface";
-import { validateParams } from "./services/create-utils.service";
+import { 
+  Question, 
+  QuestionProp,
+  MultipleChoice,
+  MultipleChoiceProp, 
+  DateProp, 
+  Repeat, 
+  RepeatProp 
+} from "./interfaces";
+import { validateParams, getValueBetweenRanges } from "./services/create-utils.service";
 import { EventBus, EventList } from "./services/event-bus.service";
-import { getQuestion } from "./services/create.service";
+import { getQuestion, replaceIndexInQuestionsOfRepeatQuestion } from "./services/create.service";
 
+export * from "./interfaces";
 type interviewParams = { [id: string]: QuestionProp };
 
+
 export class GuidedInterview {
-  private interview = new Map<string, Question | MultipleChoice>();
+  private interview = new Map<string, Question | MultipleChoice | Repeat>();
   private events!: EventBus;
   private current!: string;
   private isRoot: boolean = true;
   private data: any = {};
 
-  constructor(interview: any = "empty", options: any = { isRoot: true }) {
+  constructor(interview: any = "empty", options: any = { isRoot: true, data: null }) {
     this.events = options.events || new EventBus();
     this.isRoot = options.isRoot;
+    this.data = options.data || this.data
     if (interview !== "empty") this.init(interview);
   }
 
-  public get questionsMap(): Map<string, Question | MultipleChoice> {
+  public get questionsMap(): Map<string, Question | MultipleChoice | Repeat> {
     return this.interview;
   }
 
@@ -32,18 +40,21 @@ export class GuidedInterview {
     for (const value of Object.values(interviewParams)) {
       this.add(value);
     }
+    if (this.isRoot) console.log(this.interview)
   }
 
   add(params: QuestionProp | MultipleChoiceProp | DateProp | RepeatProp, setAsCurrent: boolean = false) {
     const question = getQuestion(params);
-    if (question.type === 'repeat') this.buildGuidedInterviewForRepeatQuestion(question as Repeat)
+    if (question.type === 'repeat') this.buildContentForRepeatQuestion(question as Repeat)
     this.interview.set(question.id, question);
     this.events.dispatch("question-added", question);
     return question;
   }
 
-  buildGuidedInterviewForRepeatQuestion(repeatQuestion: Repeat): void {
-    repeatQuestion.questions = new GuidedInterview(repeatQuestion.questions, { isRoot: false, events: this.events }) as any
+  getNestedInterview(id: string, index: number): GuidedInterview {
+    const question = this.interview.get(id) as Repeat
+    if (question?.type !== 'repeat') throw new Error("Question with id " + id + " is not a repeat question")
+    return question.content[index].nestedInterview
   }
   
   canBeShown(question: Question): boolean {
@@ -136,17 +147,47 @@ export class GuidedInterview {
     this.events.dispatch("set-value", this.interview.get(id));
   }
 
-  setRadioChecked(question: MultipleChoice, value: string) {
-    question.choices.forEach(choice => {
-      choice.checked = choice.label === value
-    })
-  }
-
   on(event: EventList, callback: Function) {
     this.events.register(event, callback);
   }
 
   getData() {
     return this.data;
+  }
+
+
+  setRadioChecked(question: MultipleChoice, value: string) {
+    question.choices.forEach(choice => {
+      choice.checked = choice.label === value
+    })
+  }
+
+  buildContentForRepeatQuestion(repeatQuestion: Repeat, value: number | null = null): void {
+
+    const { range, id, questions } = repeatQuestion
+    const { min, max } = range
+
+    if (value === null) value = getValueBetweenRanges(repeatQuestion.value, min, max)
+
+    if (!repeatQuestion.content) repeatQuestion.content = {}
+
+    if (!this.data[id]) this.data[id] = { value: value, content: {} }
+    else this.data[id].value = value
+     
+    for (let i = 0; i < value; i++) {
+      if (repeatQuestion.content[i]) {
+        // Añadir logica de hidden
+        repeatQuestion.content[i].hidden = false
+        continue
+      }
+      this.data[id].content[i] = { hidden: false, questions: {} }
+
+      const nestedInterview = new GuidedInterview(replaceIndexInQuestionsOfRepeatQuestion(questions, i), { 
+        isRoot: false, 
+        events: this.events,
+        data: this.data[id].content[i].questions
+      })
+      repeatQuestion.content[i] = { hidden: false, nestedInterview }
+    }
   }
 }

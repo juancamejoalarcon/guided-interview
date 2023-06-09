@@ -3,7 +3,7 @@
         "id": "personasPropietarias",
         "type": "repeat",
         "title": "Número de arrendadores:",
-        "value": "1",
+        "value": "3",
         "range": {
             "min": 1,
             "max": 10
@@ -164,7 +164,7 @@
                 "id": "personasQueFirmanPersonJuridica",
                 "type": "repeat",
                 "title": "¿Cuántas personas firmarán el contrato en nombre y representación de la persona jurídica?",
-                "value": "1",
+                "value": "3",
                 "range": {
                     "min": 1,
                     "max": 10
