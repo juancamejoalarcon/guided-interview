@@ -64,11 +64,31 @@ describe("Repeat Basic", () => {
   
     expect(current.value).toEqual(current.range.max);
   });
+
   test("Set value of repeat question out of MIN range", () => {
     const current = interview.getCurrent() as Repeat;
     interview.setValue(current.id, 0);
   
     expect(current.value).toEqual(current.range.min);
   });
+
+  test("Set value of repeat question to number and hide the rest of content", () => {
+    const current = interview.getCurrent() as Repeat;
+    interview.setValue(current.id, 4);
   
+    Object.keys(current.content).forEach((key, index) => {
+      const expected = index < 4 ? false : true;
+      expect(current.content[parseInt(key)].hidden).toEqual(expected);
+    });
+  });
+
+  test("Set value of nested questions", () => {
+    const current = interview.getCurrent() as Repeat;
+    for (let index = 0; index < 4; index++) {
+      const nestedInterview = interview.getNestedInterview(current.id, index);
+      const newValue = "Result " + (index + 1);
+      nestedInterview.setValue("name", newValue);
+      expect(nestedInterview.interview.get("name")?.value).toEqual(repeatExample1Result.intialParams[index].value);
+    }
+  });
 });
