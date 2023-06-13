@@ -1,0 +1,20 @@
+{
+    "intialParams": [
+        {
+            "title": "Nombre y apellidos del promotor 1",
+            "value": ""
+        },
+        {
+            "title": "Nombre y apellidos del promotor 2",
+            "value": ""
+        },
+        {
+            "title": "Nombre y apellidos del promotor 3",
+            "value": ""
+        },
+        {
+            "title": "Nombre y apellidos del promotor 4",
+            "value": ""
+        }
+    ]
+}

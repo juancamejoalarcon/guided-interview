@@ -25,6 +25,7 @@ function MultipleElement(props: { interview: GuidedInterview }) {
                 if (item.type === 'repeat') {
                     const repeatItem = item as Repeat
                     Object.values(repeatItem.content).forEach((nestedContent, index) => {
+                        if (nestedContent.hidden) return
                         const nestedInterview = nestedContent.nestedInterview
                         const repeatInterviewQuestions: any = getQuestionBlocks(nestedInterview, index)
                         content.push(...repeatInterviewQuestions)

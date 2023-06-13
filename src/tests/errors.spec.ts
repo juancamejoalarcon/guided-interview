@@ -1,6 +1,4 @@
 import { GuidedInterview } from '@/lib/GuidedInterview'
-import data from '@/data/basic.json';
-import * as myJson from '@/data/basic.json';
 
 const repeatedIdentifiers = {
   "name": {

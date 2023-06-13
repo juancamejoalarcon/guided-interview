@@ -12,7 +12,7 @@
             "name": {
                 "id": "name",
                 "type": "text",
-                "title": "Nombre y apellidos del promotor <%= index %> (o denominación social en caso de ser una persona jurídica)",
+                "title": "Nombre y apellidos del promotor <%= index %>",
                 "placeholder": "Ej. Luz Mena Varo",
                 "value": "",
                 "required": true

@@ -1,7 +1,11 @@
 import { Question, QuestionProp } from "../interfaces/Question.interface";
 import { RepeatProp } from '../interfaces/Repeat.interface'
-import { interviewParams } from "../types/General";
+import { interviewParams, GenericQuestion } from "../types/General";
 import Str from '@supercharge/strings'
+
+export const isTest = (): boolean => {
+  return process.env.NODE_ENV === 'test'
+}
 
 export const generateRandomId = (): string => {
   return "id-" + (Math.random() + 1).toString(36).substring(7);
@@ -51,12 +55,20 @@ export const validateParams = (params: interviewParams): boolean => {
 
 export const getValueBetweenRanges = (value: number, min: number, max: number): number => {
   if (value < min) {
-      console.warn(`Value ${value} is lower than min ${min}. Returning min.`)
+      if (!isTest()) console.warn(`Value ${value} is lower than min ${min}. Returning min.`)
       return min
   }
   if (value > max) {
-      console.warn(`Value ${value} is higher than max ${max}. Returning max.`)
+    if (!isTest()) console.warn(`Value ${value} is higher than max ${max}. Returning max.`)
       return max
   }
   return value
+}
+
+export const validateSetValue = (value: string | number, question: GenericQuestion): void => {
+  if (question.type === 'repeat') {
+    if (isNaN(value as number)) {
+      throw new Error("Value of repeat question must be a number");
+    }
+  }
 }

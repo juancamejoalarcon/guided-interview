@@ -5,7 +5,7 @@ import {
 } from "../interfaces/MultipleChoice.interface";
 import { DateProp } from "../interfaces/Date.interface";
 import { Repeat, RepeatProp } from "../interfaces/Repeat.interface";
-import { generateRandomId } from "./create-utils.service";
+import { generateRandomId } from "./utils.service";
 import { interviewParams } from "../types/General";
 
 const QuestionTypes = {

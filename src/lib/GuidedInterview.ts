@@ -7,7 +7,8 @@ import {
   Repeat, 
   RepeatProp 
 } from "./interfaces";
-import { validateParams, getValueBetweenRanges } from "./services/create-utils.service";
+import { GenericQuestion } from "./types/General";
+import { validateParams, getValueBetweenRanges, validateSetValue } from "./services/utils.service";
 import { EventBus, EventList } from "./services/event-bus.service";
 import { getQuestion, replaceIndexInQuestionsOfRepeatQuestion } from "./services/create.service";
 
@@ -16,7 +17,7 @@ type interviewParams = { [id: string]: QuestionProp };
 
 
 export class GuidedInterview {
-  private interview = new Map<string, Question | MultipleChoice | Repeat>();
+  public interview = new Map<string, Question | MultipleChoice | Repeat>();
   private events!: EventBus;
   private current!: string;
   private isRoot: boolean = true;
@@ -27,6 +28,7 @@ export class GuidedInterview {
     this.isRoot = options.isRoot;
     this.data = options.data || this.data
     if (interview !== "empty") this.init(interview);
+    // if (this.isRoot) console.log(this.interview)
   }
 
   public get questionsMap(): Map<string, Question | MultipleChoice | Repeat> {
@@ -40,7 +42,6 @@ export class GuidedInterview {
     for (const value of Object.values(interviewParams)) {
       this.add(value);
     }
-    if (this.isRoot) console.log(this.interview)
   }
 
   add(params: QuestionProp | MultipleChoiceProp | DateProp | RepeatProp, setAsCurrent: boolean = false) {
@@ -121,7 +122,7 @@ export class GuidedInterview {
     }
   }
 
-  getCurrent(): Question | MultipleChoice {
+  getCurrent(): Question | MultipleChoice | Repeat {
     if (!this.current) this.current = Array.from(this.interview)[0][0]
     const currentEl = this.interview.get(this.current)
     if (!currentEl) {
@@ -135,14 +136,21 @@ export class GuidedInterview {
       throw new Error("No question with id:" + id);
     }
     const question = this.interview.get(id);
+    if (!question) throw new Error("No question with id:" + id);
+    validateSetValue(value, question)
     question!.value = value;
     
     if (question?.type === 'multipleChoice') {
       this.setRadioChecked(question as MultipleChoice, value as string)
     }
 
-    if (this.data[id]) this.data[id].value = value;
-    else this.data[id] = { value: value };
+    if (question?.type === 'repeat') {
+      this.buildContentForRepeatQuestion(question as Repeat, value as number)
+    }
+
+    if (this.data[id]) this.data[id].value = question.value;
+    else this.data[id] = { value: question.value };
+
     
     this.events.dispatch("set-value", this.interview.get(id));
   }
@@ -167,7 +175,9 @@ export class GuidedInterview {
     const { range, id, questions } = repeatQuestion
     const { min, max } = range
 
-    if (value === null) value = getValueBetweenRanges(repeatQuestion.value, min, max)
+    value = getValueBetweenRanges(repeatQuestion.value, min, max)
+
+    repeatQuestion.value = value
 
     if (!repeatQuestion.content) repeatQuestion.content = {}
 
@@ -188,6 +198,14 @@ export class GuidedInterview {
         data: this.data[id].content[i].questions
       })
       repeatQuestion.content[i] = { hidden: false, nestedInterview }
+    }
+    // Hide remaining questions
+    const totalLength = Object.keys(repeatQuestion.content)
+    if (value < totalLength.length) {
+      for (let i = value; i < totalLength.length; i++) {
+        repeatQuestion.content[i].hidden = true
+        this.data[id].content[i].hidden = true
+      }
     }
   }
 }
