@@ -4,6 +4,7 @@ import * as nestedDuplicatedErrorJson from "@/data/repeat-error-duplicated-id-2.
 import * as idNotInCamel from "@/data/repeat-error-id-not-camel.json";
 import * as repeatExample1 from "@/data/repeat-example-1.json";
 import * as repeatExample1Result from "@/data/results/test-repeat-example-1.json";
+import * as nestedRepeatExample from "@/data/repeat-example-2.json";
 
 describe("Repeat errors", () => {
   test("Duplicated id values", () => {
@@ -91,4 +92,23 @@ describe("Repeat Basic", () => {
       expect(nestedInterview.interview.get("name")?.value).toEqual(repeatExample1Result.intialParams[index].value);
     }
   });
+});
+
+describe("Repeat nested", () => {
+  const interview = new GuidedInterview(nestedRepeatExample);
+
+  test("Set initial param", () => {
+    const current = interview.getCurrent() as Repeat;
+    expect(current.type).toEqual("repeat");
+  });
+
+  test("Set initial param", () => {
+    const current = interview.getCurrent() as Repeat;
+    const nestedInterview = interview.getNestedInterview(current.id, 0);
+    nestedInterview.setValue("personasQueFirmanPersonJuridica", 5);
+    const data = interview.getData().personasPropietarias.content[0].questions.personasQueFirmanPersonJuridica.value
+    expect(data).toEqual(5);
+
+  });
+
 });

@@ -9,10 +9,15 @@ import {
   Typography, 
   Divider, 
   IconButton,
+  Button,
+  Grid
  } from "@mui/material";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import { Menu as MenuIcon, ChevronLeft, ChevronRight, MoveToInbox, Mail as MailIcon } from "@mui/icons-material";
 import MenuLinks from "./MenuLinks";
+import {
+  Link
+} from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -65,6 +70,8 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   justifyContent: "flex-end",
 }));
 
+const navItems = ['Questions', 'Text'];
+
 export default function PersistentDrawerLeft(props: { children: React.ReactNode }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -81,7 +88,8 @@ export default function PersistentDrawerLeft(props: { children: React.ReactNode 
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <AppBar position="fixed" open={open}>
-        <Toolbar>
+        <Toolbar sx={{ display: "flex", justifyContent: 'space-between' }} >
+          <Grid display="flex" alignItems="center">
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -92,8 +100,14 @@ export default function PersistentDrawerLeft(props: { children: React.ReactNode 
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Guided interview demo
+            Guided interview
           </Typography>
+          </Grid>
+          <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+            {navItems.map((item) => (
+              <Link key={item} to={'/' + item.toLowerCase()} style={{ color: 'white', padding: '0rem 1rem'}}>{item}</Link>
+            ))}
+          </Box>
         </Toolbar>
       </AppBar>
       <Drawer

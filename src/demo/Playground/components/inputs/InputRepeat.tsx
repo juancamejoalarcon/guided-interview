@@ -20,6 +20,7 @@ function InputRepeat(props: { interview: GuidedInterview; question: Repeat }) {
             marks
             min={range.min}
             max={range.max}
+            defaultValue={parseInt(value)}
             onChange={(
               event: any,
               value: number | number[],

@@ -1,0 +1,23 @@
+{
+  "numeroAsociados": {
+    "value": 2,
+    "content": {
+      "0": {
+        "hidden": false,
+        "questions": {
+          "name": {
+            "value": "Juan 1"
+          }
+        }
+      },
+      "1": {
+        "hidden": false,
+        "questions": {
+          "name": {
+            "value": "Juan 2"
+          }
+        }
+      }
+    }
+  }
+}

@@ -7,14 +7,13 @@ import {
   Repeat, 
   RepeatProp 
 } from "./interfaces";
-import { GenericQuestion } from "./types/General";
+import { GenericQuestion, interviewParams, DataSaved } from "./types/General";
 import { validateParams, getValueBetweenRanges, validateSetValue } from "./services/utils.service";
 import { EventBus, EventList } from "./services/event-bus.service";
 import { getQuestion, replaceIndexInQuestionsOfRepeatQuestion } from "./services/create.service";
+import { makeTemplate } from "./services/templating.service";
 
 export * from "./interfaces";
-type interviewParams = { [id: string]: QuestionProp };
-
 
 export class GuidedInterview {
   public interview = new Map<string, Question | MultipleChoice | Repeat>();
@@ -27,8 +26,10 @@ export class GuidedInterview {
     this.events = options.events || new EventBus();
     this.isRoot = options.isRoot;
     this.data = options.data || this.data
+    // FIXME: This is a hack to avoid the data to be modified by reference
+    const copyOFData = options.data ? JSON.parse(JSON.stringify(this.data)) : null
     if (interview !== "empty") this.init(interview);
-    // if (this.isRoot) console.log(this.interview)
+    if (copyOFData) this.applyDataToQuestions(copyOFData)
   }
 
   public get questionsMap(): Map<string, Question | MultipleChoice | Repeat> {
@@ -54,6 +55,7 @@ export class GuidedInterview {
 
   getNestedInterview(id: string, index: number): GuidedInterview {
     const question = this.interview.get(id) as Repeat
+    if (!question) throw new Error("No question with id:" + id);
     if (question?.type !== 'repeat') throw new Error("Question with id " + id + " is not a repeat question")
     return question.content[index].nestedInterview
   }
@@ -180,7 +182,6 @@ export class GuidedInterview {
     repeatQuestion.value = value
 
     if (!repeatQuestion.content) repeatQuestion.content = {}
-
     if (!this.data[id]) this.data[id] = { value: value, content: {} }
     else this.data[id].value = value
      
@@ -207,5 +208,26 @@ export class GuidedInterview {
         this.data[id].content[i].hidden = true
       }
     }
+  }
+
+  applyDataToQuestions(data: DataSaved) {
+    Object.entries(data).forEach(([key, { value, content }]) => {
+      this.setValue(key, value)
+      if (content) {
+        Object.values(content).forEach((contentValue: {
+          hidden?: boolean | undefined;
+          questions: DataSaved;
+      }, index) => {
+          if (!contentValue.hidden) {
+            this.getNestedInterview(key, index).applyDataToQuestions(contentValue.questions)
+          }
+        })
+      }
+    })
+  }
+
+  makeTemplate(template: string): string {
+    if (!template) throw new Error("No template provided")
+    return makeTemplate(this.data, template)
   }
 }

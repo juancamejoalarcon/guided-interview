@@ -24,6 +24,7 @@
     "@mui/icons-material": "^5.11.9",
     "@mui/material": "^5.11.8",
     "@supercharge/strings": "^2.0.0",
+    "nunjucks": "^3.2.4",
     "path": "^0.12.7",
     "react": "^18.2.0",
     "react-datepicker": "^4.11.0",
@@ -35,6 +36,7 @@
   "devDependencies": {
     "@jest/globals": "^29.5.0",
     "@types/jest": "^29.5.1",
+    "@types/nunjucks": "^3.2.2",
     "@types/react": "^18.0.27",
     "@types/react-datepicker": "^4.10.0",
     "@types/react-dom": "^18.0.10",
