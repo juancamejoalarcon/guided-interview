@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import DataObjectIcon from '@mui/icons-material/DataObject';
 
-const demoFiles = import.meta.glob("@/data/*.json");
+const demoFiles = import.meta.glob("@/data/forms/*.json");
 
 let pathElements: string[] = [];
 

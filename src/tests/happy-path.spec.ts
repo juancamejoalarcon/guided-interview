@@ -1,5 +1,5 @@
 import { GuidedInterview } from "@/lib/GuidedInterview";
-import * as data from "@/data/solicitud-vacaciones.json";
+import * as data from "@/data/forms/solicitud-vacaciones.json";
 
 const interview = new GuidedInterview(data);
 

@@ -1,10 +1,10 @@
 import { GuidedInterview, Repeat } from "@/lib/GuidedInterview";
-import * as duplicatedErrorJson from "@/data/repeat-error-duplicated-id.json";
-import * as nestedDuplicatedErrorJson from "@/data/repeat-error-duplicated-id-2.json";
-import * as idNotInCamel from "@/data/repeat-error-id-not-camel.json";
-import * as repeatExample1 from "@/data/repeat-example-1.json";
+import * as duplicatedErrorJson from "@/data/forms/repeat-error-duplicated-id.json";
+import * as nestedDuplicatedErrorJson from "@/data/forms/repeat-error-duplicated-id-2.json";
+import * as idNotInCamel from "@/data/forms/repeat-error-id-not-camel.json";
+import * as repeatExample1 from "@/data/forms/repeat-example-1.json";
 import * as repeatExample1Result from "@/data/results/test-repeat-example-1.json";
-import * as nestedRepeatExample from "@/data/repeat-example-2.json";
+import * as nestedRepeatExample from "@/data/forms/repeat-example-2.json";
 
 describe("Repeat errors", () => {
   test("Duplicated id values", () => {

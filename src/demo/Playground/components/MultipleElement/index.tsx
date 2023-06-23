@@ -1,8 +1,8 @@
-import './MultipleElement.scss'
-import InputText from '../../inputs/InputText'
-import InputRadio from '../../inputs/InputRadio'
-import InputDate from '../../inputs/InputDate'
-import InputRepeat from '../../inputs/InputRepeat'
+import './index.scss'
+import InputText from '../inputs/InputText'
+import InputRadio from '../inputs/InputRadio'
+import InputDate from '../inputs/InputDate'
+import InputRepeat from '../inputs/InputRepeat'
 import { GuidedInterview, Repeat } from '@/lib/GuidedInterview'
 
 

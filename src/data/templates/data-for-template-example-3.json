@@ -1,0 +1,111 @@
+{
+  "personasPropietarias": {
+    "value": 2,
+    "content": {
+      "0": {
+        "hidden": false,
+        "questions": {
+          "personasQueFirmanPersonJuridica": {
+            "value": "3",
+            "content": {
+              "0": {
+                "hidden": false,
+                "questions": {}
+              },
+              "1": {
+                "hidden": false,
+                "questions": {}
+              },
+              "2": {
+                "hidden": false,
+                "questions": {}
+              }
+            }
+          },
+          "tipoPersona": {
+            "value": "Persona física"
+          },
+          "actuaComo": {
+            "value": "en su propio nombre y representación"
+          },
+          "nombreArrendador": {
+            "value": "Juan 1"
+          },
+          "direccionArrendador": {
+            "value": "Calle Melosa"
+          },
+          "tipoDocumento": {
+            "value": "DNI"
+          },
+          "numeroDocAnterior": {
+            "value": "54113125J"
+          }
+        }
+      },
+      "1": {
+        "hidden": false,
+        "questions": {
+          "personasQueFirmanPersonJuridica": {
+            "value": 2,
+            "content": {
+              "0": {
+                "hidden": false,
+                "questions": {
+                  "nombreRepresentantePersonaJuridica": {
+                    "value": "Nested Señor irrelevante 1"
+                  },
+                  "funcionRepresentantePersonaJuridica": {
+                    "value": "No molestar 1"
+                  }
+                }
+              },
+              "1": {
+                "hidden": false,
+                "questions": {
+                  "nombreRepresentantePersonaJuridica": {
+                    "value": "Nested Señor irrelevante 2"
+                  },
+                  "funcionRepresentantePersonaJuridica": {
+                    "value": "No molestar 2"
+                  }
+                }
+              },
+              "2": {
+                "hidden": true,
+                "questions": {}
+              }
+            }
+          },
+          "tipoPersona": {
+            "value": "Persona jurídica"
+          },
+          "nombrePersonaJuridica": {
+            "value": "Empresa Random"
+          }
+        }
+      },
+      "2": {
+        "hidden": true,
+        "questions": {
+          "personasQueFirmanPersonJuridica": {
+            "value": "3",
+            "content": {
+              "0": {
+                "hidden": false,
+                "questions": {}
+              },
+              "1": {
+                "hidden": false,
+                "questions": {}
+              },
+              "2": {
+                "hidden": false,
+                "questions": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

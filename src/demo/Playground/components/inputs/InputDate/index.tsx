@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import './InputDate.css'
+import './index.css'
 import { DateTime } from '@/lib/interfaces/Date.interface'
 import { GuidedInterview } from '@/lib/GuidedInterview'
 import TextField from '@mui/material/TextField';
@@ -20,7 +20,6 @@ function InputDate(props: { interview: GuidedInterview, question: DateTime }) {
             <h2>{title}</h2>
             <DatePicker dateFormat={format} selected={startDate} onChange={(date) => {
               props.interview.setValue(id, new Date(date).toLocaleDateString())
-              // console.log(new Date(date).toLocaleDateString())
               }} />
         </div>
     </div>

@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react'
 import './index.scss'
 import { GuidedInterview } from '@/lib/GuidedInterview'
-import SingleElement from './components/view-display/SingleElement/SingleElement';
-import MultipleElement from './components/view-display/MultipleElement/MultipleElement';
+import MultipleElement from './components/MultipleElement';
 import Menu from './components/menu/Menu'
 import { useLocation, useSearchParams } from 'react-router-dom';
-const demoFiles = import.meta.glob("@/data/*.json");
-import data from '@/data/solicitud-vacaciones.json';
+const demoFiles = import.meta.glob("@/data/forms/*.json");
 
 function Playground() {
 
@@ -15,15 +13,17 @@ function Playground() {
   const [interviewData, setInterviewData] = useState<any>(null);
 
   useEffect(() => {
-    if (!searchParams.has('demo')) return
-    demoFiles[`/src/data/${searchParams.get('demo')}.json`]().then((data: any) => {
+    if (!searchParams.has('demo')) {
+      setSearchParams({demo: 'solicitud-vacaciones'})
+      return
+    }
+    demoFiles[`/src/data/forms/${searchParams.get('demo')}.json`]().then((data: any) => {
       setInterviewData((data.default))
     })
   }, [location])
 
   const [interview, setInterview] = useState<any>(null);
   const [current, setCurrent] = useState<any>(null);
-  const [viewMode, setViewMode] = useState('list');
   
   useEffect(() => {
     if (interviewData) setInterview(new GuidedInterview(interviewData))
@@ -44,9 +44,8 @@ function Playground() {
 
   return (
     <div className="Playground">
-        <Menu interview={interview} setViewMode={() => setViewMode(viewMode === 'normal' ? 'list' : 'normal')}/>
-        {viewMode === 'normal' && <SingleElement interview={interview} current={current as any} />}
-        {viewMode === 'list' && <MultipleElement interview={interview} />}
+        <Menu interview={interview}/>
+        <MultipleElement interview={interview} />
     </div>
   )
 }

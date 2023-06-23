@@ -1,10 +1,7 @@
 import { useState } from "react";
 import "./Menu.scss";
-import IconButton from "@mui/material/IconButton";
-import ViewListIcon from "@mui/icons-material/ViewList";
 import DataObjectIcon from "@mui/icons-material/DataObject";
-import DialogTitle from "@mui/material/DialogTitle";
-import Dialog from "@mui/material/Dialog";
+import { Dialog, DialogTitle, IconButton } from "@mui/material";
 
 function SimpleDialog(props: { open: boolean, onClose: any, interview: any }) {
   const { open, onClose } = props;
@@ -19,7 +16,7 @@ function SimpleDialog(props: { open: boolean, onClose: any, interview: any }) {
   );
 }
 
-function Playground(props: { setViewMode: any; interview: any }) {
+function Playground(props: { interview: any }) {
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -32,13 +29,6 @@ function Playground(props: { setViewMode: any; interview: any }) {
   return (
     <div className="menu">
       <div className="menu-container">
-        <IconButton
-          aria-label="view-mode"
-          size="large"
-          onClick={props.setViewMode}
-        >
-          <ViewListIcon fontSize="inherit" />
-        </IconButton>
         <IconButton
           aria-label="view-mode"
           size="large"

@@ -1,0 +1,18 @@
+<h3>Ejemplo de NESTED loop</h3>
+<ul>
+{% for personaPropietaria in personasPropietarias %}
+  {% if (personaPropietaria.tipoPersona == "Persona física") %}
+    <div>Persona física: {{ personaPropietaria.nombreArrendador }}</div>
+    <div>{{ personaPropietaria.direccionArrendador }}</div>
+    <div>{{ personaPropietaria.tipoDocumento }} {{ personaPropietaria.numeroDocAnterior }}</div>
+    <div> Actúa: {{ personaPropietaria.actuaComo }}</div>
+  {% elif (personaPropietaria.tipoPersona == "Persona jurídica") %}
+    <div>Persona jurídica: {{ personaPropietaria.nombrePersonaJuridica }}</div>
+    {% for personaQueFirma in personaPropietaria.personasQueFirmanPersonJuridica %}
+     <p style="padding-left: 1rem;">Representante empresa: {{ personaQueFirma.nombreRepresentantePersonaJuridica }}</p>
+    {% endfor %}
+  {% endif %}
+{% else %}
+  <li>This would display if the 'personasPropietarias' collection were empty</li>
+{% endfor %}
+</ul>
