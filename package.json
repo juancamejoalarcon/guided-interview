@@ -3,18 +3,20 @@
   "private": false,
   "version": "0.0.4",
   "type": "module",
-  "main": "./guided-interview.umd.cjs",
+  "main": "./guided-interview.umd.js",
   "module": "./guided-interview.js",
+  "types": "types.d.ts",
   "exports": {
     ".": {
       "import": "./guided-interview.js",
-      "require": "./guided-interview.umd.cjs"
+      "require": "./guided-interview.umd.js"
     }
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build --mode production",
+    "build": "tsc && npm run build-types && vite build --mode production",
     "build-demo": "tsc && vite build --mode demo --base=/guided-interview/demo",
+    "build-types": "tsc src/lib/GuidedInterview.ts --declaration --emitDeclarationOnly --downlevelIteration --outfile ./types.js",
     "preview": "vite preview",
     "test": "jest"
   },

@@ -1,4 +1,4 @@
-import nunjucks from "nunjucks";
+import * as nunjucks from "nunjucks";
 
 export const makeTemplate = (interviewData: any, template: string) => {
   const data = transformInterviewData(interviewData);
