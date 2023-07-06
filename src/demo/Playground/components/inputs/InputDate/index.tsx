@@ -19,7 +19,7 @@ function InputDate(props: { interview: GuidedInterview, question: DateTime }) {
         <div className="container">
             <h2>{title}</h2>
             <DatePicker dateFormat={format} selected={startDate} onChange={(date) => {
-              props.interview.setValue(id, new Date(date).toLocaleDateString())
+              props.interview.setValue(id, new Date(date as any).toLocaleDateString())
               }} />
         </div>
     </div>

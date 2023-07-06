@@ -13,7 +13,7 @@ const transformInterviewData = (interviewData: any) => {
     if (isOfTypeRepeat(value)) {
       const content = Object.values((value as any).content)
       transformedData[key] = content
-        .filter(item => !item?.hidden)
+        .filter((item: any) => !item?.hidden)
         .map((item: any) => transformInterviewData(item.questions));
       return;
     }
