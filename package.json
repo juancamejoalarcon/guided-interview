@@ -5,7 +5,7 @@
   "type": "module",
   "main": "./guided-interview.umd.js",
   "module": "./guided-interview.js",
-  "types": "types.d.ts",
+  "types": "./types/GuidedInterview.d.ts",
   "exports": {
     ".": {
       "import": "./guided-interview.js",
@@ -16,7 +16,8 @@
     "dev": "vite",
     "build": "tsc && npm run build-types && vite build --mode production",
     "build-demo": "tsc && vite build --mode demo --base=/guided-interview/demo",
-    "build-types": "tsc src/lib/GuidedInterview.ts --declaration --emitDeclarationOnly --downlevelIteration --outfile ./types.js",
+    "build-types": "tsc -t es5 src/lib/GuidedInterview.ts --declaration --emitDeclarationOnly --downlevelIteration && npm run build-types-folder",
+    "build-types-folder": "node build-types-folder.js",
     "preview": "vite preview",
     "test": "jest"
   },
@@ -26,6 +27,7 @@
     "@mui/icons-material": "^5.11.9",
     "@mui/material": "^5.11.8",
     "@supercharge/strings": "^2.0.0",
+    "mv": "^2.1.1",
     "nunjucks": "^3.2.4",
     "path": "^0.12.7",
     "react": "^18.2.0",
