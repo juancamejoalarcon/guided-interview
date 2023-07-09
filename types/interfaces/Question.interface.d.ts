@@ -10,6 +10,7 @@ export interface Question {
     logic?: {
         showIf?: any;
     };
+    options?: any;
 }
 export interface QuestionProp extends Omit<Question, 'id' | 'title' | 'required' | 'value'> {
     id?: string;

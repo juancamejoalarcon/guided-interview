@@ -1,5 +1,5 @@
-import { Question, QuestionProp, MultipleChoice, MultipleChoiceProp, DateProp, Repeat, RepeatProp } from "./interfaces";
-import { interviewParams, DataSaved } from "./types/General";
+import { Question, QuestionProp, MultipleChoice, MultipleChoiceProp, DateProp, Repeat, RepeatProp, Choice } from "./interfaces";
+import { GenericQuestion, interviewParams, DataSaved } from "./types/General";
 import { EventList } from "./services/event-bus.service";
 export * from "./interfaces";
 export declare class GuidedInterview {
@@ -27,4 +27,11 @@ export declare class GuidedInterview {
     buildContentForRepeatQuestion(repeatQuestion: Repeat, value?: number | null): void;
     applyDataToQuestions(data: DataSaved): void;
     makeTemplate(template: string): string;
+    getStepById(id: string): GenericQuestion | null;
+    changeIdOfQuestion(id: string, newId: string): void;
+    addChoiceToMultipleChoice(id: string, choice: Choice): void;
+    setQuestionAsRequired(id: string, required: boolean): void;
+    setPlaceholder(id: string, placeholder: string): void;
+    setExtraOption(id: string, param: string, value: any): void;
+    setIndications(id: string, indications: string): void;
 }
