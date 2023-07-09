@@ -1,4 +1,4 @@
-import { GuidedInterview } from "@/lib/GuidedInterview";
+import { GuidedInterview, MultipleChoice } from "@/lib/GuidedInterview";
 import * as data from "@/data/forms/solicitud-vacaciones.json";
 
 const interview = new GuidedInterview(data);
@@ -60,4 +60,50 @@ describe("Happy path", () => {
     interview.setValue(id, value);
     expect(interview.canBeShown(current)).toEqual(false);
   });
+
+  test("Test Get ID", () => {
+    const id = "sexoEmpleador";
+    const el = interview.getStepById(id);
+    expect(el?.id).toEqual(id);
+    
+    const nullId = null;
+    const nullEl = interview.getStepById('null');
+    expect(nullEl).toEqual(nullId);
+  });
+
+  test("Add choice to multiple choice", () => {
+    const id = "sexoEmpleador";
+    interview.addChoiceToMultipleChoice("sexoEmpleador", {
+      label: "Otro",
+      checked: false,
+    });
+    const question = interview.getStepById(id);
+    expect((question as MultipleChoice)?.choices.length).toEqual(4);
+  });
+
+  test("Set question as required", () => {
+    const id = "sexoEmpleador";
+    interview.setQuestionAsRequired(id, false);
+    const question = interview.getStepById(id);
+    expect(question?.required).toEqual(false);
+    interview.setQuestionAsRequired(id, true);
+    expect(question?.required).toEqual(true);
+  });
+
+  test("Set extra option to questions", () => {
+    const id = "sexoEmpleador";
+    interview.setExtraOption(id, 'extraOption', "value");
+    const question = interview.getStepById(id);
+    expect(question?.options.extraOption).toEqual("value");
+  });
+
+  test("Change ID of Question", () => {
+    const id = "sexoEmpleador";
+    interview.changeIdOfQuestion(id, "newId");
+    const question = interview.getStepById(id);
+    expect(question).toEqual(null);
+    const newQuestion = interview.getStepById("newId");
+    expect(newQuestion?.id).toEqual("newId");
+  })
+
 });

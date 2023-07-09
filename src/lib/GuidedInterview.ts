@@ -5,7 +5,8 @@ import {
   MultipleChoiceProp, 
   DateProp, 
   Repeat, 
-  RepeatProp 
+  RepeatProp,
+  Choice
 } from "./interfaces";
 import { GenericQuestion, interviewParams, DataSaved } from "./types/General";
 import { validateParams, getValueBetweenRanges, validateSetValue } from "./services/utils.service";
@@ -230,4 +231,60 @@ export class GuidedInterview {
     if (!template) throw new Error("No template provided")
     return makeTemplate(this.data, template)
   }
+
+  getStepById(id: string): GenericQuestion | null {
+    const question = this.interview.get(id)
+    if (!question) return null;
+    return question
+  }
+
+  changeIdOfQuestion(id: string, newId: string) {
+    const question = this.interview.get(id)
+    if (!question) throw new Error("No question with id:" + id);
+    const interviewToArray = Array.from(this.interview, ([name, value]) => ({ name, value }));
+    interviewToArray.forEach((question, index) => {
+      if (question.name === id) {
+        interviewToArray[index].value.id = newId
+        interviewToArray[index].name = newId
+      }
+    })
+    const newInterview = new Map<string, Question | MultipleChoice | Repeat>();
+    interviewToArray.forEach(question => {
+      newInterview.set(question.name, question.value)
+    })
+    this.interview = newInterview
+  }
+
+  addChoiceToMultipleChoice(id: string, choice: Choice) {
+    const question = this.interview.get(id)
+    if (!question) throw new Error("No question with id:" + id);
+    if (question?.type !== 'multipleChoice') throw new Error("Question with id " + id + " is not a multiple choice question");
+    (question as MultipleChoice).choices.push(choice)
+  }
+
+  setQuestionAsRequired(id: string, required: boolean) {
+    const question = this.interview.get(id)
+    if (!question) throw new Error("No question with id:" + id);
+    question.required = required
+  }
+
+  setPlaceholder(id: string, placeholder: string) {
+    const question = this.interview.get(id)
+    if (!question) throw new Error("No question with id:" + id);
+    question.placeholder = placeholder
+  }
+
+  setExtraOption(id: string, param: string, value: any) {
+    const question = this.interview.get(id)
+    if (!question) throw new Error("No question with id:" + id);
+    if (!question.options) question.options = {}
+    question.options[param] = value
+  }
+
+  setIndications(id: string, indications: string) {
+    const question = this.interview.get(id)
+    if (!question) throw new Error("No question with id:" + id);
+    question.indications = indications
+  }
+
 }

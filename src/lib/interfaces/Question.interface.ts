@@ -9,7 +9,8 @@ export interface Question {
     placeholder?: string;
     logic?: {
         showIf?: any
-    }
+    },
+    options?: any
 }
 
 export interface QuestionProp extends Omit<Question, 'id' | 'title' | 'required' | 'value'> {
