@@ -28,9 +28,14 @@ export declare class GuidedInterview {
     applyDataToQuestions(data: DataSaved): void;
     makeTemplate(template: string): string;
     getStepById(id: string): GenericQuestion | null;
+    checkIfIdIsValid(id: string): {
+        isValid: boolean;
+        message: string;
+    };
     changeIdOfQuestion(id: string, newId: string): void;
     addChoiceToMultipleChoice(id: string, choice: Choice): void;
     setQuestionAsRequired(id: string, required: boolean): void;
+    setTitleOfQuestion(id: string, title: string): void;
     setPlaceholder(id: string, placeholder: string): void;
     setExtraOption(id: string, param: string, value: any): void;
     setIndications(id: string, indications: string): void;
