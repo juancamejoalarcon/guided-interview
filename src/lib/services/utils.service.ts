@@ -11,6 +11,10 @@ export const generateRandomId = (): string => {
   return "id-" + (Math.random() + 1).toString(36).substring(7);
 };
 
+export const isCamelCase = (str: string): boolean => {
+  return Str(str).isCamel()
+}
+
 const findIdsNotInCamelCase = (params: interviewParams): string | null => {
   let idNotInCamelCase = null
   Object.entries(params).forEach(([id, value]) => {
@@ -19,7 +23,7 @@ const findIdsNotInCamelCase = (params: interviewParams): string | null => {
       const repeatIdNotInCamelCase = findIdsNotInCamelCase(repeatEl.questions)
       if (repeatIdNotInCamelCase) idNotInCamelCase = repeatIdNotInCamelCase
     }
-    if (!Str(id).isCamel()) idNotInCamelCase = id
+    if (!isCamelCase(id)) idNotInCamelCase = id
   })
   return idNotInCamelCase
 }

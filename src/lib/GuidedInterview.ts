@@ -9,7 +9,7 @@ import {
   Choice
 } from "./interfaces";
 import { GenericQuestion, interviewParams, DataSaved } from "./types/General";
-import { validateParams, getValueBetweenRanges, validateSetValue } from "./services/utils.service";
+import { validateParams, getValueBetweenRanges, validateSetValue, isCamelCase } from "./services/utils.service";
 import { EventBus, EventList } from "./services/event-bus.service";
 import { getQuestion, replaceIndexInQuestionsOfRepeatQuestion } from "./services/create.service";
 import { makeTemplate } from "./services/templating.service";
@@ -238,9 +238,18 @@ export class GuidedInterview {
     return question
   }
 
+  checkIfIdIsValid(id: string): { isValid: boolean, message: string } {
+    if (!id) throw new Error("No id provided")
+    if (this.interview.has(id)) return { isValid: false, message: "Id already exists" }
+    if (!isCamelCase(id)) return { isValid: false, message: "Id must be in camel case" }
+    return { isValid: true, message: '' }
+  }
+
   changeIdOfQuestion(id: string, newId: string) {
     const question = this.interview.get(id)
     if (!question) throw new Error("No question with id:" + id);
+    const idValidation = this.checkIfIdIsValid(newId)
+    if (!idValidation.isValid) throw new Error(idValidation.message)
     const interviewToArray = Array.from(this.interview, ([name, value]) => ({ name, value }));
     interviewToArray.forEach((question, index) => {
       if (question.name === id) {
@@ -266,6 +275,12 @@ export class GuidedInterview {
     const question = this.interview.get(id)
     if (!question) throw new Error("No question with id:" + id);
     question.required = required
+  }
+
+  setTitleOfQuestion(id: string, title: string) {
+    const question = this.interview.get(id)
+    if (!question) throw new Error("No question with id:" + id);
+    question.title = title
   }
 
   setPlaceholder(id: string, placeholder: string) {
