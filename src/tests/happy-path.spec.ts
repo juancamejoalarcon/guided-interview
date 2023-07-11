@@ -97,6 +97,46 @@ describe("Happy path", () => {
     expect(question?.options.extraOption).toEqual("value");
   });
 
+  test("Change order of choices", () => {
+    const id = "sexoEmpleador";
+    interview.changeOrderOfChoices(id, 1, 0);
+    const question = interview.getStepById(id) as MultipleChoice;
+    expect(question?.choices[0].label).toEqual("un hombre");
+    expect(question?.choices[1].label).toEqual("una mujer");
+    expect(question?.choices[2].label).toEqual("una persona jurídica");
+  })
+
+  test("Remove choice from multiple choice", () => {
+    const id = "sexoEmpleador";
+    interview.removeChoiceFromMultipleChoice(id, 0);
+    const question = interview.getStepById(id) as MultipleChoice;
+    expect(question?.choices.length).toEqual(3);
+    expect(question?.choices[0].label).toEqual("una mujer");
+  });
+
+  test("Change label of choice", () => {
+    const id = "sexoEmpleador";
+    interview.changeLabelOfChoice(id, 0, "una mujer updated");
+    const question = interview.getStepById(id) as MultipleChoice;
+    expect(question?.choices[0].label).toEqual("una mujer updated");
+  });
+  
+  test("Change default value of multiple choice", () => {
+    const id = "sexoEmpleador";
+    interview.setDefaultCheckedChoice(id, 0);
+    const question = interview.getStepById(id) as MultipleChoice;
+    expect(question?.choices[0].checked).toEqual(true);
+    expect(question?.choices[1].checked).toEqual(false);
+  });
+
+  test("Change default value of multiple choice", () => {
+    const id = "sexoEmpleador";
+    interview.setDefaultCheckedChoice(id, 0);
+    const question = interview.getStepById(id) as MultipleChoice;
+    expect(question?.choices[0].checked).toEqual(true);
+    expect(question?.choices[1].checked).toEqual(false);
+  });
+
   test("Change ID of Question", () => {
     const id = "sexoEmpleador";
 
@@ -115,5 +155,6 @@ describe("Happy path", () => {
     const newQuestion = interview.getStepById("newId");
     expect(newQuestion?.id).toEqual("newId");
   })
+  
 
 });
