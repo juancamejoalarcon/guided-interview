@@ -12,6 +12,7 @@ export declare class GuidedInterview {
     get questionsMap(): Map<string, Question | MultipleChoice | Repeat>;
     init(interviewParams: interviewParams): void;
     add(params: QuestionProp | MultipleChoiceProp | DateProp | RepeatProp, setAsCurrent?: boolean): Question | MultipleChoice | Repeat;
+    remove(id: string): void;
     getNestedInterview(id: string, index: number): GuidedInterview;
     canBeShown(question: Question): boolean;
     setCurrent(id: string): void;
@@ -33,7 +34,12 @@ export declare class GuidedInterview {
         message: string;
     };
     changeIdOfQuestion(id: string, newId: string): void;
+    changeOrderOfQuestions(previousIndex: number, newIndex: number): void;
     addChoiceToMultipleChoice(id: string, choice: Choice): void;
+    changeOrderOfChoices(id: string, previousIndex: number, newIndex: number): void;
+    removeChoiceFromMultipleChoice(id: string, index: number): void;
+    changeLabelOfChoice(id: string, index: number, label: string): void;
+    setDefaultCheckedChoice(id: string, index: number): void;
     setQuestionAsRequired(id: string, required: boolean): void;
     setTitleOfQuestion(id: string, title: string): void;
     setPlaceholder(id: string, placeholder: string): void;
