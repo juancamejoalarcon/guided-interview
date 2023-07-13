@@ -97,14 +97,14 @@ describe("Happy path", () => {
     expect(question?.options.extraOption).toEqual("value");
   });
 
-  test("Change order of choices", () => {
-    const id = "sexoEmpleador";
-    interview.changeOrderOfChoices(id, 1, 0);
-    const question = interview.getStepById(id) as MultipleChoice;
-    expect(question?.choices[0].label).toEqual("un hombre");
-    expect(question?.choices[1].label).toEqual("una mujer");
-    expect(question?.choices[2].label).toEqual("una persona jurídica");
-  })
+  // test("Change order of choices", () => {
+  //   const id = "sexoEmpleador";
+  //   interview.changeOrderOfChoices(id, 1, 0);
+  //   const question = interview.getStepById(id) as MultipleChoice;
+  //   expect(question?.choices[0].label).toEqual("un hombre");
+  //   expect(question?.choices[1].label).toEqual("una mujer");
+  //   expect(question?.choices[2].label).toEqual("una persona jurídica");
+  // })
 
   test("Remove choice from multiple choice", () => {
     const id = "sexoEmpleador";

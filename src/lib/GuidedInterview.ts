@@ -37,6 +37,10 @@ export class GuidedInterview {
     return this.interview;
   }
 
+  setInterview(interview: Map<string, Question | MultipleChoice | Repeat>) {
+    this.interview = interview
+  }
+
   init(interviewParams: interviewParams) {
     if (interviewParams === null) throw new Error("Interview init param is null");
     if (!validateParams(interviewParams)) return
@@ -270,33 +274,12 @@ export class GuidedInterview {
     this.interview = newInterview
   }
 
-  changeOrderOfQuestions(previousIndex: number, newIndex: number) {
-    const interviewToArray = Array.from(this.interview, ([name, value]) => ({ name, value }));
-    const tmp = interviewToArray[previousIndex];
-    interviewToArray[previousIndex] = interviewToArray[newIndex];
-    interviewToArray[newIndex] = tmp;
-    const newInterview = new Map<string, Question | MultipleChoice | Repeat>();
-    interviewToArray.forEach(question => {
-      newInterview.set(question.name, question.value)
-    })
-    this.interview = newInterview
-  }
 
   addChoiceToMultipleChoice(id: string, choice: Choice) {
     const question = this.interview.get(id)
     if (!question) throw new Error("No question with id:" + id);
     if (question?.type !== 'multipleChoice') throw new Error("Question with id " + id + " is not a multiple choice question");
     (question as MultipleChoice).choices.push(choice)
-  }
-
-  changeOrderOfChoices(id: string, previousIndex: number, newIndex: number) {
-    const question = this.interview.get(id)
-    if (!question) throw new Error("No question with id:" + id);
-    if (question?.type !== 'multipleChoice') throw new Error("Question with id " + id + " is not a multiple choice question");
-    const choices = (question as MultipleChoice).choices
-    var tmp = choices[previousIndex];
-    choices[previousIndex] = choices[newIndex];
-    choices[newIndex] = tmp;
   }
 
   removeChoiceFromMultipleChoice(id: string, index: number) {
