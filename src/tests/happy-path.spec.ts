@@ -111,14 +111,14 @@ describe("Happy path", () => {
     interview.removeChoiceFromMultipleChoice(id, 0);
     const question = interview.getStepById(id) as MultipleChoice;
     expect(question?.choices.length).toEqual(3);
-    expect(question?.choices[0].label).toEqual("una mujer");
+    expect(question?.choices[0].label).toEqual("un hombre");
   });
 
   test("Change label of choice", () => {
     const id = "sexoEmpleador";
-    interview.changeLabelOfChoice(id, 0, "una mujer updated");
+    interview.changeLabelOfChoice(id, 0, "un hombre updated");
     const question = interview.getStepById(id) as MultipleChoice;
-    expect(question?.choices[0].label).toEqual("una mujer updated");
+    expect(question?.choices[0].label).toEqual("un hombre updated");
   });
   
   test("Change default value of multiple choice", () => {

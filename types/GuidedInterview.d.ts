@@ -10,6 +10,7 @@ export declare class GuidedInterview {
     private data;
     constructor(interview?: any, options?: any);
     get questionsMap(): Map<string, Question | MultipleChoice | Repeat>;
+    setInterview(interview: Map<string, Question | MultipleChoice | Repeat>): void;
     init(interviewParams: interviewParams): void;
     add(params: QuestionProp | MultipleChoiceProp | DateProp | RepeatProp, setAsCurrent?: boolean): Question | MultipleChoice | Repeat;
     remove(id: string): void;
@@ -34,9 +35,7 @@ export declare class GuidedInterview {
         message: string;
     };
     changeIdOfQuestion(id: string, newId: string): void;
-    changeOrderOfQuestions(previousIndex: number, newIndex: number): void;
     addChoiceToMultipleChoice(id: string, choice: Choice): void;
-    changeOrderOfChoices(id: string, previousIndex: number, newIndex: number): void;
     removeChoiceFromMultipleChoice(id: string, index: number): void;
     changeLabelOfChoice(id: string, index: number, label: string): void;
     setDefaultCheckedChoice(id: string, index: number): void;
