@@ -1,12 +1,15 @@
-import { Question, QuestionProp } from "../interfaces/Question.interface";
 import {
+  Question,
+  QuestionProp,
   MultipleChoice,
   MultipleChoiceProp,
-} from "../interfaces/MultipleChoice.interface";
-import { DateProp } from "../interfaces/Date.interface";
-import { Repeat, RepeatProp } from "../interfaces/Repeat.interface";
+  DateProp,
+  Repeat,
+  RepeatProp
+} from "../interfaces";
 import { generateRandomId } from "./utils.service";
 import { interviewParams } from "../types/General";
+
 
 const QuestionTypes = {
   text: true,

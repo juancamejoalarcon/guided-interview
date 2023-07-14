@@ -21,7 +21,7 @@ export class GuidedInterview {
   private events!: EventBus;
   private current!: string;
   private isRoot: boolean = true;
-  private data: any = {};
+  public data: any = {};
 
   constructor(interview: any = "empty", options: any = { isRoot: true, data: null }) {
     this.events = options.events || new EventBus();
@@ -50,6 +50,17 @@ export class GuidedInterview {
     }
   }
 
+  getInterviewParams(): interviewParams {
+    const interviewParams: interviewParams = {};
+    this.interview.forEach((value, key) => {
+      interviewParams[key] = value as QuestionProp | MultipleChoiceProp | DateProp | RepeatProp;
+      if (value.type === 'repeat') {
+        (interviewParams[key] as RepeatProp).content = {}
+      }
+    });
+    return interviewParams;
+  }
+
   add(params: QuestionProp | MultipleChoiceProp | DateProp | RepeatProp, setAsCurrent: boolean = false) {
     const question = getQuestion(params);
     if (question.type === 'repeat') this.buildContentForRepeatQuestion(question as Repeat)
@@ -61,7 +72,6 @@ export class GuidedInterview {
   remove(id: string) {
     if (!this.interview.has(id)) throw new Error("No question with id:" + id);
     this.interview.delete(id);
-    // this.events.dispatch("question-removed", id);
   }
 
   getNestedInterview(id: string, index: number): GuidedInterview {
@@ -274,67 +284,66 @@ export class GuidedInterview {
     this.interview = newInterview
   }
 
+  findQuestionById(id: string): Question | MultipleChoice | Repeat {
+    const question = this.interview.get(id)
+    if (!question) throw new Error("No question with id:" + id);
+    return question
+  }
 
-  addChoiceToMultipleChoice(id: string, choice: Choice) {
+  findMultipleChoiceById(id: string): MultipleChoice {
     const question = this.interview.get(id)
     if (!question) throw new Error("No question with id:" + id);
     if (question?.type !== 'multipleChoice') throw new Error("Question with id " + id + " is not a multiple choice question");
+    return question as MultipleChoice
+  }
+
+  addChoiceToMultipleChoice(id: string, choice: Choice) {
+    const question = this.findMultipleChoiceById(id);
     (question as MultipleChoice).choices.push(choice)
   }
 
   removeChoiceFromMultipleChoice(id: string, index: number) {
-    const question = this.interview.get(id)
-    if (!question) throw new Error("No question with id:" + id);
-    if (question?.type !== 'multipleChoice') throw new Error("Question with id " + id + " is not a multiple choice question");
+    const question = this.findMultipleChoiceById(id);
     (question as MultipleChoice).choices.splice(index, 1)
   }
 
   changeLabelOfChoice(id: string, index: number, label: string) {
-    const question = this.interview.get(id)
-    if (!question) throw new Error("No question with id:" + id);
-    if (question?.type !== 'multipleChoice') throw new Error("Question with id " + id + " is not a multiple choice question");
+    const question = this.findMultipleChoiceById(id);
     if (!label) throw new Error("No label provided");
     if (!(question as MultipleChoice).choices[index]) throw new Error("No choice with index:" + index);
     (question as MultipleChoice).choices[index].label = label
   }
 
   setDefaultCheckedChoice(id: string, index: number) {
-    const question = this.interview.get(id)
-    if (!question) throw new Error("No question with id:" + id);
-    if (question?.type !== 'multipleChoice') throw new Error("Question with id " + id + " is not a multiple choice question");
+    const question = this.findMultipleChoiceById(id);
     if (!(question as MultipleChoice).choices[index]) throw new Error("No choice with index:" + index);
     (question as MultipleChoice).choices.forEach(choice => choice.checked = false);
     (question as MultipleChoice).choices[index].checked = true
   }
 
   setQuestionAsRequired(id: string, required: boolean) {
-    const question = this.interview.get(id)
-    if (!question) throw new Error("No question with id:" + id);
+    const question = this.findQuestionById(id);
     question.required = required
   }
 
   setTitleOfQuestion(id: string, title: string) {
-    const question = this.interview.get(id)
-    if (!question) throw new Error("No question with id:" + id);
+    const question = this.findQuestionById(id);
     question.title = title
   }
 
   setPlaceholder(id: string, placeholder: string) {
-    const question = this.interview.get(id)
-    if (!question) throw new Error("No question with id:" + id);
+    const question = this.findQuestionById(id);
     question.placeholder = placeholder
   }
 
   setExtraOption(id: string, param: string, value: any) {
-    const question = this.interview.get(id)
-    if (!question) throw new Error("No question with id:" + id);
+    const question = this.findQuestionById(id);
     if (!question.options) question.options = {}
     question.options[param] = value
   }
 
   setIndications(id: string, indications: string) {
-    const question = this.interview.get(id)
-    if (!question) throw new Error("No question with id:" + id);
+    const question = this.findQuestionById(id);
     question.indications = indications
   }
 

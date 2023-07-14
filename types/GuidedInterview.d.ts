@@ -7,11 +7,12 @@ export declare class GuidedInterview {
     private events;
     private current;
     private isRoot;
-    private data;
+    data: any;
     constructor(interview?: any, options?: any);
     get questionsMap(): Map<string, Question | MultipleChoice | Repeat>;
     setInterview(interview: Map<string, Question | MultipleChoice | Repeat>): void;
     init(interviewParams: interviewParams): void;
+    getInterviewParams(): interviewParams;
     add(params: QuestionProp | MultipleChoiceProp | DateProp | RepeatProp, setAsCurrent?: boolean): Question | MultipleChoice | Repeat;
     remove(id: string): void;
     getNestedInterview(id: string, index: number): GuidedInterview;
@@ -35,6 +36,8 @@ export declare class GuidedInterview {
         message: string;
     };
     changeIdOfQuestion(id: string, newId: string): void;
+    findQuestionById(id: string): Question | MultipleChoice | Repeat;
+    findMultipleChoiceById(id: string): MultipleChoice;
     addChoiceToMultipleChoice(id: string, choice: Choice): void;
     removeChoiceFromMultipleChoice(id: string, index: number): void;
     changeLabelOfChoice(id: string, index: number, label: string): void;

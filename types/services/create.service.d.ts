@@ -1,7 +1,4 @@
-import { Question, QuestionProp } from "../interfaces/Question.interface";
-import { MultipleChoice, MultipleChoiceProp } from "../interfaces/MultipleChoice.interface";
-import { DateProp } from "../interfaces/Date.interface";
-import { Repeat, RepeatProp } from "../interfaces/Repeat.interface";
+import { Question, QuestionProp, MultipleChoice, MultipleChoiceProp, DateProp, Repeat, RepeatProp } from "../interfaces";
 import { interviewParams } from "../types/General";
 export declare const getQuestion: (params: QuestionProp | MultipleChoiceProp | DateProp | RepeatProp, setAsCurrent?: boolean) => Question | MultipleChoice | Repeat;
 export declare const buildTextQuestion: (params: QuestionProp) => {
@@ -19,7 +16,7 @@ export declare const buildDateQuestion: (params: DateProp) => {
 };
 export declare const buildMultipleChoiceQuestion: (params: MultipleChoiceProp) => {
     value: string;
-    choices: import("../interfaces/MultipleChoice.interface").Choice[];
+    choices: import("../interfaces").Choice[];
     subType: "select" | "radio";
 };
 export declare const buildRepeatQuestion: (params: RepeatProp) => {
