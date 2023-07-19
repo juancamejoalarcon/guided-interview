@@ -65,6 +65,7 @@ export class GuidedInterview {
     const question = getQuestion(params);
     if (question.type === 'repeat') this.buildContentForRepeatQuestion(question as Repeat)
     this.interview.set(question.id, question);
+    this.setValue(question.id, question.value);
     this.events.dispatch("question-added", question);
     return question;
   }
