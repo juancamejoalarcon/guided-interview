@@ -41,6 +41,7 @@ export const getQuestion = (
     title: params.title || "",
     indications: params.indications || "",
     logic: params.logic || {},
+    options: params.options || {},
     ...typeParams,
   };
 

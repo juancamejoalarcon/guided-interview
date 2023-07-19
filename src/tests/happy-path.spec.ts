@@ -7,6 +7,7 @@ const missingValues = {
   indications: "",
   subType: "",
   logic: {},
+  options: {},
 };
 
 describe("Happy path", () => {
