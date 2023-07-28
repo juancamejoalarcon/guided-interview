@@ -9,6 +9,7 @@ export interface Question {
     placeholder?: string;
     logic?: {
         showIf?: any;
+        hideIf?: any;
     };
     options?: any;
 }

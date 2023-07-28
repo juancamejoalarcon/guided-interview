@@ -47,4 +47,8 @@ export declare class GuidedInterview {
     setPlaceholder(id: string, placeholder: string): void;
     setExtraOption(id: string, param: string, value: any): void;
     setIndications(id: string, indications: string): void;
+    setLogic(id: string, logic: {
+        showIf?: any;
+        hideIf?: any;
+    }): void;
 }
