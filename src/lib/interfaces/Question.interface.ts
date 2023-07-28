@@ -8,7 +8,8 @@ export interface Question {
     value: string | number;
     placeholder?: string;
     logic?: {
-        showIf?: any
+        showIf?: any;
+        hideIf?: any;
     },
     options?: any
 }

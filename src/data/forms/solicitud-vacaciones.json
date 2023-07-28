@@ -93,7 +93,11 @@
         "title": "Dirección completa del empresario a quien se solicitan las vacaciones:",
         "placeholder": "Ej. Av. Diagonal 100, 3°C; 08006 Barcelona.",
         "value": "",
-        "required": true
+        "required": true,
+        "logic": {
+            "showIf": "sexoEmpleador.value === 'una mujer'",
+            "hideIf": "sexoEmpleador.value === 'una persona jurídica'"
+        }
     },
     "localidadRedaccion": {
         "id": "localidadRedaccion",

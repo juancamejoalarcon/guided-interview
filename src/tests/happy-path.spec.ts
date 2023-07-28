@@ -1,4 +1,4 @@
-import { GuidedInterview, MultipleChoice } from "@/lib/GuidedInterview";
+import { GuidedInterview, MultipleChoice, Question } from "@/lib/GuidedInterview";
 import * as data from "@/data/forms/solicitud-vacaciones.json";
 
 const interview = new GuidedInterview(data);
@@ -52,7 +52,7 @@ describe("Happy path", () => {
     expect(current.value).toEqual(value);
   });
 
-  test("Test Logic Can Be Shown", () => {
+  test("Test Logic Can Be Shown 'Show If'", () => {
     interview.next();
     const current = interview.getCurrent();
     expect(interview.canBeShown(current)).toEqual(true);
@@ -60,6 +60,12 @@ describe("Happy path", () => {
     const value = "una persona jurídica";
     interview.setValue(id, value);
     expect(interview.canBeShown(current)).toEqual(false);
+  });
+
+  test("Test Logic Can Be Shown 'Hide If'", () => {
+    const id = "direccionEmpleador";
+    const stepWithHideIf = interview.getStepById('direccionEmpleador') as Question;
+    expect(interview.canBeShown(stepWithHideIf)).toEqual(false);
   });
 
   test("Test Get ID", () => {

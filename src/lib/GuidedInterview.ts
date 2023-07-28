@@ -87,7 +87,15 @@ export class GuidedInterview {
         const keys = this.interview.keys()
         const values = this.interview.values()
         const showIfFunct = Function(...keys, `return ${question.logic.showIf}`).bind(this)
-        return showIfFunct(...values)
+        const result = showIfFunct(...values)
+        if (!result) return false
+    }
+    if (question.logic?.hideIf) {
+        const keys = this.interview.keys()
+        const values = this.interview.values()
+        const hideIfFunct = Function(...keys, `return ${question.logic.hideIf}`).bind(this)
+        const result = !hideIfFunct(...values)
+        if (!result) return false
     }
     return true
   }
@@ -346,6 +354,10 @@ export class GuidedInterview {
   setIndications(id: string, indications: string) {
     const question = this.findQuestionById(id);
     question.indications = indications
+  }
+
+  setLogic(id: string, logic: { showIf?: any; hideIf?: any; }) {
+    this.findQuestionById(id).logic = logic
   }
 
 }
