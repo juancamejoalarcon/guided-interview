@@ -360,4 +360,10 @@ export class GuidedInterview {
     this.findQuestionById(id).logic = logic
   }
 
+  setRange(id: string, range: { min: number; max: number; }) {
+    const question = this.findQuestionById(id) as Repeat;
+    if (question?.type !== 'repeat') throw new Error("Question with id " + id + " is not a repeat question")
+    question.range = range
+  }
+
 }

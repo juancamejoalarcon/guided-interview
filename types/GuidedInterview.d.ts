@@ -51,4 +51,8 @@ export declare class GuidedInterview {
         showIf?: any;
         hideIf?: any;
     }): void;
+    setRange(id: string, range: {
+        min: number;
+        max: number;
+    }): void;
 }

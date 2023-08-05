@@ -5421,6 +5421,12 @@ class St {
   setLogic(t, e) {
     this.findQuestionById(t).logic = e;
   }
+  setRange(t, e) {
+    const r = this.findQuestionById(t);
+    if ((r == null ? void 0 : r.type) !== "repeat")
+      throw new Error("Question with id " + t + " is not a repeat question");
+    r.range = e;
+  }
 }
 export {
   St as GuidedInterview
