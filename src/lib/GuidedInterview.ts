@@ -19,7 +19,7 @@ export * from "./interfaces";
 export class GuidedInterview {
   public interview = new Map<string, Question | MultipleChoice | Repeat>();
   private events!: EventBus;
-  private current!: string;
+  private current!: GenericQuestion;
   private isRoot: boolean = true;
   public data: any = {};
 
@@ -99,68 +99,241 @@ export class GuidedInterview {
     }
     return true
   }
-
-  setCurrent(id: string) {
-    if (!this.interview.has(id)) {
-      throw new Error("No question with id:" + id);
+  // This question should be private
+  setCurrent(question: GenericQuestion) {
+    if (!question) {
+      throw new Error("No question provided");
     }
-    this.current = id;
+    if (typeof question !== 'object') {
+      throw new Error("No question provided");
+    }
+    this.current = question;
     this.events.dispatch("set-current", this.getCurrent());
   }
 
   next() {
-    const idOfCurrent = this.getCurrent().id
+    let nextQuestion = this.getNextQuestion()
+    if (nextQuestion) this.setCurrent(nextQuestion)
+    // Fix when nextQuestion is null
+    else this.getCurrent().isCurrent = true
+  }
+  
+  getNextQuestion(): GenericQuestion | null {
+    let newCurrent;
+    let nextQuestionExists;
     const interviewList = Array.from(this.interview)
     for (let i = 0; i < interviewList.length ; i++) {
-        const [key] = interviewList[i]
-        if (idOfCurrent === key) {
-            const nextQuestion = this.nextAvailableQuestion(i + 1)
-            if (nextQuestion) this.setCurrent(nextQuestion[0])
-            break
-        }
-    }
-  }
+      const question = interviewList[i][1]
+      const isCurrent = question?.isCurrent
+      const isRepeat = question?.type === 'repeat'
+      nextQuestionExists = interviewList[i + 1] && interviewList[i + 1][1]
 
-  nextAvailableQuestion(index: number) { 
-    const interviewList = Array.from(this.interview)
-    for (let i = index; i < interviewList.length ; i++) {
-        const [key, value] = interviewList[i]
-        if (this.canBeShown(value)) {
-            return interviewList[i]
+
+      if (isCurrent && !isRepeat && !nextQuestionExists && !this.isRoot) {
+        question.isEnd = true
+        newCurrent = question
+        break
+      }
+      if (isCurrent && !isRepeat && nextQuestionExists ) {
+        question.isCurrent = false
+        newCurrent = interviewList[i + 1][1]
+        newCurrent.isCurrent = true
+        if (!this.canBeShown(newCurrent)) {
+          newCurrent = this.getNextQuestion()
         }
+        break
+      }
+      if (isCurrent && isRepeat && this.canBeShown(question)) {
+        const repeat = question as Repeat
+        repeat.isCurrent = false;
+        const firstNestedInterview = Array.from(repeat.content[0].nestedInterview.interview) as any
+        newCurrent = firstNestedInterview[0][1]
+        newCurrent.isCurrent = true
+        break
+      }
+
+      if (isCurrent && isRepeat && !this.canBeShown(question) && nextQuestionExists) {
+        question.isCurrent = false
+        newCurrent = interviewList[i + 1][1]
+        newCurrent.isCurrent = true
+        if (!this.canBeShown(newCurrent)) {
+          newCurrent = this.getNextQuestion()
+        }
+        break
+      }
+
+      if (isCurrent && isRepeat && !this.canBeShown(question) && !nextQuestionExists) {
+        question.isEnd = true
+        newCurrent = question
+        break
+      }
+
+      if (!isCurrent && isRepeat && !this.canBeShown(question) && !nextQuestionExists) {
+        question.isEnd = true
+        newCurrent = question
+        break
+      }
+
+
+      if (!isCurrent && isRepeat && this.canBeShown(question)) {
+        const repeat = question as Repeat
+        for (let j = 0; j < parseInt(question.value as string) ; j++) {
+          
+          if (!repeat.content[j].hidden) {
+
+            newCurrent = repeat.content[j].nestedInterview.getNextQuestion()
+
+            if (newCurrent) {
+              if (newCurrent.isEnd) {
+                if ((j + 1) < parseInt(question.value as string)) {
+                  if (!newCurrent.isCurrent) {
+                    newCurrent.isEnd = false
+                    newCurrent = null
+                  } else {
+                    const firstOfNextNestedInterview = Array.from(repeat.content[j + 1].nestedInterview.interview) as any
+                    newCurrent.isCurrent = false
+                    newCurrent.isEnd = false
+                    newCurrent = firstOfNextNestedInterview[0][1]
+                    newCurrent.isCurrent = true
+                  }
+                } else {
+                  const canBeShown = repeat.content[j].nestedInterview.canBeShown(newCurrent)
+                  if (newCurrent.isEnd && !canBeShown) {
+                    newCurrent.isCurrent = false
+                    newCurrent = null
+                  }
+                }
+              }
+              if (newCurrent) break
+            }
+          }
+        }
+        break
+      }
     }
+    return newCurrent
   }
 
   previous() {
-    const idOfCurrent = this.getCurrent().id
-    const interviewList = Array.from(this.interview)
-    for (let i = 0; i < interviewList.length ; i++) {
-        const [key] = interviewList[i]
-        if (idOfCurrent === key) {
-            const previousQuestion = this.previousAvailableQuestion(i - 1)
-            if (previousQuestion) this.setCurrent(previousQuestion[0])
-            break
-        }
-    }
+    let previousQuestion = this.getPreviousQuestion()
+    if (previousQuestion) this.setCurrent(previousQuestion)
   }
 
-  previousAvailableQuestion(index: number) { 
+  getPreviousQuestion(previous: GenericQuestion | null = null): GenericQuestion | null {
     const interviewList = Array.from(this.interview)
-    for (let i = index; i >= 0 ; i--) {
-        const [key, value] = interviewList[i]
-        if (this.canBeShown(value)) {
-            return interviewList[i]
-        }
+    const firstQuestion = interviewList[0][1]
+    if (firstQuestion.isCurrent) {
+      if (this.isRoot) {
+        return firstQuestion
+      } else {
+        if (previous) previous.isCurrent = true
+        firstQuestion.isCurrent = false
+        return previous
+      }
     }
+
+    let previousQuestion = firstQuestion
+    let newCurrent;
+    let nextQuestionExists;
+    for (let i = 1; i < interviewList.length ; i++) {
+      const question = interviewList[i][1]
+      const questionCanBeShown = this.canBeShown(question)
+      nextQuestionExists = interviewList[i + 1] && interviewList[i + 1][1]
+      if (!question.isCurrent) {
+        if (questionCanBeShown) previousQuestion = question
+        if (question.type === 'repeat') {
+          const repeat = question as Repeat
+          for (let j = 0; j < parseInt(question.value as string) ; j++) {
+            if (!repeat.content[j].hidden) {
+              newCurrent = repeat.content[j].nestedInterview.getPreviousQuestion(previousQuestion)
+              // update previous
+              if (newCurrent?.isPrevious) {
+                newCurrent.isPrevious = false
+                previousQuestion = newCurrent
+                newCurrent = null
+              }
+              if (newCurrent && newCurrent.isCurrent) break
+            }
+          }
+          if (newCurrent && newCurrent.isCurrent) break
+        }
+      } else {
+        previousQuestion.isCurrent = true
+        newCurrent = previousQuestion
+        question.isCurrent = false
+        break
+      }
+    }
+    if (previous && !newCurrent) {
+      const found = this.reversePreviousUtil(interviewList)
+      if (found) newCurrent = found
+    }
+    return newCurrent
+  }
+
+  // traverse interview backwards to find previous question
+  reversePreviousUtil(interviewList: [string, Question | MultipleChoice | Repeat][]) {
+    let newCurrent;
+    for (let i = interviewList.length - 1; i >= 0; i--) {
+      const question = interviewList[i][1]
+      const questionCanBeShown = this.canBeShown(question)
+      if (questionCanBeShown) {
+        if (question.type === 'repeat') {
+          const repeat = question as Repeat
+          // let j = parseInt(question.value as string) - 1; j >= 0; j--
+          for (let j = parseInt(question.value as string) - 1; j >= 0; j--) {
+            if (!repeat.content[j].hidden) {
+              const nestedInterviewList = Array.from(repeat.content[j].nestedInterview.interview) as [string, Question | MultipleChoice | Repeat][] 
+              newCurrent = repeat.content[j].nestedInterview.reversePreviousUtil(nestedInterviewList)
+              if (newCurrent) {
+                newCurrent.isPrevious = true
+              }
+              if (newCurrent) break
+            }
+          }
+          if (newCurrent) break
+        } else {
+          newCurrent = question as any
+          newCurrent.isPrevious = true
+          break
+        }
+      }
+    }
+    return newCurrent
+  }
+
+  // Returns interview of current question
+  getCurrentGuidedInterview(): GuidedInterview | null {
+    const interviewList = Array.from(this.interview)
+    let current: GuidedInterview | null = null;
+    for (let i = 0; i < interviewList.length ; i++) {
+      const question = interviewList[i][1];
+      if (question.isCurrent) {
+        current = this
+        break
+      }
+      if (question.type === 'repeat') {
+        const repeat = question as Repeat
+        for (let j = 0; j < parseInt(question.value as string) ; j++) {
+          if (!repeat.content[j].hidden) {
+            current = repeat.content[j].nestedInterview.getCurrentGuidedInterview()
+            if (current) break
+          }
+        }
+      }
+    }
+    if (this.isRoot && !current) current = this
+    return current
   }
 
   getCurrent(): Question | MultipleChoice | Repeat {
-    if (!this.current) this.current = Array.from(this.interview)[0][0]
-    const currentEl = this.interview.get(this.current)
-    if (!currentEl) {
-        throw new Error("Could not find current Quetion");  
+    if (!this.current) {
+      this.current = Array.from(this.interview)[0][1]
+      if (this.isRoot) {
+        Array.from(this.interview)[0][1].isCurrent = true
+      }
     }
-    return currentEl;
+    return this.current;
   }
 
   setValue(id: string, value: string | number) {

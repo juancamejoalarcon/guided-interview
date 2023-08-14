@@ -7,6 +7,8 @@ export interface Question {
     indications?: string;
     value: string | number;
     placeholder?: string;
+    isCurrent?: boolean;
+    isEnd?: boolean;
     logic?: {
         showIf?: any;
         hideIf?: any;
