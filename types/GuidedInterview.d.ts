@@ -17,11 +17,13 @@ export declare class GuidedInterview {
     remove(id: string): void;
     getNestedInterview(id: string, index: number): GuidedInterview;
     canBeShown(question: Question): boolean;
-    setCurrent(id: string): void;
+    setCurrent(question: GenericQuestion): void;
     next(): void;
-    nextAvailableQuestion(index: number): [string, Question | MultipleChoice | Repeat];
+    getNextQuestion(): GenericQuestion | null;
     previous(): void;
-    previousAvailableQuestion(index: number): [string, Question | MultipleChoice | Repeat];
+    getPreviousQuestion(previous?: GenericQuestion | null): GenericQuestion | null;
+    reversePreviousUtil(interviewList: [string, Question | MultipleChoice | Repeat][]): any;
+    getCurrentGuidedInterview(): GuidedInterview | null;
     getCurrent(): Question | MultipleChoice | Repeat;
     setValue(id: string, value: string | number): void;
     on(event: EventList, callback: Function): void;
