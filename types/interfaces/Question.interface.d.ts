@@ -13,6 +13,7 @@ export interface Question {
         showIf?: any;
         hideIf?: any;
     };
+    indexInsideRepeat?: number | null;
     options?: any;
 }
 export interface QuestionProp extends Omit<Question, 'id' | 'title' | 'required' | 'value'> {

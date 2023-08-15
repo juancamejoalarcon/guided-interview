@@ -42,6 +42,7 @@ export const getQuestion = (
     indications: params.indications || "",
     logic: params.logic || {},
     options: params.options || {},
+    indexInsideRepeat: params.indexInsideRepeat || null,
     ...typeParams,
   };
 
@@ -88,7 +89,8 @@ export const replaceIndexInQuestionsOfRepeatQuestion = (questions: interviewPara
     const realIndex = index + 1
     if (value.title) {
       value.title = value.title.replace(/\<%= index %>/g, realIndex.toString())
-    } 
+    }
+    value.indexInsideRepeat = realIndex
   })
   return copyOfQuestions
 }

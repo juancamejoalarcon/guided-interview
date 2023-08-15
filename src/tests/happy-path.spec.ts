@@ -8,7 +8,8 @@ const missingValues = {
   subType: "",
   logic: {},
   options: {},
-  isCurrent: true
+  isCurrent: true,
+  indexInsideRepeat: null
 };
 
 describe("Happy path", () => {

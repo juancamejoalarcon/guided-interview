@@ -23,6 +23,14 @@ export declare class GuidedInterview {
     previous(): void;
     getPreviousQuestion(previous?: GenericQuestion | null): GenericQuestion | null;
     reversePreviousUtil(interviewList: [string, Question | MultipleChoice | Repeat][]): any;
+    getProgress(): {
+        total: number;
+        currentPosition: number;
+        percentageOfCompletion: number;
+    };
+    isStart(): boolean;
+    isEnd(): boolean;
+    getLastQuestionOfInterview(): GenericQuestion | null;
     getCurrentGuidedInterview(): GuidedInterview | null;
     getCurrent(): Question | MultipleChoice | Repeat;
     setValue(id: string, value: string | number): void;

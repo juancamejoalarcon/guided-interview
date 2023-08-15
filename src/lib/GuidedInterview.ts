@@ -114,8 +114,9 @@ export class GuidedInterview {
   next() {
     let nextQuestion = this.getNextQuestion()
     if (nextQuestion) this.setCurrent(nextQuestion)
-    // Fix when nextQuestion is null
+    // Fixes when nextQuestion is null
     else this.getCurrent().isCurrent = true
+    this.getCurrent().isEnd = false
   }
   
   getNextQuestion(): GenericQuestion | null {
@@ -270,7 +271,7 @@ export class GuidedInterview {
     }
     return newCurrent
   }
-
+  
   // traverse interview backwards to find previous question
   reversePreviousUtil(interviewList: [string, Question | MultipleChoice | Repeat][]) {
     let newCurrent;
@@ -300,6 +301,79 @@ export class GuidedInterview {
       }
     }
     return newCurrent
+  }
+
+    // Returns an object whith the current total questions 
+  // and the position you are in it
+  getProgress(): { total: number, currentPosition: number, percentageOfCompletion: number } {
+    let total = 0;
+    let currentPosition = 0
+    const interviewList = Array.from(this.interview)
+    interviewList.forEach(([id, question]) => {
+      total += 1
+      if (question.isCurrent) currentPosition = total
+      if (question.type === 'repeat') {
+        const repeat = question as Repeat
+        Object.values(repeat.content).forEach(content => {
+          if (!content.hidden) {
+            const progress = content.nestedInterview.getProgress()
+            if (progress.currentPosition !== 0) {
+              currentPosition = total + progress.currentPosition
+            }
+            total += progress.total
+          }
+        })
+      }
+    })
+    return {
+      total,
+      currentPosition,
+      percentageOfCompletion: Math.round((currentPosition * 100) / total)
+    }
+  }
+
+  // returns true if you are at the first question
+  isStart() {
+    const interviewList = Array.from(this.interview)
+    const idOfFirstQuestion = interviewList[0][1].id
+    const idOfCurrent = this.getCurrent().id
+    return idOfFirstQuestion === idOfCurrent
+  }
+
+  // returns true if you reach the last question
+  isEnd() {
+    const lastQuestion = this.getLastQuestionOfInterview()
+    const current = this.getCurrent()
+    if (current.indexInsideRepeat !== null) {
+      return current.id === lastQuestion?.id && current.indexInsideRepeat === lastQuestion.indexInsideRepeat
+    }
+    return lastQuestion?.id === current.id
+  }
+
+  getLastQuestionOfInterview(): GenericQuestion | null {
+    let found = null;
+    const interviewList = Array.from(this.interview)
+    for (let i = interviewList.length - 1; i >= 0; i--) {
+      const question = interviewList[i][1]
+      const questionCanBeShown = this.canBeShown(question)
+      if (questionCanBeShown) {
+        if (question.type === 'repeat') {
+          const repeat = question as Repeat
+          for (let j = parseInt(question.value as string) - 1; j >= 0; j--) {
+            if (!repeat.content[j].hidden) {
+              found = repeat.content[j].nestedInterview.getLastQuestionOfInterview()
+              if (found) break
+            }
+          }
+          if (!found) found = question
+          break
+        } else {
+          found = question
+          break
+        }
+      }
+    }
+    return found
   }
 
   // Returns interview of current question
@@ -442,6 +516,7 @@ export class GuidedInterview {
 
   checkIfIdIsValid(id: string): { isValid: boolean, message: string } {
     if (!id) throw new Error("No id provided")
+    // Check if id ALREADY EXISTS IN NESTED QUESTIONS
     if (this.interview.has(id)) return { isValid: false, message: "Id already exists" }
     if (!isCamelCase(id)) return { isValid: false, message: "Id must be in camel case" }
     return { isValid: true, message: '' }
