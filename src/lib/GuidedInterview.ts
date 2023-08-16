@@ -451,7 +451,7 @@ export class GuidedInterview {
 
   buildContentForRepeatQuestion(repeatQuestion: Repeat, value: number | null = null): void {
 
-    const { range, id, questions } = repeatQuestion
+    const { range, id, questions, indexInsideRepeat } = repeatQuestion
     const { min, max } = range
 
     value = getValueBetweenRanges(repeatQuestion.value, min, max)
@@ -470,7 +470,7 @@ export class GuidedInterview {
       }
       this.data[id].content[i] = { hidden: false, questions: {} }
 
-      const nestedInterview = new GuidedInterview(replaceIndexInQuestionsOfRepeatQuestion(questions, i), { 
+      const nestedInterview = new GuidedInterview(replaceIndexInQuestionsOfRepeatQuestion(questions, i, indexInsideRepeat), { 
         isRoot: false, 
         events: this.events,
         data: this.data[id].content[i].questions

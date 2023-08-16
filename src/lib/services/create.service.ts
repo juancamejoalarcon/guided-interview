@@ -83,14 +83,15 @@ export const buildRepeatQuestion = (params: RepeatProp) => {
   };
 };
 
-export const replaceIndexInQuestionsOfRepeatQuestion = (questions: interviewParams, index: number): interviewParams => {
+export const replaceIndexInQuestionsOfRepeatQuestion = (questions: interviewParams, index: number, indexInsideRepeat: string | null = null): interviewParams => {
   const copyOfQuestions: interviewParams = JSON.parse(JSON.stringify(questions))
   Object.entries(copyOfQuestions).forEach(([id, value]) => {
     const realIndex = index + 1
     if (value.title) {
       value.title = value.title.replace(/\<%= index %>/g, realIndex.toString())
     }
-    value.indexInsideRepeat = realIndex
+    if (indexInsideRepeat) value.indexInsideRepeat = indexInsideRepeat + `.${realIndex}`
+    else value.indexInsideRepeat = realIndex.toString()
   })
   return copyOfQuestions
 }

@@ -1,6 +1,7 @@
 import { GuidedInterview, Question, Repeat } from "@/lib/GuidedInterview";
 import * as repeatExample3 from "@/data/forms/repeat-example-3.json";
 import * as repeatExample4 from "@/data/forms/repeat-example-4.json";
+import * as repeatExample5 from "@/data/forms/repeat-example-5.json";
 
 
 describe("Repeat Next & Previous", () => {
@@ -173,10 +174,6 @@ describe("Repeat Next & Previous", () => {
   test("Change repeat value", () => {
     const interview = new GuidedInterview(repeatExample4);
     let current = interview.getCurrent() as Question;
-    let progress = { currentPosition: 0, total: 0, percentageOfCompletion: 0};
-    const updateProgress = () =>  {
-      progress = interview.getProgress()
-    }
 
     for (let i = 0; i < 4 ; i++) interview.next()
 
@@ -234,6 +231,58 @@ describe("Repeat Next & Previous", () => {
 
     interview.next();
     expect(interview.getCurrent().title).toEqual("2.2 - index 3");
+    expect(interview.isEnd()).toEqual(true);
+
+
+  });
+
+  test("3 level nested", () => {
+    const interview = new GuidedInterview(repeatExample5);
+    let current = interview.getCurrent() as Question;
+
+    expect(interview.getCurrent().id).toEqual("idxgsqa");
+    expect(interview.isStart()).toEqual(true);
+
+    interview.next();
+
+    expect(interview.getCurrent().id).toEqual("idnoczv");
+
+    interview.getCurrentGuidedInterview()?.setValue(interview.getCurrent().id, 2);
+
+    for (let i = 0; i < 2 ; i++) interview.next();
+
+    expect(interview.getCurrent().id).toEqual("idaubct");
+    interview.getCurrentGuidedInterview()?.setValue(interview.getCurrent().id, 2);
+
+    for (let i = 0; i < 2 ; i++) interview.next();
+
+    expect(interview.getCurrent().id).toEqual("idszikt");
+    expect(interview.getCurrent().title).toEqual("2.2.2 - index 1");
+    expect(interview.isEnd()).toEqual(false);
+
+    interview.next();
+
+    expect(interview.getCurrent().id).toEqual("idgqylc");
+    expect(interview.getCurrent().title).toEqual("2.2.1 - index 2");
+    expect(interview.isEnd()).toEqual(false);
+
+  
+    for (let i = 0; i < 2 ; i++) interview.next();
+
+    expect(interview.getCurrent().id).toEqual("idjvlnl");
+    expect(interview.getCurrent().title).toEqual("2.1 - index 2");
+    expect(interview.isEnd()).toEqual(false);
+
+    interview.next();
+
+    expect(interview.getCurrent().id).toEqual("idaubct");
+    expect(interview.getCurrent().title).toEqual("2.2 - index 2");
+    expect(interview.isEnd()).toEqual(false);
+
+    for (let i = 0; i < 2 ; i++) interview.next();
+
+    expect(interview.getCurrent().id).toEqual("idszikt");
+    expect(interview.getCurrent().title).toEqual("2.2.2 - index 1");
     expect(interview.isEnd()).toEqual(true);
 
 

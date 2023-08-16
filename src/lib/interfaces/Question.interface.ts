@@ -13,7 +13,7 @@ export interface Question {
         showIf?: any;
         hideIf?: any;
     },
-    indexInsideRepeat?: number | null;
+    indexInsideRepeat?: string | null;
     options?: any
 }
 
