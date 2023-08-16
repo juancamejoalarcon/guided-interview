@@ -27,4 +27,4 @@ export declare const buildRepeatQuestion: (params: RepeatProp) => {
     };
     questions: interviewParams;
 };
-export declare const replaceIndexInQuestionsOfRepeatQuestion: (questions: interviewParams, index: number) => interviewParams;
+export declare const replaceIndexInQuestionsOfRepeatQuestion: (questions: interviewParams, index: number, indexInsideRepeat?: string | null) => interviewParams;
