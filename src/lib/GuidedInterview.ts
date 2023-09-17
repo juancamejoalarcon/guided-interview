@@ -13,6 +13,7 @@ import { validateParams, getValueBetweenRanges, validateSetValue, isCamelCase } 
 import { EventBus, EventList } from "./services/event-bus.service";
 import { getQuestion, replaceIndexInQuestionsOfRepeatQuestion } from "./services/create.service";
 import { makeTemplate } from "./services/templating.service";
+import { Cloner } from "@/lib/services/clone.service"
 
 export * from "./interfaces";
 
@@ -22,6 +23,7 @@ export class GuidedInterview {
   private current!: GenericQuestion;
   private isRoot: boolean = true;
   public data: any = {};
+  public Cloner = Cloner
 
   constructor(interview: any = "empty", options: any = { isRoot: true, data: null }) {
     this.events = options.events || new EventBus();
