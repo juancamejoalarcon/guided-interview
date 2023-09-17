@@ -1,10 +1,4 @@
-import {
-  QuestionProp,
-  MultipleChoiceProp,
-  Question,
-  MultipleChoice,
-} from "@/lib/interfaces";
-import { GenericQuestion } from "@/lib/types/General";
+import { GenericQuestion } from "../types/General";
 
 export type copiedQuestion = {
   id: string | undefined;
@@ -216,8 +210,8 @@ export class Cloner {
         delete (question as any).percentageOfCompletion
         if (!(question as any).preLogic) return
       let condition = "";
-      const transformLogic = (arr, needsEnd = false) => {
-        arr.forEach((el, index) => {
+      const transformLogic = (arr: any, needsEnd = false) => {
+        arr.forEach((el: any, index: any) => {
             const nextEl = arr[index + 1]
             if (typeof el === 'string') {
                 const [id, label] = el.split('-')

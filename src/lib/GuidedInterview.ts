@@ -13,7 +13,7 @@ import { validateParams, getValueBetweenRanges, validateSetValue, isCamelCase } 
 import { EventBus, EventList } from "./services/event-bus.service";
 import { getQuestion, replaceIndexInQuestionsOfRepeatQuestion } from "./services/create.service";
 import { makeTemplate } from "./services/templating.service";
-import { Cloner } from "@/lib/services/clone.service"
+import { Cloner } from "./services/clone.service"
 
 export * from "./interfaces";
 

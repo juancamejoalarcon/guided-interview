@@ -1,6 +1,7 @@
 import { Question, QuestionProp, MultipleChoice, MultipleChoiceProp, DateProp, Repeat, RepeatProp, Choice } from "./interfaces";
 import { GenericQuestion, interviewParams, DataSaved } from "./types/General";
 import { EventList } from "./services/event-bus.service";
+import { Cloner } from "./services/clone.service";
 export * from "./interfaces";
 export declare class GuidedInterview {
     interview: Map<string, Question | MultipleChoice | Repeat>;
@@ -8,6 +9,7 @@ export declare class GuidedInterview {
     private current;
     private isRoot;
     data: any;
+    Cloner: typeof Cloner;
     constructor(interview?: any, options?: any);
     get questionsMap(): Map<string, Question | MultipleChoice | Repeat>;
     setInterview(interview: Map<string, Question | MultipleChoice | Repeat>): void;
