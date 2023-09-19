@@ -1,8 +1,9 @@
 import { GuidedInterview, MultipleChoice, MultipleChoiceProp } from "@/lib/GuidedInterview";
 import { Cloner, copiedQuestion } from "@/lib/services/clone.service"
 import * as data from "@/data/forms/cloner-data.json";
+import * as dataRepeat from "@/data/forms/cloner-data-repeat.json";
 
-const interview = new GuidedInterview(data);
+const interview = new GuidedInterview(dataRepeat);
 
 const missingValues = {
   indications: "",
@@ -16,7 +17,7 @@ const missingValues = {
 
 describe("Cloner", () => {
   test("Set initial value ", async () => {
-    expect(interview.getCurrent()).toEqual({ ...missingValues, ...data.q1 });
+    expect(interview.getCurrent()).toEqual({ ...missingValues, ...dataRepeat.q1 });
 
     const getQuestion = () => {
       return new Promise<copiedQuestion>((resolve, reject) => {
@@ -92,6 +93,35 @@ describe("Cloner", () => {
       });
     };
 
+    const goToEndAndGetIdsAndGoBack = () => {
+      return new Promise<string[]>((resolve, reject) => {
+        const current = interview.getCurrent().id
+        const ids = []
+        while (!interview.isEnd()) {
+          interview.next()
+          ids.push(interview.getCurrent().id)
+        }
+        while (interview.getCurrent().id !== current) {
+          interview.previous()
+        }
+        resolve(ids);
+      });
+    }
+
+    const setValueOfRepeat = (id: string, value: number) => {
+      return new Promise<void>((resolve, reject) => {
+        interview.setValue(id, value)
+        resolve()
+      })
+    }
+
+    const isRepeat = (id: string) => {
+      return new Promise<boolean>((resolve, reject) => {
+        const question = interview.getCurrent();
+        resolve(question.type === 'repeat');
+      });
+    }
+
     const cloner = new Cloner(
       getQuestion,
       isLastRadio,
@@ -100,10 +130,15 @@ describe("Cloner", () => {
       checkFirstRadio,
       isEnd,
       nextQuestion,
-      previousQuestion
+      previousQuestion,
+      isRepeat,
+      goToEndAndGetIdsAndGoBack,
+      setValueOfRepeat
     )
 
-    await cloner.copy()
+    const result = await cloner.copy()
+
+    // console.log(JSON.stringify(result))
 
   });
 

@@ -179,14 +179,39 @@ export class GuidedInterview {
 
 
       if (!isCurrent && isRepeat && this.canBeShown(question)) {
+        let shouldContinue = false
         const repeat = question as Repeat
         for (let j = 0; j < parseInt(question.value as string) ; j++) {
           
           if (!repeat.content[j].hidden) {
 
+            const repeatIsFinished = !repeat.content[j + 1] || repeat.content[j + 1]?.hidden
+
             newCurrent = repeat.content[j].nestedInterview.getNextQuestion()
 
             if (newCurrent) {
+              // Fixme: should check here for next question
+              const isLast = repeat.content[j].nestedInterview.isQuestionTheLastOfInterview(newCurrent.id)
+              if (isLast) {
+                if (repeatIsFinished && nextQuestionExists) {
+                  const current = newCurrent as any
+                  // si tiene EXIT REPEAT
+                  if (current.exitRepeat) {
+                    current.isEnd = false
+                    current.isCurrent = false
+                    newCurrent = interviewList[i + 1][1]
+                    newCurrent.isCurrent = true
+                    if (!this.canBeShown(newCurrent)) {
+                        newCurrent = this.getNextQuestion()
+                    }
+                    delete current.exitRepeat
+                    break
+                  } else {
+                    current.exitRepeat = true
+                  }
+                }
+              }
+
               if (newCurrent.isEnd) {
                 if ((j + 1) < parseInt(question.value as string)) {
                   if (!newCurrent.isCurrent) {
@@ -208,10 +233,16 @@ export class GuidedInterview {
                 }
               }
               if (newCurrent) break
+
+            } else {
+              if (repeatIsFinished && nextQuestionExists) {
+                shouldContinue = true
+              }
             }
           }
         }
-        break
+        if (shouldContinue) continue
+        else break
       }
     }
     return newCurrent
@@ -350,6 +381,15 @@ export class GuidedInterview {
       return current.id === lastQuestion?.id && current.indexInsideRepeat === lastQuestion.indexInsideRepeat
     }
     return lastQuestion?.id === current.id
+  }
+
+  isQuestionTheLastOfInterview (id: string) {
+    const lastQuestion = this.getLastQuestionOfInterview()
+    const question = this.getStepById(id)
+    if (question?.indexInsideRepeat !== null) {
+      return question?.id === lastQuestion?.id && question?.indexInsideRepeat === lastQuestion?.indexInsideRepeat
+    }
+    return lastQuestion?.id === question.id
   }
 
   getLastQuestionOfInterview(): GenericQuestion | null {
