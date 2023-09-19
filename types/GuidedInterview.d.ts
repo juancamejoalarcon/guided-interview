@@ -32,6 +32,7 @@ export declare class GuidedInterview {
     };
     isStart(): boolean;
     isEnd(): boolean;
+    isQuestionTheLastOfInterview(id: string): boolean;
     getLastQuestionOfInterview(): GenericQuestion | null;
     getCurrentGuidedInterview(): GuidedInterview | null;
     getCurrent(): Question | MultipleChoice | Repeat;
