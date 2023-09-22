@@ -156,11 +156,13 @@ describe("Happy path", () => {
     expect(t).toThrow("Id already exists");
     expect(interview.getStepById(id)?.id).toEqual(id);
 
-    const t2 = () => {  interview.changeIdOfQuestion(id, 'not_in_camel') };
-    expect(t2).toThrow("Id must be in camel case");
-    expect(interview.getStepById(id)?.id).toEqual(id);
+    const snakeTestId = 'not_in_camel_but_snake'
+    interview.changeIdOfQuestion(id, snakeTestId)
+    // const t2 = () => {  interview.changeIdOfQuestion(id, snakeTest) };
+    // expect(t2).toThrow("Id must be in camel case");
+    expect(interview.getStepById(snakeTestId)?.id).toEqual(snakeTestId);
 
-    interview.changeIdOfQuestion(id, "newId");
+    interview.changeIdOfQuestion(snakeTestId, "newId");
     const question = interview.getStepById(id);
     expect(question).toEqual(null);
     const newQuestion = interview.getStepById("newId");

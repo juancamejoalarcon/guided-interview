@@ -15,15 +15,20 @@ export const isCamelCase = (str: string): boolean => {
   return Str(str).isCamel()
 }
 
-const findIdsNotInCamelCase = (params: interviewParams): string | null => {
+export const isSnakeCase = (str: string): boolean => {
+  const snakeCaseRegex = /^([a-z]{1,})(_[a-z0-9]{1,})*$/;
+  return snakeCaseRegex.test(str);
+}
+
+const findIdsNotInCamelCaseOrSnakeCase = (params: interviewParams): string | null => {
   let idNotInCamelCase = null
   Object.entries(params).forEach(([id, value]) => {
     if (value.type === "repeat") {
       const repeatEl = value as RepeatProp
-      const repeatIdNotInCamelCase = findIdsNotInCamelCase(repeatEl.questions)
+      const repeatIdNotInCamelCase = findIdsNotInCamelCaseOrSnakeCase(repeatEl.questions)
       if (repeatIdNotInCamelCase) idNotInCamelCase = repeatIdNotInCamelCase
     }
-    if (!isCamelCase(id)) idNotInCamelCase = id
+    if (!isCamelCase(id) && !isSnakeCase(id)) idNotInCamelCase = id
   })
   return idNotInCamelCase
 }
@@ -50,7 +55,7 @@ export const validateParams = (params: interviewParams): boolean => {
   if (duplicates.length) {
     throw new Error(`Duplicated id values: ${duplicates[0]?.id}`);
   }
-  const idNotInCamelCase = findIdsNotInCamelCase(params)
+  const idNotInCamelCase = findIdsNotInCamelCaseOrSnakeCase(params)
   if (idNotInCamelCase) {
     throw new Error(`ID must be in camel case: ${idNotInCamelCase}`);
   }

@@ -9,7 +9,7 @@ import {
   Choice
 } from "./interfaces";
 import { GenericQuestion, interviewParams, DataSaved } from "./types/General";
-import { validateParams, getValueBetweenRanges, validateSetValue, isCamelCase } from "./services/utils.service";
+import { validateParams, getValueBetweenRanges, validateSetValue, isCamelCase, isSnakeCase } from "./services/utils.service";
 import { EventBus, EventList } from "./services/event-bus.service";
 import { getQuestion, replaceIndexInQuestionsOfRepeatQuestion } from "./services/create.service";
 import { makeTemplate } from "./services/templating.service";
@@ -560,7 +560,7 @@ export class GuidedInterview {
     if (!id) throw new Error("No id provided")
     // Check if id ALREADY EXISTS IN NESTED QUESTIONS
     if (this.interview.has(id)) return { isValid: false, message: "Id already exists" }
-    if (!isCamelCase(id)) return { isValid: false, message: "Id must be in camel case" }
+    if (!isCamelCase(id) && !isSnakeCase(id)) return { isValid: false, message: "Id must be in camel case" }
     return { isValid: true, message: '' }
   }
 

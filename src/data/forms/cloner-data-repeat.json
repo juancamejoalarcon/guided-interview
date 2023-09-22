@@ -24,6 +24,7 @@
         "id": "q2",
         "type": "text",
         "title": "q2",
+        "placeholder": "P. ej: test",
         "value": "",
         "required": false,
         "logic": {

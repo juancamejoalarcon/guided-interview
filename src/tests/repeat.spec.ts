@@ -21,12 +21,12 @@ describe("Repeat errors", () => {
     };
     expect(t).toThrow("Duplicated id values: nombreDelFamiliar");
   });
-  test("ID not in camel case", () => {
-    const t = () => {
-      new GuidedInterview(idNotInCamel);
-    };
-    expect(t).toThrow("ID must be in camel case: nombre_del_familiar");
-  });
+  // test("ID not in camel case", () => {
+  //   const t = () => {
+  //     new GuidedInterview(idNotInCamel);
+  //   };
+  //   expect(t).toThrow("ID must be in camel case: nombre_del_familiar");
+  // });
 });
 
 describe("Repeat Basic", () => {
