@@ -6,6 +6,7 @@ export type copiedQuestion = {
     choices?: any[];
     value: any;
     placeholder?: string;
+    subType?: string;
 };
 export declare class Cloner {
     interview: GenericQuestion[];

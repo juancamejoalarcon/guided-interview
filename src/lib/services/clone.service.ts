@@ -8,6 +8,7 @@ export type copiedQuestion = {
   choices?: any[];
   value: any;
   placeholder?: string,
+  subType?: string,
 };
 
 export class Cloner {
@@ -132,8 +133,8 @@ export class Cloner {
     questionProps: copiedQuestion,
     percentageOfCompletion: string | number
   ) {
-    const { id = "", title = "", value = "", type = "", indications = "", placeholder = "" } = questionProps as any;
-    const question: GenericQuestion = { id, title, value, type, indications, placeholder };
+    const { id = "", title = "", value = "", type = "", subType = "", indications = "", placeholder = "" } = questionProps as any;
+    const question: GenericQuestion = { id, title, value, type, indications, placeholder, subType };
 
     let activeRepeatEnd = this.currentRepeatEnd[
       this.currentRepeatEnd.length - 1

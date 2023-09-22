@@ -21,8 +21,8 @@ describe("Cloner", () => {
 
     const getQuestion = () => {
       return new Promise<copiedQuestion>((resolve, reject) => {
-        const { id = '', title, type, choices, value, placeholder } = interview.getCurrent() as MultipleChoiceProp
-        resolve({ id, title, type, choices, value, placeholder })
+        const { id = '', title, type, choices, value, placeholder, subType } = interview.getCurrent() as MultipleChoiceProp
+        resolve({ id, title, type, choices, value, placeholder, subType })
       })
     }
     
