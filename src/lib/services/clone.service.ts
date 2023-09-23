@@ -133,8 +133,8 @@ export class Cloner {
     questionProps: copiedQuestion,
     percentageOfCompletion: string | number
   ) {
-    const { id = "", title = "", value = "", type = "", subType = "", indications = "", placeholder = "" } = questionProps as any;
-    const question: GenericQuestion = { id, title, value, type, indications, placeholder, subType };
+    const { id = "", title = "", value = "", type = "", subType = "", indications = "", placeholder = "", other = {} } = questionProps as any;
+    const question: GenericQuestion & { other: any } = { id, title, value, type, indications, placeholder, subType, other };
 
     let activeRepeatEnd = this.currentRepeatEnd[
       this.currentRepeatEnd.length - 1
