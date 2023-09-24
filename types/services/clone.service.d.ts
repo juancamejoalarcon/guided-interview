@@ -11,9 +11,8 @@ export type copiedQuestion = {
 export declare class Cloner {
     interview: GenericQuestion[];
     nested: string[];
-    currentRepeat: string[];
-    currentRepeatEnd: string[];
     result: any;
+    questionsInsideRepeat: GenericQuestion[];
     getQuestion: () => Promise<copiedQuestion>;
     isLastRadio: () => Promise<boolean>;
     isEnd: () => Promise<boolean>;
@@ -51,6 +50,7 @@ export declare class Cloner {
     applyLogicToQuestion(question: GenericQuestion): void;
     questionExistsInInterview(id: string): GenericQuestion;
     getQuestionInInterview(id: string): GenericQuestion;
+    getQuestionInsideRepeat(id: string): GenericQuestion;
     setActiveMultipleOption(id: string, label: string): void;
     removeActiveMultipleOption(): void;
     addQuestion(questionProps: copiedQuestion, percentageOfCompletion: string | number): void;
@@ -59,7 +59,6 @@ export declare class Cloner {
     backToPreviousActive(): Promise<void>;
     happyPath(): Promise<void>;
     transform(): void;
-    relocateQuestionsInsideRepeat(): void;
     createResult(): void;
     copy(): Promise<any>;
 }

@@ -14,9 +14,9 @@ export type copiedQuestion = {
 export class Cloner {
   interview: GenericQuestion[] = [];
   nested: string[] = [];
-  currentRepeat: string[] = [];
-  currentRepeatEnd: string[] = [];
   result: any = {}
+
+  questionsInsideRepeat: GenericQuestion[] = [];
 
   getQuestion!: () => Promise<copiedQuestion>;
   isLastRadio!: () => Promise<boolean>;
@@ -119,6 +119,10 @@ export class Cloner {
     return this.interview.find((q) => q.id === id);
   }
 
+  getQuestionInsideRepeat(id: string) {
+    return this.questionsInsideRepeat.find((q) => q.id === id);
+  }
+
   setActiveMultipleOption(id: string, label: string) {
     if (this.nested.length && this.nested[this.nested.length - 1].includes(id))
       this.nested.pop();
@@ -133,18 +137,8 @@ export class Cloner {
     questionProps: copiedQuestion,
     percentageOfCompletion: string | number
   ) {
-    const { id = "", title = "", value = "", type = "", subType = "", indications = "", placeholder = "", other = {} } = questionProps as any;
-    const question: GenericQuestion & { other: any } = { id, title, value, type, indications, placeholder, subType, other };
-
-    let activeRepeatEnd = this.currentRepeatEnd[
-      this.currentRepeatEnd.length - 1
-    ];
-
-    if (question.id === activeRepeatEnd) {
-      this.currentRepeat.pop();
-      this.currentRepeatEnd.pop();
-      activeRepeatEnd = "";
-    }
+    const { id = "", title = "", value = "", type = "", subType = "", indications = "", placeholder = "", questions = {}, other = {} } = questionProps as any;
+    const question: GenericQuestion & { other: any } = { id, title, value, type, indications, placeholder, subType, questions, other };
 
     // start or referenceQuestion
     if (percentageOfCompletion !== "start") this.applyLogicToQuestion(question);
@@ -154,9 +148,6 @@ export class Cloner {
       q.choices = (questionProps as any).choices;
     }
 
-    if (activeRepeatEnd) {
-      q.belongsToRepeat = this.currentRepeat[this.currentRepeat.length - 1];
-    }
 
     q.percentageOfCompletion =
       percentageOfCompletion === "start" ? 0 : percentageOfCompletion;
@@ -171,18 +162,48 @@ export class Cloner {
     const ids2 = await this.goToEndAndGetIdsAndGoBack();
     await this.setValueOfRepeat(repeatId, 1);
 
+    let repeatEnd = '';
     for (let i = 0; i < ids1.length; i++) {
       if (ids1[i] !== ids2[i]) {
-        this.currentRepeatEnd.push(ids1[i]);
-        this.currentRepeat.push(repeatId);
+        repeatEnd = ids1[i - 1]
         break;
       }
     }
+
+    const isEnd = async () => {
+      const question = await this.getQuestion()
+      const thisIsEnd = await this.isEnd()
+      
+      return question.id === repeatEnd || thisIsEnd 
+    }
+
+
+    const cloner = new Cloner(
+      this.getQuestion,
+      this.isLastRadio,
+      this.getCompletionPercen,
+      this.checkNextRadio,
+      this.checkFirstRadio,
+      isEnd,
+      this.nextQuestion,
+      this.previousQuestion,
+      this.isRepeat,
+      this.goToEndAndGetIdsAndGoBack,
+      this.setValueOfRepeat
+    )
+
+    await this.nextQuestion();
+
+    (question as any).questions = await cloner.copy()
+
+    this.questionsInsideRepeat = [...this.questionsInsideRepeat, ...cloner.interview]
+
   }
 
   async copyQuestion(start = false, happyPath = false) {
     const current = await this.getQuestion();
     const questionID = current.id as string;
+    if (this.getQuestionInsideRepeat(questionID)) return
     if (this.questionExistsInInterview(questionID)) {
       if (current.type === "multipleChoice") {
         if (!this.nested.find((id) => id.includes(questionID))) {
@@ -212,8 +233,8 @@ export class Cloner {
         const conpletionPercen = await this.getCompletionPercen();
         const repeat = await this.isRepeat(current.id as string);
         if (repeat) {
-          this.addQuestion(current, conpletionPercen);
           await this.copyRepeat(current);
+          this.addQuestion(current, conpletionPercen);
         } else {
           this.addQuestion(current, conpletionPercen);
         }
@@ -298,25 +319,6 @@ export class Cloner {
     });
   }
 
-  relocateQuestionsInsideRepeat() {
-    const idsToRemove = [];
-    for (let i = 0; i < this.interview.length; i++) {
-      const q = this.interview[i] as any;
-      if (q.belongsToRepeat) {
-        const repeat = this.interview.find(
-          (question) => question.id === q.belongsToRepeat
-        ) as Repeat;
-        if (!repeat.questions) repeat.questions = {};
-        repeat.questions[q.id] = q;
-        delete q.belongsToRepeat;
-        idsToRemove.push(q.id);
-      }
-    }
-    idsToRemove.forEach((id) => {
-      this.interview = this.interview.filter((el) => el.id !== id);
-    });
-  }
-
   createResult() {
     this.interview.forEach((question) => {
       this.result[question.id] = question
@@ -327,7 +329,6 @@ export class Cloner {
     await this.copyQuestion(true);
     await this.happyPath();
     this.transform();
-    this.relocateQuestionsInsideRepeat();
     this.createResult()
     return this.result
   }
