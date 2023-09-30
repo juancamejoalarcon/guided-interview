@@ -165,15 +165,19 @@ export class Cloner {
     let repeatEnd = '';
     for (let i = 0; i < ids1.length; i++) {
       if (ids1[i] !== ids2[i]) {
-        repeatEnd = ids1[i - 1]
+        repeatEnd = ids1[i]
         break;
       }
     }
 
     const isEnd = async () => {
-      const question = await this.getQuestion()
+      // const question = await this.getQuestion()
       const thisIsEnd = await this.isEnd()
-      
+      await this.nextQuestion()
+      const question = await this.getQuestion()
+      await this.previousQuestion()
+
+
       return question.id === repeatEnd || thisIsEnd 
     }
 

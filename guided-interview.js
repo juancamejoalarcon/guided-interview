@@ -5264,12 +5264,14 @@ class ht {
     let i = "";
     for (let m = 0; m < n.length; m++)
       if (n[m] !== o[m]) {
-        i = n[m - 1];
+        i = n[m];
         break;
       }
     const u = async () => {
-      const m = await this.getQuestion(), y = await this.isEnd();
-      return m.id === i || y;
+      const m = await this.isEnd();
+      await this.nextQuestion();
+      const y = await this.getQuestion();
+      return await this.previousQuestion(), y.id === i || m;
     }, d = new ht(
       this.getQuestion,
       this.isLastRadio,
