@@ -3,7 +3,8 @@ import { Question } from "./Question.interface";
 export interface MultipleChoice extends Question {
     choices: Choice[];
     type: 'multipleChoice';
-    subType?: 'radio' | 'select';
+    subType?: 'radio' | 'select' | 'multiSelect';
+    values: Array<string | number>
 }
 
 export interface Choice {
