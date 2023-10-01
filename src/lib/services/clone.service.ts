@@ -18,7 +18,7 @@ export class Cloner {
 
   questionsInsideRepeat: GenericQuestion[] = [];
 
-  getQuestion!: () => Promise<copiedQuestion>;
+  getQuestion!: (options?: any) => Promise<copiedQuestion>;
   isLastRadio!: () => Promise<boolean>;
   isEnd!: () => Promise<boolean>;
   nextQuestion!: () => Promise<void>;
@@ -33,7 +33,7 @@ export class Cloner {
   alphabetMap = { 1: "a", 2: "b", 3: "c", 4: "d", 5: "e", 6: "f" };
 
   constructor(
-    getQuestion: () => Promise<copiedQuestion>,
+    getQuestion: (options?: any) => Promise<copiedQuestion>,
     isLastRadio: () => Promise<boolean>,
     getCompletionPercen: () => Promise<string | number>,
     checkNextRadio: (id: string) => Promise<{ id: string; label: string }>,
@@ -171,10 +171,9 @@ export class Cloner {
     }
 
     const isEnd = async () => {
-      // const question = await this.getQuestion()
       const thisIsEnd = await this.isEnd()
       await this.nextQuestion()
-      const question = await this.getQuestion()
+      const question = await this.getQuestion({ ignoreCopy: true})
       await this.previousQuestion()
 
 

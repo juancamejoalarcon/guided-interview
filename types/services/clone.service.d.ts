@@ -13,7 +13,7 @@ export declare class Cloner {
     nested: string[];
     result: any;
     questionsInsideRepeat: GenericQuestion[];
-    getQuestion: () => Promise<copiedQuestion>;
+    getQuestion: (options?: any) => Promise<copiedQuestion>;
     isLastRadio: () => Promise<boolean>;
     isEnd: () => Promise<boolean>;
     nextQuestion: () => Promise<void>;
@@ -38,7 +38,7 @@ export declare class Cloner {
         5: string;
         6: string;
     };
-    constructor(getQuestion: () => Promise<copiedQuestion>, isLastRadio: () => Promise<boolean>, getCompletionPercen: () => Promise<string | number>, checkNextRadio: (id: string) => Promise<{
+    constructor(getQuestion: (options?: any) => Promise<copiedQuestion>, isLastRadio: () => Promise<boolean>, getCompletionPercen: () => Promise<string | number>, checkNextRadio: (id: string) => Promise<{
         id: string;
         label: string;
     }>, checkFirstRadio: (id: string) => Promise<{

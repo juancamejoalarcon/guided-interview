@@ -5270,7 +5270,7 @@ class ht {
     const u = async () => {
       const m = await this.isEnd();
       await this.nextQuestion();
-      const y = await this.getQuestion();
+      const y = await this.getQuestion({ ignoreCopy: !0 });
       return await this.previousQuestion(), y.id === i || m;
     }, d = new ht(
       this.getQuestion,
