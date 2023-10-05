@@ -5,7 +5,7 @@
         "title": "q1",
         "value": "",
         "values": [],
-        "subType": "multipleSelect",
+        "subType": "multiSelect",
         "choices": [
             {
                 "label": "a",
@@ -38,7 +38,17 @@
         "value": "",
         "required": false,
         "logic": {
-            "showIf": "q1.values.includes('a') && q1.values.includes('c')"
+            "showIf": "q1.values.includes('a') && q1.values.includes('b')"
+        }
+    },
+    "q4": {
+        "id": "q4",
+        "type": "text",
+        "title": "q4",
+        "value": "",
+        "required": false,
+        "logic": {
+            "showIf": "q1.values.includes('b')"
         }
     }
 }

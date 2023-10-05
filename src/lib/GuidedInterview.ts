@@ -495,11 +495,21 @@ export class GuidedInterview {
         })
       } else {
         if (!question.values) question.values = []
-        if (!question.values.includes(value)) {
+        if (!question.values.includes(value) && value) {
+          const valueExists = question.choices.find((q) => q.label === value)
+          if (!valueExists) throw new Error("Value does not exists");
           question.values.push(value)
           question.choices.forEach(choice => {
             choice.checked = question.values.includes(choice.label)
           })
+        }
+        if (options.unselect) {
+          const valueExists = question.choices.find((q) => q.label === value)
+          if (!valueExists) throw new Error("Value does not exists");
+          const index = question.values.indexOf(valueExists.label);
+          if (index !== -1) question.values.splice(index, 1);
+          valueExists.checked = false
+          return
         }
       }
       return

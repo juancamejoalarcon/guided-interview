@@ -14,49 +14,48 @@ const missingValues = {
 
 describe("Happy path", () => {
   test("Set initial value ", () => {
-    expect(interview.getCurrent()).toEqual({
+    const current = interview.getCurrent();
+    expect(current).toEqual({
       ...missingValues,
       ...data.q1,
     });
+
+    expect((current as MultipleChoice).values).toEqual([ 'a', 'b' ]);
   });
 
   test("Set next question", () => {
     interview.next();
-    const current = interview.getCurrent();
-    expect(current.id).toEqual("dni");
+    let current = interview.getCurrent();
+    expect(current.id).toEqual("q2");
+
+    interview.next();
+    current = interview.getCurrent();
+    expect(current.id).toEqual("q3");
+
   });
 
-  // test("Set previous question", () => {
-  //   interview.previous();
-  //   const current = interview.getCurrent();
-  //   expect(current.id).toEqual("name");
-  // });
+  test("Set previous question", () => {
+    interview.previous();
+    let current = interview.getCurrent();
+    expect(current.id).toEqual("q2");
+    interview.previous();
+    current = interview.getCurrent();
+    expect(current.id).toEqual("q1");
+  });
 
-  // test("Set value of question", () => {
-  //   const value = "John Doe";
-  //   const current = interview.getCurrent();
-  //   interview.setValue(current.id, "John Doe");
-  //   expect(current.value).toEqual(value);
-  // });
+  test("Select wrong option", () => {
+    let current = interview.getCurrent();
+    const t = () => { interview.setValue(current.id, "John Doe") };
+    expect(t).toThrow("Value does not exists");
+  });
 
-  // test("Set value of multiple choice", () => {
-  //   const id = "sexoEmpleador";
-  //   const value = "un hombre";
-  //   interview.setValue(id, value);
-  //   const current = interview.findQuestionById(id);
-  //   expect(current.value).toEqual(value);
-  // });
-
-  // test("Test Logic Can Be Shown 'Show If'", () => {
-  //   for (let i = 0; i < 5 ; i++) {
-  //     interview.next();
-  //   }
-  //   const current = interview.getCurrent();
-  //   expect(interview.canBeShown(current)).toEqual(true);
-  //   const id = "sexoEmpleador";
-  //   const value = "una persona jurídica";
-  //   interview.setValue(id, value);
-  //   expect(interview.canBeShown(current)).toEqual(false);
-  // });
+  test("Unselect option", () => {
+    let current = interview.getCurrent();
+    interview.setValue(current.id, "a", { unselect: true });
+    expect((current as MultipleChoice).values).toEqual([ 'b' ]);
+    interview.next();
+    current = interview.getCurrent();
+    expect(current.id).toEqual("q4");
+  });
 
 });

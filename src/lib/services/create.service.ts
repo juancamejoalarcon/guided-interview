@@ -72,7 +72,9 @@ export const buildMultipleChoiceQuestion = (params: MultipleChoiceProp) => {
   if (params.subType === 'multiSelect') {
     const values = params.values || []
     params.choices?.forEach(choice => {
-      choice.checked = values.includes(choice.label)
+      const includedInValues = values.includes(choice.label)
+      if (choice.checked && !includedInValues) values.push(choice.label)
+      choice.checked = includedInValues || choice.checked
     })
     return {
       value: '',
