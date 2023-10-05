@@ -74,7 +74,7 @@ export const getValueBetweenRanges = (value: number, min: number, max: number): 
   return value
 }
 
-export const validateSetValue = (value: string | number, question: GenericQuestion): void => {
+export const validateSetValue = (value: string | number | string[], question: GenericQuestion): void => {
   if (question.type === 'repeat') {
     if (isNaN(value as number)) {
       throw new Error("Value of repeat question must be a number");

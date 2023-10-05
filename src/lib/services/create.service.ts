@@ -68,6 +68,22 @@ export const buildDateQuestion = (params: DateProp) => {
 };
 
 export const buildMultipleChoiceQuestion = (params: MultipleChoiceProp) => {
+
+  if (params.subType === 'multiSelect') {
+    const values = params.values || []
+    params.choices?.forEach(choice => {
+      const includedInValues = values.includes(choice.label)
+      if (choice.checked && !includedInValues) values.push(choice.label)
+      choice.checked = includedInValues || choice.checked
+    })
+    return {
+      value: '',
+      values,
+      choices: params.choices || [],
+      subType: params.subType
+    }
+  }
+  
   return {
     value: params.choices.find((choice) => choice.checked === true)?.label || "",
     choices: params.choices || [],

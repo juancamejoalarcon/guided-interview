@@ -452,17 +452,17 @@ export class GuidedInterview {
     return this.current;
   }
 
-  setValue(id: string, value: string | number) {
+  setValue(id: string, value: string | number | string[], options: any = {}) {
     if (!this.interview.has(id)) {
       throw new Error("No question with id:" + id);
     }
     const question = this.interview.get(id);
     if (!question) throw new Error("No question with id:" + id);
     validateSetValue(value, question)
-    question!.value = value;
+    if (question.subType !== 'multiSelect') question!.value = value as string | number;
     
     if (question?.type === 'multipleChoice') {
-      this.setRadioChecked(question as MultipleChoice, value as string)
+      this.setRadioChecked(question as MultipleChoice, value as string, options)
     }
 
     if (question?.type === 'repeat') {
@@ -485,7 +485,36 @@ export class GuidedInterview {
   }
 
 
-  setRadioChecked(question: MultipleChoice, value: string) {
+  setRadioChecked(question: MultipleChoice, value: string, options: any = {}) {
+    // Multiselect
+    if (question.subType === 'multiSelect') {
+      if (Array.isArray(value)) {
+        question.values = value
+        question.choices.forEach(choice => {
+          choice.checked = value.includes(choice.label)
+        })
+      } else {
+        if (!question.values) question.values = []
+        if (!question.values.includes(value) && value) {
+          const valueExists = question.choices.find((q) => q.label === value)
+          if (!valueExists) throw new Error("Value does not exists");
+          question.values.push(value)
+          question.choices.forEach(choice => {
+            choice.checked = question.values.includes(choice.label)
+          })
+        }
+        if (options.unselect) {
+          const valueExists = question.choices.find((q) => q.label === value)
+          if (!valueExists) throw new Error("Value does not exists");
+          const index = question.values.indexOf(valueExists.label);
+          if (index !== -1) question.values.splice(index, 1);
+          valueExists.checked = false
+          return
+        }
+      }
+      return
+    }
+    
     question.choices.forEach(choice => {
       choice.checked = choice.label === value
     })
