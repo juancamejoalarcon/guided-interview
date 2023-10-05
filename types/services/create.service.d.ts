@@ -16,8 +16,14 @@ export declare const buildDateQuestion: (params: DateProp) => {
 };
 export declare const buildMultipleChoiceQuestion: (params: MultipleChoiceProp) => {
     value: string;
+    values: (string | number)[];
+    choices: import("../interfaces").Choice[];
+    subType: "multiSelect";
+} | {
+    value: string;
     choices: import("../interfaces").Choice[];
     subType: "select" | "radio";
+    values?: undefined;
 };
 export declare const buildRepeatQuestion: (params: RepeatProp) => {
     value: string;

@@ -36,10 +36,10 @@ export declare class GuidedInterview {
     getLastQuestionOfInterview(): GenericQuestion | null;
     getCurrentGuidedInterview(): GuidedInterview | null;
     getCurrent(): Question | MultipleChoice | Repeat;
-    setValue(id: string, value: string | number): void;
+    setValue(id: string, value: string | number | string[], options?: any): void;
     on(event: EventList, callback: Function): void;
     getData(): any;
-    setRadioChecked(question: MultipleChoice, value: string): void;
+    setRadioChecked(question: MultipleChoice, value: string, options?: any): void;
     buildContentForRepeatQuestion(repeatQuestion: Repeat, value?: number | null): void;
     applyDataToQuestions(data: DataSaved): void;
     makeTemplate(template: string): string;
