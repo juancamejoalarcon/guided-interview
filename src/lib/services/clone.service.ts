@@ -30,7 +30,8 @@ export class Cloner {
   goToEndAndGetIdsAndGoBack!: () => Promise<string[]>;
   setValueOfRepeat!: (id: string, value: number) => Promise<void>;
 
-  alphabetMap = { 1: "a", 2: "b", 3: "c", 4: "d", 5: "e", 6: "f" };
+  separator = '->';
+
 
   constructor(
     getQuestion: (options?: any) => Promise<copiedQuestion>,
@@ -126,7 +127,7 @@ export class Cloner {
   setActiveMultipleOption(id: string, label: string) {
     if (this.nested.length && this.nested[this.nested.length - 1].includes(id))
       this.nested.pop();
-    this.nested.push(`${id}-${label}`);
+    this.nested.push(`${id}${this.separator}${label}`);
   }
 
   removeActiveMultipleOption() {
@@ -253,7 +254,7 @@ export class Cloner {
   async backToPreviousActive() {
     const nested = this.nested;
     if (nested.length) {
-      const lastActive = nested[nested.length - 1].split("-")[0];
+      const lastActive = nested[nested.length - 1].split(this.separator)[0];
       let question = await this.getQuestion();
       while (question.id !== lastActive) {
         await this.previousQuestion();
@@ -293,7 +294,7 @@ export class Cloner {
         arr.forEach((el: any, index: any) => {
           const nextEl = arr[index + 1];
           if (typeof el === "string") {
-            const [id, label] = el.split("-");
+            const [id, label] = el.split(this.separator);
             condition += `${id}.value === '${label}'`;
 
             if (nextEl) {
