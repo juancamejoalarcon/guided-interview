@@ -138,9 +138,9 @@ describe("Cloner", () => {
 
     const result = await cloner.copy()
 
-    console.log('---')
-    console.log(result)
-    console.log('---')
+    // console.log('---')
+    // console.log(result)
+    // console.log('---')
 
     // console.log(JSON.stringify(result))
 

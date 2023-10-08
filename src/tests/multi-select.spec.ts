@@ -58,4 +58,13 @@ describe("Happy path", () => {
     expect(current.id).toEqual("q4");
   });
 
+  test("Get data", () => {
+    interview.previous();
+    let current = interview.getCurrent();
+    interview.setValue(current.id, "a");
+    expect((current as MultipleChoice).values).toEqual([ 'b', 'a' ]);
+    const data = interview.getData()
+    expect(data.q1.values).toEqual([ 'b', 'a' ]);
+  });
+
 });

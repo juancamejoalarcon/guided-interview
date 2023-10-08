@@ -472,6 +472,10 @@ export class GuidedInterview {
     if (this.data[id]) this.data[id].value = question.value;
     else this.data[id] = { value: question.value };
 
+    if (question.subType === 'multiSelect') {
+      this.data[id].values = (question as MultipleChoice).values;
+    }
+
     
     this.events.dispatch("set-value", this.interview.get(id));
   }

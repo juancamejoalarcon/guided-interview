@@ -558,11 +558,7 @@ class $n {
 }
 et.RandomStringBuilder = $n;
 var tt = {};
-const Gn = new Proxy({}, {
-  get(o, e) {
-    throw new Error(`Module "crypto" has been externalized for browser compatibility. Cannot access "crypto.${e}" in client code.  See http://vitejs.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.`);
-  }
-}), qn = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const Gn = {}, qn = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: Gn
 }, Symbol.toStringTag, { value: "Module" })), Wn = /* @__PURE__ */ Vt(qn);
@@ -5191,9 +5187,13 @@ const di = (o, e) => {
       e[t] = r.filter((i) => !(i != null && i.hidden)).map((i) => Ct(i.questions));
       return;
     }
+    if (mi(n)) {
+      e[t] = n.values;
+      return;
+    }
     e[t] = n.value;
   }), e;
-}, vi = (o) => Boolean(o.content);
+}, vi = (o) => Boolean(o.content), mi = (o) => Boolean(o.values);
 class ht {
   constructor(e, t, n, r, i, u, d, m, y, O, C) {
     ue(this, "interview", []);
@@ -5652,7 +5652,7 @@ class Nt {
     const r = this.interview.get(e);
     if (!r)
       throw new Error("No question with id:" + e);
-    oi(t, r), r.subType !== "multiSelect" && (r.value = t), (r == null ? void 0 : r.type) === "multipleChoice" && this.setRadioChecked(r, t, n), (r == null ? void 0 : r.type) === "repeat" && this.buildContentForRepeatQuestion(r, t), this.data[e] ? this.data[e].value = r.value : this.data[e] = { value: r.value }, this.events.dispatch("set-value", this.interview.get(e));
+    oi(t, r), r.subType !== "multiSelect" && (r.value = t), (r == null ? void 0 : r.type) === "multipleChoice" && this.setRadioChecked(r, t, n), (r == null ? void 0 : r.type) === "repeat" && this.buildContentForRepeatQuestion(r, t), this.data[e] ? this.data[e].value = r.value : this.data[e] = { value: r.value }, r.subType === "multiSelect" && (this.data[e].values = r.values), this.events.dispatch("set-value", this.interview.get(e));
   }
   on(e, t) {
     this.events.register(e, t);

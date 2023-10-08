@@ -17,6 +17,12 @@ const transformInterviewData = (interviewData: any) => {
         .map((item: any) => transformInterviewData(item.questions));
       return;
     }
+
+    if (isOfTypeMultiSelect(value)) {
+      transformedData[key] = (value as any).values;
+      return
+    }
+
     transformedData[key] = (value as any).value;
   });
   return transformedData;
@@ -24,4 +30,8 @@ const transformInterviewData = (interviewData: any) => {
 
 const isOfTypeRepeat = (value: any) => {
   return Boolean(value.content);
+}
+
+const isOfTypeMultiSelect = (value: any) => {
+  return Boolean(value.values);
 }
