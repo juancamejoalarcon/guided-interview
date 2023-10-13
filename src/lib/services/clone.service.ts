@@ -28,7 +28,7 @@ export class Cloner {
   checkFirstRadio!: (id: string) => Promise<{ id: string; label: string }>;
   isRepeat!: (id: string) => Promise<boolean>;
   goToEndAndGetIdsAndGoBack!: () => Promise<string[]>;
-  setValueOfRepeat!: (id: string, value: number) => Promise<void>;
+  setValueOfRepeat!: (id: string, value: number, options?: any) => Promise<void>;
 
   separator = '->';
 
@@ -44,7 +44,7 @@ export class Cloner {
     previousQuestion: () => Promise<void>,
     isRepeat: (id: string) => Promise<boolean>,
     goToEndAndGetIdsAndGoBack: () => Promise<string[]>,
-    setValueOfRepeat: (id: string, value: number) => Promise<void>
+    setValueOfRepeat: (id: string, value: number, options?: any) => Promise<void>
   ) {
     this.getQuestion = getQuestion;
     this.isLastRadio = isLastRadio;
