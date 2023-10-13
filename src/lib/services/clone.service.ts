@@ -28,7 +28,7 @@ export class Cloner {
   checkFirstRadio!: (id: string) => Promise<{ id: string; label: string }>;
   isRepeat!: (id: string) => Promise<boolean>;
   goToEndAndGetIdsAndGoBack!: () => Promise<string[]>;
-  setValueOfRepeat!: (id: string, value: number) => Promise<void>;
+  setValueOfRepeat!: (id: string, value: number, options?: any) => Promise<void>;
 
   separator = '->';
 
@@ -44,7 +44,7 @@ export class Cloner {
     previousQuestion: () => Promise<void>,
     isRepeat: (id: string) => Promise<boolean>,
     goToEndAndGetIdsAndGoBack: () => Promise<string[]>,
-    setValueOfRepeat: (id: string, value: number) => Promise<void>
+    setValueOfRepeat: (id: string, value: number, options?: any) => Promise<void>
   ) {
     this.getQuestion = getQuestion;
     this.isLastRadio = isLastRadio;
@@ -59,8 +59,10 @@ export class Cloner {
     this.setValueOfRepeat = setValueOfRepeat;
   }
 
-  start(question: copiedQuestion) {
+  async start(question: copiedQuestion) {
     this.interview = [];
+    const repeat = await this.isRepeat(question.id as string);
+    if (repeat) await this.copyRepeat(question);
     this.addQuestion(question, "start");
   }
 
@@ -161,7 +163,7 @@ export class Cloner {
     const ids1 = await this.goToEndAndGetIdsAndGoBack();
     await this.setValueOfRepeat(repeatId, 2);
     const ids2 = await this.goToEndAndGetIdsAndGoBack();
-    await this.setValueOfRepeat(repeatId, 1);
+    await this.setValueOfRepeat(repeatId, 1, { checkAfterIdsGotten: true });
 
     let repeatEnd = '';
     for (let i = 0; i < ids1.length; i++) {
@@ -232,7 +234,7 @@ export class Cloner {
         );
       }
     } else {
-      if (start) this.start(current);
+      if (start) await this.start(current);
       else {
         const conpletionPercen = await this.getCompletionPercen();
         const repeat = await this.isRepeat(current.id as string);
