@@ -29,7 +29,7 @@ export declare class Cloner {
     }>;
     isRepeat: (id: string) => Promise<boolean>;
     goToEndAndGetIdsAndGoBack: () => Promise<string[]>;
-    setValueOfRepeat: (id: string, value: number) => Promise<void>;
+    setValueOfRepeat: (id: string, value: number, options?: any) => Promise<void>;
     separator: string;
     constructor(getQuestion: (options?: any) => Promise<copiedQuestion>, isLastRadio: () => Promise<boolean>, getCompletionPercen: () => Promise<string | number>, checkNextRadio: (id: string) => Promise<{
         id: string;
@@ -37,8 +37,8 @@ export declare class Cloner {
     }>, checkFirstRadio: (id: string) => Promise<{
         id: string;
         label: string;
-    }>, isEnd: () => Promise<boolean>, nextQuestion: () => Promise<void>, previousQuestion: () => Promise<void>, isRepeat: (id: string) => Promise<boolean>, goToEndAndGetIdsAndGoBack: () => Promise<string[]>, setValueOfRepeat: (id: string, value: number) => Promise<void>);
-    start(question: copiedQuestion): void;
+    }>, isEnd: () => Promise<boolean>, nextQuestion: () => Promise<void>, previousQuestion: () => Promise<void>, isRepeat: (id: string) => Promise<boolean>, goToEndAndGetIdsAndGoBack: () => Promise<string[]>, setValueOfRepeat: (id: string, value: number, options?: any) => Promise<void>);
+    start(question: copiedQuestion): Promise<void>;
     insertQuestionInInterview(question: GenericQuestion, percentageOfCompletion: string | number): void;
     applyLogicToQuestion(question: GenericQuestion): void;
     questionExistsInInterview(id: string): GenericQuestion;

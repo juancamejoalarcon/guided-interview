@@ -5214,8 +5214,8 @@ class ht {
     ue(this, "separator", "->");
     this.getQuestion = e, this.isLastRadio = t, this.getCompletionPercen = n, this.checkNextRadio = r, this.checkFirstRadio = i, this.isEnd = u, this.nextQuestion = d, this.previousQuestion = m, this.isRepeat = y, this.goToEndAndGetIdsAndGoBack = O, this.setValueOfRepeat = C;
   }
-  start(e) {
-    this.interview = [], this.addQuestion(e, "start");
+  async start(e) {
+    this.interview = [], await this.isRepeat(e.id) && await this.copyRepeat(e), this.addQuestion(e, "start");
   }
   insertQuestionInInterview(e, t) {
     this.interview.push(e), t !== "start" && this.interview.sort(
@@ -5276,7 +5276,7 @@ class ht {
     const n = await this.goToEndAndGetIdsAndGoBack();
     await this.setValueOfRepeat(t, 2);
     const r = await this.goToEndAndGetIdsAndGoBack();
-    await this.setValueOfRepeat(t, 1);
+    await this.setValueOfRepeat(t, 1, { checkAfterIdsGotten: !0 });
     let i = "";
     for (let m = 0; m < n.length; m++)
       if (n[m] !== r[m]) {
@@ -5325,7 +5325,7 @@ class ht {
           );
       else {
         if (e)
-          this.start(n);
+          await this.start(n);
         else {
           const i = await this.getCompletionPercen();
           await this.isRepeat(n.id) ? (await this.copyRepeat(n), this.addQuestion(n, i)) : this.addQuestion(n, i);
