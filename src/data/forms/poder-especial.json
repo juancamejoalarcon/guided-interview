@@ -1,0 +1,508 @@
+{
+    "numero_poderdantes": {
+        "id": "numero_poderdantes",
+        "type": "repeat",
+        "title": "Número de personas que otorgan el poder a través de este documento (poderdantes):",
+        "indications": "Indique aquí cuántas personas otorgan el poder especial a través de este documento; es decir, autorizan o facultan a otra(s) persona(s) para que realice(n) determinado(s) acto(s) en su nombre. \n\nEstas personas se conocen con el nombre de poderdantes o representados.",
+        "logic": {},
+        "options": {},
+        "indexInsideRepeat": null,
+        "value": "1",
+        "range": {
+            "min": 1,
+            "max": 10
+        },
+        "questions": {
+            "poderdante": {
+                "id": "poderdante",
+                "type": "multipleChoice",
+                "title": "El poderdante (persona que otorga el poder a través de este documento) es:",
+                "indications": "Indique aquí si el poderdante, es decir, la persona que, mediante este documento, autoriza o faculta a otra(s) persona(s) para que realice(n) determinado(s) acto(s) en su nombre es una persona física o una persona jurídica (ej. Sociedad Limitada, asociación).",
+                "logic": {},
+                "options": {},
+                "indexInsideRepeat": null,
+                "value": "una persona física",
+                "choices": [
+                    {
+                        "label": "una persona física",
+                        "checked": true
+                    },
+                    {
+                        "label": "una persona jurídica",
+                        "checked": false
+                    }
+                ],
+                "subType": "radio"
+            },
+            "nombre_concluido_n": {
+                "id": "nombre_concluido_n",
+                "type": "multipleChoice",
+                "title": "El poderdante (persona que otorga el poder a través de este documento) firma el poder especial:",
+                "indications": "Indique aquí si la persona que, mediante este documento, autoriza o faculta a otra(s) persona(s) para que realice(n) determinado(s) acto(s) en su nombre (el poderdante) firma el poder especial en nombre y representación propios o representada por otra persona. La persona que la representa puede ser un representante legal (caso de los menores e incapacitados/as judicialmente) o un representante voluntario (por ejemplo, apoderado/a).\n\nEl representante voluntario debe estar debidamente autorizado mediante documento público o privado en el que se recoja y motive su intervención.\n\nSi el poder se firma en nombre y representación propios, esto quiere decir que la persona que lo firma será a nombre de quien el apoderado nombrado en este documento realice los actos autorizados. Por el contrario, si se concluye por medio de representante, la persona que firma el documento (representante) no es la misma que a nombre de quien el apoderado realizará los actos autorizados (poderdante).",
+                "logic": {
+                    "showIf": "poderdante.value === 'una persona física'"
+                },
+                "options": {},
+                "indexInsideRepeat": null,
+                "value": "en su propio nombre y representación",
+                "choices": [
+                    {
+                        "label": "en su propio nombre y representación",
+                        "checked": true
+                    },
+                    {
+                        "label": "por medio de un(a) representante legal (en caso de ser menor de 18 años o incapacitado judicialmente) o voluntario/a",
+                        "checked": false
+                    }
+                ],
+                "subType": "radio"
+            },
+            "representante": {
+                "id": "representante",
+                "type": "text",
+                "title": "Nombre completo de la persona física (representante legal o voluntario) que firma el poder especial en nombre y representación del poderdante:",
+                "indications": "Indique aquí el nombre completo (nombre(s) y apellidos) de la persona física que firma el poder especial en nombre del poderdante; es decir de la persona (física o jurídica) que, mediante este documento, autoriza o faculta a otra(s) persona(s) para que realice(n) determinado(s) acto(s) en su nombre.\n\nSi el poderdante es una persona física, el poder lo puede firmar un representante legal (caso de los menores e incapacitados/as) o voluntario (apoderado, por ejemplo). \n\nEn cambio, si es una persona jurídica, el poder debe firmarlo una persona física que haya recibido de esta facultades para hacer declaraciones jurídicamente vinculantes en nombre de la empresa, y que puede ser, al mismo tiempo, su administradora (representante legal) o no (por ejemplo, apoderado, directora jurídica de la sociedad con facultades para contratar en nombre de ella).",
+                "logic": {
+                    "showIf": "poderdante.value === 'una persona física' &&  (nombre_concluido_n.value === 'por medio de un(a) representante legal (en caso de ser menor de 18 años o incapacitado judicialmente) o voluntario/a' &&  (doc_poderdante.value === 'DNI/NIF' || doc_poderdante.value === 'NIE' || doc_poderdante.value === 'Pasaporte') ) || poderdante.value === 'una persona jurídica'"
+                },
+                "options": {},
+                "indexInsideRepeat": null,
+                "value": "",
+                "required": false,
+                "placeholder": "Ej. Pedro Molina Martínez",
+                "subType": ""
+            },
+            "doc_representante": {
+                "id": "doc_representante",
+                "type": "multipleChoice",
+                "title": "Documento de identificación personal de la persona que firma el poder especial en nombre y representación del poderdante:",
+                "indications": "Escoja el tipo de documento que identificará personalmente a la persona física que firma este poder especial en nombre del poderdante; es decir de la persona (física o jurídica) que, mediante este documento, autoriza o faculta a otra(s) persona(s) para que realice(n) determinado(s) acto(s) en su nombre.\n\nSi esta persona cuenta con DNI/NIF escoja siempre esta opción, y reserve las opciones de NIE o Pasaporte solo para cuando aquel no exista o no se esté en posesión del mismo.",
+                "logic": {
+                    "showIf": "poderdante.value === 'una persona física' &&  (nombre_concluido_n.value === 'por medio de un(a) representante legal (en caso de ser menor de 18 años o incapacitado judicialmente) o voluntario/a' &&  (doc_poderdante.value === 'DNI/NIF' || doc_poderdante.value === 'NIE' || doc_poderdante.value === 'Pasaporte') ) || poderdante.value === 'una persona jurídica'"
+                },
+                "options": {},
+                "indexInsideRepeat": null,
+                "value": "DNI/NIF",
+                "choices": [
+                    {
+                        "label": "DNI/NIF",
+                        "checked": true
+                    },
+                    {
+                        "label": "NIE",
+                        "checked": false
+                    },
+                    {
+                        "label": "Pasaporte",
+                        "checked": false
+                    }
+                ],
+                "subType": "select"
+            },
+            "dni_representante": {
+                "id": "dni_representante",
+                "type": "text",
+                "title": "Número del documento de identificación personal seleccionado:",
+                "indications": "Introduzca aquí el número correspondiente al documento de identificación personal escogido en la pregunta anterior para la persona física que firma este poder especial en nombre del poderdante; es decir de la persona (física o jurídica) que, mediante este documento, autoriza o faculta a otra(s) persona(s) para que realice(n) determinado(s) acto(s) en su nombre.",
+                "logic": {
+                    "showIf": "poderdante.value === 'una persona física' &&  (nombre_concluido_n.value === 'por medio de un(a) representante legal (en caso de ser menor de 18 años o incapacitado judicialmente) o voluntario/a' &&  (doc_poderdante.value === 'DNI/NIF' &&  (doc_representante.value === 'DNI/NIF' || doc_representante.value === 'NIE' || doc_representante.value === 'Pasaporte') || doc_poderdante.value === 'NIE' &&  (doc_representante.value === 'DNI/NIF' || doc_representante.value === 'NIE' || doc_representante.value === 'Pasaporte') || doc_poderdante.value === 'Pasaporte' &&  (doc_representante.value === 'DNI/NIF' || doc_representante.value === 'NIE' || doc_representante.value === 'Pasaporte') ) ) || poderdante.value === 'una persona jurídica' &&  (doc_representante.value === 'DNI/NIF' || doc_representante.value === 'NIE' || doc_representante.value === 'Pasaporte') "
+                },
+                "options": {},
+                "indexInsideRepeat": null,
+                "value": "",
+                "required": false,
+                "placeholder": "Ej. 11111111-X",
+                "subType": ""
+            },
+            "direccion_representante": {
+                "id": "direccion_representante",
+                "type": "text",
+                "title": "Dirección completa del domicilio de la persona que firma el poder especial en nombre y representación del poderdante:",
+                "indications": "Indique aquí el domicilio completo (tipo y nombre de la vía, número, piso, código postal y localidad) de la persona física que firma este poder especial en nombre del poderdante; es decir de la persona (física o jurídica) que, mediante este documento, autoriza o faculta a otra(s) persona(s) para que realice(n) determinado(s) acto(s) en su nombre.",
+                "logic": {
+                    "showIf": "poderdante.value === 'una persona física' &&  (nombre_concluido_n.value === 'por medio de un(a) representante legal (en caso de ser menor de 18 años o incapacitado judicialmente) o voluntario/a' &&  (doc_poderdante.value === 'DNI/NIF' &&  (doc_representante.value === 'DNI/NIF' || doc_representante.value === 'NIE' || doc_representante.value === 'Pasaporte') || doc_poderdante.value === 'NIE' &&  (doc_representante.value === 'DNI/NIF' || doc_representante.value === 'NIE' || doc_representante.value === 'Pasaporte') || doc_poderdante.value === 'Pasaporte' &&  (doc_representante.value === 'DNI/NIF' || doc_representante.value === 'NIE' || doc_representante.value === 'Pasaporte') ) ) || poderdante.value === 'una persona jurídica' &&  (doc_representante.value === 'DNI/NIF' || doc_representante.value === 'NIE' || doc_representante.value === 'Pasaporte') "
+                },
+                "options": {},
+                "indexInsideRepeat": null,
+                "value": "",
+                "required": false,
+                "placeholder": "Ej. Paseo Teruel 5, 1°B. 50004 Zaragoza",
+                "subType": ""
+            },
+            "calidad_representantef": {
+                "id": "calidad_representantef",
+                "type": "text",
+                "title": "Función del/la representante del poderdante:",
+                "indications": "Indique aquí en qué calidad o función el/la representante firma el poder especial en nombre y representación de la persona física que, mediante este documento, autoriza o faculta a otra(s) persona(s) para que realice(n) determinado(s) acto(s) en su nombre.",
+                "logic": {
+                    "showIf": "poderdante.value === 'una persona física' &&  (nombre_concluido_n.value === 'por medio de un(a) representante legal (en caso de ser menor de 18 años o incapacitado judicialmente) o voluntario/a' &&  (doc_poderdante.value === 'DNI/NIF' &&  (doc_representante.value === 'DNI/NIF' || doc_representante.value === 'NIE' || doc_representante.value === 'Pasaporte') || doc_poderdante.value === 'NIE' &&  (doc_representante.value === 'DNI/NIF' || doc_representante.value === 'NIE' || doc_representante.value === 'Pasaporte') || doc_poderdante.value === 'Pasaporte' &&  (doc_representante.value === 'DNI/NIF' || doc_representante.value === 'NIE' || doc_representante.value === 'Pasaporte') ) ) "
+                },
+                "options": {},
+                "indexInsideRepeat": null,
+                "value": "",
+                "required": false,
+                "placeholder": "Ej. representante legal, apoderado",
+                "subType": ""
+            },
+            "nombre_poderdante": {
+                "id": "nombre_poderdante",
+                "type": "text",
+                "title": "Nombre completo del poderdante:",
+                "indications": "Indique aquí el nombre completo (nombre(s) y apellidos) del poderdante, es decir, de la persona que, mediante este documento otorga el poder a otra persona para que realice determinados actos en su nombre.",
+                "logic": {
+                    "showIf": "poderdante.value === 'una persona física' &&  (nombre_concluido_n.value === 'en su propio nombre y representación' || nombre_concluido_n.value === 'por medio de un(a) representante legal (en caso de ser menor de 18 años o incapacitado judicialmente) o voluntario/a') "
+                },
+                "options": {},
+                "indexInsideRepeat": null,
+                "value": "",
+                "required": false,
+                "placeholder": "Ej. Pedro Páramo Ortiz",
+                "subType": ""
+            },
+            "nacionalidad_poderdante": {
+                "id": "nacionalidad_poderdante",
+                "type": "text",
+                "title": "Nacionalidad del poderdante:",
+                "indications": "Indique la nacionalidad del poderdante, es decir, de la persona que, mediante este documento otorga el poder a otra persona para que realice determinados actos en su nombre.",
+                "logic": {
+                    "showIf": "poderdante.value === 'una persona física' &&  (nombre_concluido_n.value === 'en su propio nombre y representación' || nombre_concluido_n.value === 'por medio de un(a) representante legal (en caso de ser menor de 18 años o incapacitado judicialmente) o voluntario/a') "
+                },
+                "options": {},
+                "indexInsideRepeat": null,
+                "value": "",
+                "required": false,
+                "placeholder": "Ej. española; francesa",
+                "subType": ""
+            },
+            "doc_poderdante": {
+                "id": "doc_poderdante",
+                "type": "multipleChoice",
+                "title": "Documento de identificación personal del poderdante:",
+                "indications": "Escoja el tipo de documento que identificará personalmente a la persona (física) que, mediante este documento, otorga el poder a otra persona para que realice determinados actos en su nombre.\n\nSi esta persona cuenta con DNI/NIF escoja siempre esta opción, y reserve las opciones de NIE o Pasaporte solo para cuando aquel no exista o no se esté en posesión del mismo.",
+                "logic": {
+                    "showIf": "poderdante.value === 'una persona física' &&  (nombre_concluido_n.value === 'en su propio nombre y representación' || nombre_concluido_n.value === 'por medio de un(a) representante legal (en caso de ser menor de 18 años o incapacitado judicialmente) o voluntario/a') "
+                },
+                "options": {},
+                "indexInsideRepeat": null,
+                "value": "DNI/NIF",
+                "choices": [
+                    {
+                        "label": "DNI/NIF",
+                        "checked": true
+                    },
+                    {
+                        "label": "NIE",
+                        "checked": false
+                    },
+                    {
+                        "label": "Pasaporte",
+                        "checked": false
+                    }
+                ],
+                "subType": "select"
+            },
+            "dni_poderdante": {
+                "id": "dni_poderdante",
+                "type": "text",
+                "title": "Número del documento de identificación personal seleccionado:",
+                "indications": "Introduzca aquí el número correspondiente al documento de identificación personal escogido en la pregunta anterior para el poderdante; es decir, la persona (física) que, mediante este documento, otorga el poder a otra persona para que realice determinados actos en su nombre.",
+                "logic": {
+                    "showIf": "poderdante.value === 'una persona física' &&  (nombre_concluido_n.value === 'en su propio nombre y representación' &&  (doc_poderdante.value === 'DNI/NIF' || doc_poderdante.value === 'NIE' || doc_poderdante.value === 'Pasaporte') || nombre_concluido_n.value === 'por medio de un(a) representante legal (en caso de ser menor de 18 años o incapacitado judicialmente) o voluntario/a' &&  (doc_poderdante.value === 'DNI/NIF' || doc_poderdante.value === 'NIE' || doc_poderdante.value === 'Pasaporte') ) "
+                },
+                "options": {},
+                "indexInsideRepeat": null,
+                "value": "",
+                "required": false,
+                "placeholder": "Ej. 12345678-Y",
+                "subType": ""
+            },
+            "direccion_poderdante": {
+                "id": "direccion_poderdante",
+                "type": "text",
+                "title": "Dirección completa del domicilio del poderdante:",
+                "indications": "Indique aquí la dirección completa (tipo y nombre de la vía, número, piso, código postal, localidad y provincia) del poderdante; es decir, de la persona (física) que, mediante este documento, otorga el poder a otra persona para que realice determinados actos en su nombre.",
+                "logic": {
+                    "showIf": "poderdante.value === 'una persona física' &&  (nombre_concluido_n.value === 'en su propio nombre y representación' &&  (doc_poderdante.value === 'DNI/NIF' || doc_poderdante.value === 'NIE' || doc_poderdante.value === 'Pasaporte') || nombre_concluido_n.value === 'por medio de un(a) representante legal (en caso de ser menor de 18 años o incapacitado judicialmente) o voluntario/a' &&  (doc_poderdante.value === 'DNI/NIF' || doc_poderdante.value === 'NIE' || doc_poderdante.value === 'Pasaporte') ) "
+                },
+                "options": {},
+                "indexInsideRepeat": null,
+                "value": "",
+                "required": false,
+                "placeholder": "Ej. Calle Nieve 1, 2°A. 28007 Madrid",
+                "subType": ""
+            },
+            "denominacion_poderdante": {
+                "id": "denominacion_poderdante",
+                "type": "text",
+                "title": "Nombre o razón social del poderdante:",
+                "indications": "Indique aquí el nombre o razón social del poderdante, es decir, de la persona que, mediante este documento, autoriza o faculta a otra(s) persona(s) para que realice(n) determinado(s) acto(s) en su nombre.",
+                "logic": {
+                    "showIf": "poderdante.value === 'una persona jurídica'"
+                },
+                "options": {},
+                "indexInsideRepeat": null,
+                "value": "",
+                "required": false,
+                "placeholder": "Ej. FICO, S.L.",
+                "subType": ""
+            },
+            "cif_poderdante": {
+                "id": "cif_poderdante",
+                "type": "text",
+                "title": "NIF/CIF del poderdante:",
+                "indications": "Indique aquí el N.I.F./C.I.F del poderdante, es decir, de la persona que, mediante este documento, autoriza o faculta a otra(s) persona(s) para que realice(n) determinado(s) acto(s) en su nombre.",
+                "logic": {
+                    "showIf": "poderdante.value === 'una persona jurídica'"
+                },
+                "options": {},
+                "indexInsideRepeat": null,
+                "value": "",
+                "required": false,
+                "placeholder": "Ej. B12345678",
+                "subType": ""
+            },
+            "domicilio_social": {
+                "id": "domicilio_social",
+                "type": "text",
+                "title": "Dirección completa del domicilio social del poderdante:",
+                "indications": "Indique aquí el domicilio social completo (tipo y nombre de la vía, número, piso, código postal y localidad) del poderdante, es decir, de la persona que, mediante este documento, autoriza o faculta a otra(s) persona(s) para que realice(n) determinado(s) acto(s) en su nombre.",
+                "logic": {
+                    "showIf": "poderdante.value === 'una persona jurídica'"
+                },
+                "options": {},
+                "indexInsideRepeat": null,
+                "value": "",
+                "required": false,
+                "placeholder": "Ej. Av. Diagonal, 50. 08006 Barcelona.",
+                "subType": ""
+            },
+            "calidad_representante": {
+                "id": "calidad_representante",
+                "type": "text",
+                "title": "Función del/la representante del poderdante:",
+                "indications": "Indique aquí en qué calidad o función el representante, persona física, firma el poder especial en nombre y representación de la persona jurídica que, mediante este documento, autoriza o faculta a otra(s) persona(s) para que realice(n) determinado(s) acto(s) en su nombre.",
+                "logic": {
+                    "showIf": "poderdante.value === 'una persona jurídica' &&  (doc_representante.value === 'DNI/NIF' || doc_representante.value === 'NIE' || doc_representante.value === 'Pasaporte') "
+                },
+                "options": {},
+                "indexInsideRepeat": null,
+                "value": "",
+                "required": false,
+                "placeholder": "Ej. administrador único",
+                "subType": ""
+            },
+            "doc_representacion": {
+                "id": "doc_representacion",
+                "type": "text",
+                "title": "Documento en el que se faculta a dicho/a representante para firmar en nombre y representación del poderdante:",
+                "indications": "Indique aquí el documento en el que se faculta al representante, persona física, para firmar poderes especiales (entre otras cosas) en nombre y representación de la persona jurídica que, mediante este documento, autoriza o faculta a otra(s) persona(s) para que realice(n) determinado(s) acto(s) en su nombre.\n\nDebe indicar la mayor cantidad de datos identificativos de dicho documento.\n\nPor ejemplo, puede tratarse de la escritura pública de constitución de una sociedad limitada en la que es nombrada administradora única de la sociedad. En ese caso, debería indicar, por ejemplo,: \"escritura pública de constitución de la sociedad de 17 de enero de 2023, otorgada ante la Notaria Doña María Casas García...\"",
+                "logic": {
+                    "showIf": "poderdante.value === 'una persona jurídica' &&  (doc_representante.value === 'DNI/NIF' || doc_representante.value === 'NIE' || doc_representante.value === 'Pasaporte') "
+                },
+                "options": {},
+                "indexInsideRepeat": null,
+                "value": "",
+                "required": false,
+                "placeholder": "Ej. escritura de poder de fecha 2/1/2023",
+                "subType": ""
+            }
+        },
+        "content": {},
+        "isCurrent": false
+    },
+    "numero_apoderados": {
+        "id": "numero_apoderados",
+        "type": "repeat",
+        "title": "Número de personas que reciben el poder a través de este documento (apoderados):",
+        "indications": "Indique aquí cuántas personas reciben el poder especial a través de este documento; es decir, estarán autorizadas para realizar determinados actos en nombre del/los poderdante(s) que firman este poder. \n\nEstas personas se conocen con el nombre de apoderados o representantes.\n\nEn caso de que más de una persona reciba el poder mediante este documento, esto supone que cualquiera de los apoderados podrá realizar los actos a los que se refiere este poder especial.",
+        "logic": {
+            "showIf": ""
+        },
+        "options": {},
+        "indexInsideRepeat": null,
+        "value": "1",
+        "range": {
+            "min": 1,
+            "max": 10
+        },
+        "questions": {
+            "nombre_apoderado": {
+                "id": "nombre_apoderado",
+                "type": "text",
+                "title": "Nombre completo del apoderado (persona que recibe el poder a través de este documento):",
+                "indications": "Indique aquí el nombre completo (nombre(s) y apellidos) del apoderado, es decir, de la persona que, mediante este documento recibe la autorización para realizar determinados actos en nombre del/de los poderdante(s) que firman este poder especial.",
+                "logic": {},
+                "options": {},
+                "indexInsideRepeat": null,
+                "value": "",
+                "required": false,
+                "placeholder": "Ej. Isabel Fernández Ruiz",
+                "subType": ""
+            },
+            "doc_apoderado": {
+                "id": "doc_apoderado",
+                "type": "multipleChoice",
+                "title": "Documento de identificación personal del apoderado:",
+                "indications": "Escoja el tipo de documento que identificará personalmente a la persona que, mediante este documento, recibe la autorización para realizar determinados actos en nombre del/los poderdante(s) que firman este poder especial.\n\nSi esta persona cuenta con DNI/NIF escoja siempre esta opción, y reserve las opciones de NIE o Pasaporte solo para cuando aquel no exista o no se esté en posesión del mismo.",
+                "logic": {
+                    "showIf": ""
+                },
+                "options": {},
+                "indexInsideRepeat": null,
+                "value": "DNI/NIF",
+                "choices": [
+                    {
+                        "label": "DNI/NIF",
+                        "checked": true
+                    },
+                    {
+                        "label": "NIE",
+                        "checked": false
+                    },
+                    {
+                        "label": "Pasaporte",
+                        "checked": false
+                    }
+                ],
+                "subType": "select"
+            },
+            "dni_apoderado": {
+                "id": "dni_apoderado",
+                "type": "text",
+                "title": "Número del documento de identificación personal seleccionado:",
+                "indications": "Introduzca aquí el número correspondiente al documento de identificación personal escogido en la pregunta anterior para el apoderado; es decir, la persona que, mediante este documento, recibe la autorización para realizar determinados actos en nombre del/los poderdante(s) que firman este poder especial.",
+                "logic": {
+                    "showIf": "doc_apoderado.value === 'DNI/NIF' || doc_apoderado.value === 'NIE' || doc_apoderado.value === 'Pasaporte'"
+                },
+                "options": {},
+                "indexInsideRepeat": null,
+                "value": "",
+                "required": false,
+                "placeholder": "Ej. 33333333-Q",
+                "subType": ""
+            },
+            "domicilio_apoderado": {
+                "id": "domicilio_apoderado",
+                "type": "text",
+                "title": "Dirección completa del domicilio del apoderado:",
+                "indications": "Indique aquí la dirección completa (tipo y nombre de la vía, número, piso, código postal, localidad y provincia) del apoderado; es decir, de la persona que, mediante este documento, recibe la autorización para realizar determinados actos en nombre del/los poderdante(s) que firman este poder especial.",
+                "logic": {
+                    "showIf": "doc_apoderado.value === 'DNI/NIF' || doc_apoderado.value === 'NIE' || doc_apoderado.value === 'Pasaporte'"
+                },
+                "options": {},
+                "indexInsideRepeat": null,
+                "value": "",
+                "required": false,
+                "placeholder": "Ej. Calle del Pez, 5, 3°D. 28004 Madrid",
+                "subType": ""
+            }
+        },
+        "content": {}
+    },
+    "motivo_poder": {
+        "id": "motivo_poder",
+        "type": "text",
+        "title": "Describa el motivo por el que se otorga el poder (acto(s) concreto(s) que podrá(n) realizar el/los apoderado(s) en nombre del/los poderdante(s)):",
+        "indications": "Describa aquí, de la forma más detallada y concreta posible, la razón que motiva el otorgamiento de este poder especial por el/los poderdante(s) al/los apoderado(s). \n\nLa razón que motiva el otorgamiento del poder son los actos que podrá(n) realizar, en nombre del/los poderdante(s), el/los apoderado(s) nombrados mediante este documento.",
+        "logic": {
+            "showIf": ""
+        },
+        "options": {},
+        "indexInsideRepeat": null,
+        "value": "",
+        "required": false,
+        "placeholder": "Ej. Retirar el libro \"Un cuarto propio\" de Virginia Woolf reservado en la Biblioteca Municipal de Getafe. \nFirmar un contrato de compraventa de vehículo de segunda mano como parte compradora con Doña Alicia Muñoz Sánchez para la venta del Seat Ibiza color rojo, número de bastidor TMBN946Y323458959 y matrícula 2483YBY propiedad del poderdante. \nRecoger la documentación relativa a mi graduación ocular del oftalmólogo situado en  la Calle Princesa 2, 28013 Madrid. \n...",
+        "subType": "textarea"
+    },
+    "duracion_poder": {
+        "id": "duracion_poder",
+        "type": "multipleChoice",
+        "title": "Este poder tendrá una duración:",
+        "indications": "Indique aquí si este poder especial, es decir, la autorización para que el/los apoderado(s) realice(n) determinado(s) actos en nombre del/los poderdante(s) tendrá una duración: \n\n- \"Indefinida\". Esto supone que el poder será válido o vigente a partir de la fecha de firma que deberá indicar a continuación y hasta que se realicen todos los actos mencionados en la pregunta anterior, o hasta su revocación por el/los poderdante(s). \n\n- \"Determinada\". Esto supone que el poder será válido o vigente a partir de la fecha de firma que deberá indicar más adelante, pero solo lo será hasta la fecha de expiración o caducidad que deberá indicar a continuación (luego de esa fecha, el/los apoderado(s) no podrán realizar los actos cuya ejecución se autoriza mediante este documento). Igualmente, será posible que el/los poderdante(s) revoque(n) el poder antes de la llegada de dicha fecha.",
+        "logic": {
+            "showIf": ""
+        },
+        "options": {},
+        "indexInsideRepeat": null,
+        "value": "indefinida (hasta que se ejecuten todos los actos cuya realización se autoriza al/los apoderados(s))",
+        "choices": [
+            {
+                "label": "indefinida (hasta que se ejecuten todos los actos cuya realización se autoriza al/los apoderados(s))",
+                "checked": true
+            },
+            {
+                "label": "determinada (expirará en una fecha determinada, aunque algunos de dichos actos aún no se hayan realizado)",
+                "checked": false
+            }
+        ],
+        "subType": "radio"
+    },
+    "nombrar_sustituto": {
+        "id": "nombrar_sustituto",
+        "type": "multipleChoice",
+        "title": "¿El/lo(s) apoderado(s) podrá(n) nombrar a otra persona como su sustituto para que realice los actos cuya realización (en nombre del/los poderdante(s)) se le(s) autoriza mediante este poder?",
+        "indications": "Indique aquí si el/los apoderado(s) podrá(n) ceder esta representación o nombrar a un sub-apoderado o no; es decir, si se les permite o prohíbe nombrar a otra persona como su sustituto para que realice en nombre del/los poderdante(s) los actos cuya realización se les encomienda al/los apoderado(s) mediante este documento.",
+        "logic": {
+            "showIf": "duracion_poder.value === 'indefinida (hasta que se ejecuten todos los actos cuya realización se autoriza al/los apoderados(s))' || duracion_poder.value === 'determinada (expirará en una fecha determinada, aunque algunos de dichos actos aún no se hayan realizado)'"
+        },
+        "options": {},
+        "indexInsideRepeat": null,
+        "value": "No",
+        "choices": [
+            {
+                "label": "No",
+                "checked": true
+            },
+            {
+                "label": "Sí",
+                "checked": false
+            }
+        ],
+        "subType": "radio"
+    },
+    "fecha_expiracion": {
+        "id": "fecha_expiracion",
+        "type": "text",
+        "title": "Fecha en la que expirará (dejará de ser válido) este poder:",
+        "indications": "Con la ayuda del calendario desplegable, indique la fecha de expiración de este poder; es decir, la fecha hasta la cual el/los apoderado(s) está(n) autorizado(s) para realizar en nombre del/los poderdante(s) los actos a los que se refiere este documento.",
+        "logic": {
+            "showIf": "duracion_poder.value === 'determinada (expirará en una fecha determinada, aunque algunos de dichos actos aún no se hayan realizado)'"
+        },
+        "options": {},
+        "indexInsideRepeat": null,
+        "value": "",
+        "required": false,
+        "placeholder": "dd/mm/aaaa",
+        "subType": "date"
+    },
+    "lugar_firma": {
+        "id": "lugar_firma",
+        "type": "text",
+        "title": "Localidad en la que se firma este poder especial:",
+        "indications": "Indique aquí la localidad o el lugar en el que se firma este poder especial por el/los poderdante(s) y por el/los apoderado(s).",
+        "logic": {
+            "showIf": "duracion_poder.value === 'indefinida (hasta que se ejecuten todos los actos cuya realización se autoriza al/los apoderados(s))' &&  (nombrar_sustituto.value === 'No' || nombrar_sustituto.value === 'Sí') || duracion_poder.value === 'determinada (expirará en una fecha determinada, aunque algunos de dichos actos aún no se hayan realizado)' &&  (nombrar_sustituto.value === 'No' || nombrar_sustituto.value === 'Sí') "
+        },
+        "options": {},
+        "indexInsideRepeat": null,
+        "value": "",
+        "required": false,
+        "placeholder": "Ej. Sevilla, Madrid, Alicante, Badajoz",
+        "subType": ""
+    },
+    "fecha_firma": {
+        "id": "fecha_firma",
+        "type": "text",
+        "title": "Fecha en la que se firma este poder especial:",
+        "indications": "Con la ayuda del calendario desplegable, indique aquí la fecha en la que se firma este poder especial por el/los poderdante(s) y por el/los apoderado(s).",
+        "logic": {
+            "showIf": "duracion_poder.value === 'indefinida (hasta que se ejecuten todos los actos cuya realización se autoriza al/los apoderados(s))' &&  (nombrar_sustituto.value === 'No' || nombrar_sustituto.value === 'Sí') || duracion_poder.value === 'determinada (expirará en una fecha determinada, aunque algunos de dichos actos aún no se hayan realizado)' &&  (nombrar_sustituto.value === 'No' || nombrar_sustituto.value === 'Sí') "
+        },
+        "options": {},
+        "indexInsideRepeat": null,
+        "value": "",
+        "required": false,
+        "placeholder": "dd/mm/aaaa",
+        "subType": "date"
+    }
+}

@@ -133,9 +133,20 @@ export class GuidedInterview {
 
 
       if (isCurrent && !isRepeat && !nextQuestionExists && !this.isRoot) {
-        question.isEnd = true
-        newCurrent = question
-        break
+        if (this.canBeShown(question)) {
+          question.isEnd = true
+          newCurrent = question
+          break
+        }
+        question.isCurrent = false
+        // Find exit repeat
+        for (let j = 0; j < interviewList.length ; j++) {
+          const q: any = interviewList[j][1]
+          if (q.exitRepeat) {
+            newCurrent = q
+            break
+          }
+        }
       }
       if (isCurrent && !isRepeat && nextQuestionExists ) {
         question.isCurrent = false
@@ -188,7 +199,6 @@ export class GuidedInterview {
             const repeatIsFinished = !repeat.content[j + 1] || repeat.content[j + 1]?.hidden
 
             newCurrent = repeat.content[j].nestedInterview.getNextQuestion()
-
             if (newCurrent) {
               // Fixme: should check here for next question
               const isLast = repeat.content[j].nestedInterview.isQuestionTheLastOfInterview(newCurrent.id)
@@ -269,7 +279,7 @@ export class GuidedInterview {
     let previousQuestion = firstQuestion
     let newCurrent;
     let nextQuestionExists;
-    for (let i = 1; i < interviewList.length ; i++) {
+    for (let i = 0; i < interviewList.length ; i++) {
       const question = interviewList[i][1]
       const questionCanBeShown = this.canBeShown(question)
       nextQuestionExists = interviewList[i + 1] && interviewList[i + 1][1]
