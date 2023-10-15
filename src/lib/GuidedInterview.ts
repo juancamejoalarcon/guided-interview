@@ -464,6 +464,7 @@ export class GuidedInterview {
           }
         }
       }
+      if (current) break
     }
     if (this.isRoot && !current) current = this
     return current

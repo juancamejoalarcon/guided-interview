@@ -69,5 +69,33 @@ describe("Repeat next when first question is a repeat question", () => {
 
   });
 
+  test("Change values inside repeat", () => {
+
+    const interview = new GuidedInterview(poderEspecial);
+    const current = interview.getCurrent() as Repeat;
+    expect(current.type).toEqual("repeat");
+    expect(current.id).toEqual("numero_poderdantes");
+    interview.setValue(current.id, 2);
+    interview.next();
+    expect(interview.getCurrent().id).toEqual("poderdante");
+    const value = 'una persona jurídica'
+    interview.getCurrentGuidedInterview()?.setValue(interview.getCurrent().id, value)
+    expect(interview.getCurrent().value).toEqual(value);
+    expect(interview.getCurrent().indexInsideRepeat).toEqual("1");
+    interview.next();
+    expect(interview.getCurrent().id).toEqual("representante");
+    interview.next();
+    expect(interview.getCurrent().id).toEqual("doc_representante");
+    interview.next();
+    expect(interview.getCurrent().id).toEqual("dni_representante");
+    for (let i = 0; i < 7; i++) interview.next();
+    expect(interview.getCurrent().id).toEqual("poderdante");
+    expect(interview.getCurrent().indexInsideRepeat).toEqual("2");
+    expect(interview.getCurrent().value).toEqual("una persona física");
+    interview.getCurrentGuidedInterview()?.setValue(interview.getCurrent().id, value);
+    expect(interview.getCurrent().value).toEqual("una persona jurídica");
+
+  });
+
 });
 
