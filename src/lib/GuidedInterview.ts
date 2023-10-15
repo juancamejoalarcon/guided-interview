@@ -219,10 +219,14 @@ export class GuidedInterview {
                   } else {
                     current.exitRepeat = true
                   }
+                } else {
+                  if (!repeatIsFinished) {
+                    newCurrent.isLast = true
+                  }
                 }
               }
 
-              if (newCurrent.isEnd) {
+              if (newCurrent?.isEnd) {
                 if ((j + 1) < parseInt(question.value as string)) {
                   if (!newCurrent.isCurrent) {
                     newCurrent.isEnd = false
@@ -247,6 +251,19 @@ export class GuidedInterview {
             } else {
               if (repeatIsFinished && nextQuestionExists) {
                 shouldContinue = true
+              } else {
+                if (!repeatIsFinished && !newCurrent) {
+                  const lastQuestion: any = Array.from(repeat.content[j].nestedInterview.interview).find((q: any) => q[1].isLast)
+                  if (lastQuestion) {
+                    delete lastQuestion[1].isLast
+                    const firstOfNextNestedInterview = Array.from(repeat.content[j + 1].nestedInterview.interview) as any
+                    if (!firstOfNextNestedInterview[0][1].isCurrent) {
+                      firstOfNextNestedInterview[0][1].isCurrent = true
+                      newCurrent = firstOfNextNestedInterview[0][1]
+                      break
+                    }
+                  }
+                }
               }
             }
           }

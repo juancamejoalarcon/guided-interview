@@ -5502,15 +5502,17 @@ class Nt {
           if (!O.content[C].hidden) {
             const B = !O.content[C + 1] || ((r = O.content[C + 1]) == null ? void 0 : r.hidden);
             if (e = O.content[C].nestedInterview.getNextQuestion(), e) {
-              if (O.content[C].nestedInterview.isQuestionTheLastOfInterview(e.id) && B && t) {
-                const T = e;
-                if (T.exitRepeat) {
-                  T.isEnd = !1, T.isCurrent = !1, e = n[i + 1][1], e.isCurrent = !0, this.canBeShown(e) || (e = this.getNextQuestion()), delete T.exitRepeat;
-                  break;
+              if (O.content[C].nestedInterview.isQuestionTheLastOfInterview(e.id))
+                if (B && t) {
+                  const T = e;
+                  if (T.exitRepeat) {
+                    T.isEnd = !1, T.isCurrent = !1, e = n[i + 1][1], e.isCurrent = !0, this.canBeShown(e) || (e = this.getNextQuestion()), delete T.exitRepeat;
+                    break;
+                  } else
+                    T.exitRepeat = !0;
                 } else
-                  T.exitRepeat = !0;
-              }
-              if (e.isEnd)
+                  B || (e.isLast = !0);
+              if (e != null && e.isEnd)
                 if (C + 1 < parseInt(u.value))
                   if (!e.isCurrent)
                     e.isEnd = !1, e = null;
@@ -5524,8 +5526,19 @@ class Nt {
                 }
               if (e)
                 break;
-            } else
-              B && t && (g = !0);
+            } else if (B && t)
+              g = !0;
+            else if (!B && !e) {
+              const N = Array.from(O.content[C].nestedInterview.interview).find((T) => T[1].isLast);
+              if (N) {
+                delete N[1].isLast;
+                const T = Array.from(O.content[C + 1].nestedInterview.interview);
+                if (!T[0][1].isCurrent) {
+                  T[0][1].isCurrent = !0, e = T[0][1];
+                  break;
+                }
+              }
+            }
           }
         if (g)
           continue;
