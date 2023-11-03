@@ -569,6 +569,7 @@ export class GuidedInterview {
       if (repeatQuestion.content[i]) {
         // Añadir logica de hidden
         repeatQuestion.content[i].hidden = false
+        this.data[id].content[i].hidden = false
         continue
       }
       this.data[id].content[i] = { hidden: false, questions: {} }
