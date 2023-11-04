@@ -8,6 +8,7 @@ export declare class GuidedInterview {
     private events;
     private current;
     private isRoot;
+    private isLastContentInterviewOfRepeat;
     data: any;
     Cloner: typeof Cloner;
     constructor(interview?: any, options?: any);

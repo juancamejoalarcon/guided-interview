@@ -22,13 +22,15 @@ export class GuidedInterview {
   private events!: EventBus;
   private current!: GenericQuestion;
   private isRoot: boolean = true;
+  private isLastContentInterviewOfRepeat: boolean = false
   public data: any = {};
   public Cloner = Cloner
 
-  constructor(interview: any = "empty", options: any = { isRoot: true, data: null }) {
+  constructor(interview: any = "empty", options: any = { isRoot: true, data: null, isLastContentInterviewOfRepeat: false }) {
     this.events = options.events || new EventBus();
     this.isRoot = options.isRoot;
     this.data = options.data || this.data
+    this.isLastContentInterviewOfRepeat = options.isLastContentInterviewOfRepeat || false
     // FIXME: This is a hack to avoid the data to be modified by reference
     const copyOFData = options.data ? JSON.parse(JSON.stringify(this.data)) : null
     if (interview !== "empty") this.init(interview);
@@ -276,7 +278,7 @@ export class GuidedInterview {
   }
 
   previous() {
-    let previousQuestion = this.getPreviousQuestion()
+    let previousQuestion: any = this.getPreviousQuestion()
     if (previousQuestion) this.setCurrent(previousQuestion)
   }
 
@@ -300,6 +302,10 @@ export class GuidedInterview {
       const question = interviewList[i][1]
       const questionCanBeShown = this.canBeShown(question)
       nextQuestionExists = interviewList[i + 1] && interviewList[i + 1][1]
+      // remove trash created in next question
+      if ((question as any).exitRepeat) delete (question as any).exitRepeat
+      if ((question as any).isLast) delete (question as any).isLast
+      if ((question as any).isNotLastOfRepeatContent) delete (question as any).isNotLastOfRepeatContent
       if (!question.isCurrent) {
         if (questionCanBeShown) previousQuestion = question
         if (question.type === 'repeat') {
@@ -329,6 +335,20 @@ export class GuidedInterview {
       const found = this.reversePreviousUtil(interviewList)
       if (found) newCurrent = found
     }
+    if (newCurrent && !this.isRoot) {
+      if (this.isQuestionTheLastOfInterview(newCurrent.id)) {
+        if (this.isLastContentInterviewOfRepeat) {
+          newCurrent.isLast = true
+          newCurrent.exitRepeat = true
+        } else {
+          newCurrent.isNotLastOfRepeatContent = true
+        }
+      }
+    }
+    if (newCurrent && this.isRoot && newCurrent.indexInsideRepeat && newCurrent.isNotLastOfRepeatContent) {
+      newCurrent.isLast = true
+    }
+ 
     return newCurrent
   }
   
@@ -557,6 +577,7 @@ export class GuidedInterview {
     const { range, id, questions, indexInsideRepeat } = repeatQuestion
     const { min, max } = range
 
+    value = value ? parseInt(value as any) : value
     value = getValueBetweenRanges(repeatQuestion.value, min, max)
 
     repeatQuestion.value = value
@@ -589,6 +610,14 @@ export class GuidedInterview {
         this.data[id].content[i].hidden = true
       }
     }
+    const allInterviews = Object.values(repeatQuestion.content)
+    allInterviews.forEach((interview, index) => {
+      if ((index + 1) === parseInt(value as any)) {
+        interview.nestedInterview.isLastContentInterviewOfRepeat = true
+      } else {
+        interview.nestedInterview.isLastContentInterviewOfRepeat = false
+      }
+    })
   }
 
   applyDataToQuestions(data: DataSaved) {

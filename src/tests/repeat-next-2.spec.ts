@@ -97,5 +97,116 @@ describe("Repeat next when first question is a repeat question", () => {
 
   });
 
+  test("Go to next value after repeat, then return to last question inside repeat and then go again to next question after repeat", () => {
+
+    
+    const interview = new GuidedInterview(poderEspecial);
+    const current = () => interview.getCurrent() as any;
+    expect(current().type).toEqual("repeat");
+    expect(current().id).toEqual("numero_poderdantes");
+
+    for (let i = 0; i < 7; i++) interview.next();
+    interview.next();
+
+    expect(current().id).toEqual("numero_apoderados");
+
+    interview.previous();
+
+    expect(current().id).toEqual("direccion_poderdante");
+
+    interview.next();
+
+    expect(current().id).toEqual("numero_apoderados");
+
+    interview.previous();
+
+    expect(current().id).toEqual("direccion_poderdante");
+
+    interview.previous();
+
+    expect(current().id).toEqual("dni_poderdante");
+
+    for (let i = 0; i < 6; i++) interview.previous();
+
+    expect(current().id).toEqual("numero_poderdantes");
+
+    interview.setValue(current().id, 2);
+
+    for (let i = 0; i < 7; i++) interview.next();
+
+    expect(current().id).toEqual("direccion_poderdante");
+
+    interview.next();
+
+    expect(current().id).toEqual("poderdante");
+    expect(current().indexInsideRepeat).toEqual("2");
+
+    interview.previous();
+
+    expect(current().id).toEqual("direccion_poderdante");
+    expect(current().indexInsideRepeat).toEqual("1");
+
+    interview.next();
+
+    expect(current().id).toEqual("poderdante");
+    expect(current().indexInsideRepeat).toEqual("2");
+
+    interview.next();
+
+    expect(current().id).toEqual("nombre_concluido_n");
+    expect(current().indexInsideRepeat).toEqual("2");
+
+    for (let i = 0; i < 5; i++) interview.next();
+    interview.next();
+
+    expect(current().id).toEqual("numero_apoderados");
+
+    interview.previous();
+
+    expect(current().id).toEqual("direccion_poderdante");
+    expect(current().indexInsideRepeat).toEqual("2");
+
+    interview.next();
+
+    expect(current().id).toEqual("numero_apoderados");
+
+    for (let i = 0; i < 15; i++) interview.previous();
+
+    expect(current().id).toEqual("numero_poderdantes");
+
+    interview.setValue(current().id, 3);
+
+    for (let i = 0; i < 8; i++) interview.next();
+
+    expect(current().id).toEqual("poderdante");
+    expect(current().indexInsideRepeat).toEqual("2");
+
+    interview.previous();
+
+    expect(current().id).toEqual("direccion_poderdante");
+    expect(current().indexInsideRepeat).toEqual("1");
+
+    interview.next();
+
+    expect(current().id).toEqual("poderdante");
+    expect(current().indexInsideRepeat).toEqual("2");
+
+    for (let i = 0; i < 7; i++) interview.next();
+
+    expect(current().id).toEqual("poderdante");
+    expect(current().indexInsideRepeat).toEqual("3");
+
+    interview.previous();
+
+    expect(current().id).toEqual("direccion_poderdante");
+    expect(current().indexInsideRepeat).toEqual("2");
+
+    for (let i = 0; i < 8; i++) interview.next();
+
+    expect(current().id).toEqual("numero_apoderados");
+
+
+  });
+
 });
 
