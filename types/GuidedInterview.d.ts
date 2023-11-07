@@ -43,7 +43,7 @@ export declare class GuidedInterview {
     setRadioChecked(question: MultipleChoice, value: string, options?: any): void;
     buildContentForRepeatQuestion(repeatQuestion: Repeat, value?: number | null): void;
     applyDataToQuestions(data: DataSaved): void;
-    makeTemplate(template: string): string;
+    makeTemplate(template: string, cleanHtml?: boolean): string;
     getStepById(id: string): GenericQuestion | null;
     checkIfIdIsValid(id: string): {
         isValid: boolean;
