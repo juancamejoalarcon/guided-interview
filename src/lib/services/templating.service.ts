@@ -7,7 +7,7 @@ export const makeTemplate = (interviewData: any, template: string, options: { cl
   if (options?.cleanHtml) {
     stringToRender = getCleanHtml(template)
   }
-  const result = nunjucks.renderString(template, data)
+  const result = nunjucks.renderString(stringToRender, data)
   return result;
 };
 

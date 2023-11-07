@@ -5178,7 +5178,9 @@ else {`), this._emit("cb()")), this._emitLine("}");
 })(pi);
 const di = (o, e, t = { cleanHtml: !1 }) => {
   const n = Ct(o);
-  return Ke.configure({ autoescape: !0 }), t != null && t.cleanHtml && gi(e), Ke.renderString(e, n);
+  Ke.configure({ autoescape: !0 });
+  let r = e;
+  return t != null && t.cleanHtml && (r = gi(e)), Ke.renderString(r, n);
 }, Ct = (o) => {
   const e = {};
   return Object.entries(o).forEach(([t, n]) => {
