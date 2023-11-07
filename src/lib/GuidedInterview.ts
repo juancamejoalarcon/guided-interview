@@ -636,9 +636,9 @@ export class GuidedInterview {
     })
   }
 
-  makeTemplate(template: string): string {
+  makeTemplate(template: string, cleanHtml: boolean = false): string {
     if (!template) throw new Error("No template provided")
-    return makeTemplate(this.data, template)
+    return makeTemplate(this.data, template, { cleanHtml })
   }
 
   getStepById(id: string): GenericQuestion | null {
