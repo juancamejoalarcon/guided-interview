@@ -126,10 +126,15 @@ export class Cloner {
     return this.questionsInsideRepeat.find((q) => q.id === id);
   }
 
-  setActiveMultipleOption(id: string, label: string) {
-    if (this.nested.length && this.nested[this.nested.length - 1].includes(id))
+  setActiveMultipleOption(id: string, label: string, subType: string = '') {
+    if (this.nested.length && this.nested[this.nested.length - 1].includes(id)) {
       this.nested.pop();
-    this.nested.push(`${id}${this.separator}${label}`);
+    }
+    if (subType === 'multiSelect') {
+      this.nested.push(`${id}${this.separator}${label}(multiSelect)`);
+    } else { 
+      this.nested.push(`${id}${this.separator}${label}`);
+    }
   }
 
   removeActiveMultipleOption() {
@@ -222,11 +227,11 @@ export class Cloner {
         if (lastRadio) {
           if (happyPath && this.nested.length) {
             const result = await this.checkFirstRadio(current.id as string);
-            this.setActiveMultipleOption(result.id, result.label);
+            this.setActiveMultipleOption(result.id, result.label, current.subType);
           }
         } else {
           const result = await this.checkNextRadio(questionID);
-          this.setActiveMultipleOption(result.id, result.label);
+          this.setActiveMultipleOption(result.id, result.label, current.subType);
         }
       } else {
         this.applyLogicToQuestion(
@@ -248,7 +253,7 @@ export class Cloner {
 
       if (current.type === "multipleChoice") {
         const result = await this.checkFirstRadio(current.id as string);
-        this.setActiveMultipleOption(result.id, result.label);
+        this.setActiveMultipleOption(result.id, result.label, current?.subType);
       }
     }
   }
@@ -297,7 +302,16 @@ export class Cloner {
           const nextEl = arr[index + 1];
           if (typeof el === "string") {
             const [id, label] = el.split(this.separator);
-            condition += `${id}.value === '${label}'`;
+            if (label.includes('(multiSelect)')) {
+              if (label.includes('checked')) {
+                const cleanLabel = label.replace('(multiSelect)', '')
+                condition += `${cleanLabel.includes('Not checked') ? '!' : ''}${id}.values.includes('Checked')`;
+              } else {
+                condition += `${id}.values.includes('${label.replace('(multiSelect)', '')}')`;
+              }
+            } else {
+              condition += `${id}.value === '${label}'`;
+            }
 
             if (nextEl) {
               if (typeof nextEl === "string") condition += " || ";
