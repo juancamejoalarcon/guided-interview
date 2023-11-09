@@ -44,7 +44,7 @@ export declare class Cloner {
     questionExistsInInterview(id: string): GenericQuestion;
     getQuestionInInterview(id: string): GenericQuestion;
     getQuestionInsideRepeat(id: string): GenericQuestion;
-    setActiveMultipleOption(id: string, label: string): void;
+    setActiveMultipleOption(id: string, label: string, subType?: string): void;
     removeActiveMultipleOption(): void;
     addQuestion(questionProps: copiedQuestion, percentageOfCompletion: string | number): void;
     copyRepeat(question: copiedQuestion): Promise<void>;
