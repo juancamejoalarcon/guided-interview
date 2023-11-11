@@ -12,7 +12,7 @@ import { GenericQuestion, interviewParams, DataSaved } from "./types/General";
 import { validateParams, getValueBetweenRanges, validateSetValue, isCamelCase, isSnakeCase } from "./services/utils.service";
 import { EventBus, EventList } from "./services/event-bus.service";
 import { getQuestion, replaceIndexInQuestionsOfRepeatQuestion } from "./services/create.service";
-import { makeTemplate } from "./services/templating.service";
+import { makeTemplate, getCleanHtml } from "./services/templating.service";
 import { Cloner } from "./services/clone.service"
 
 export * from "./interfaces";
@@ -639,6 +639,11 @@ export class GuidedInterview {
   makeTemplate(template: string, cleanHtml: boolean = false): string {
     if (!template) throw new Error("No template provided")
     return makeTemplate(this.data, template, { cleanHtml })
+  }
+
+  getCleanHTML(template: string): string {
+    if (!template) throw new Error("No template provided")
+    return getCleanHtml(template)
   }
 
   getStepById(id: string): GenericQuestion | null {

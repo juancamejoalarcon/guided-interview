@@ -1,8 +1,8 @@
-var Dt = Object.defineProperty;
-var Ut = (o, e, t) => e in o ? Dt(o, e, { enumerable: !0, configurable: !0, writable: !0, value: t }) : o[e] = t;
-var le = (o, e, t) => (Ut(o, typeof e != "symbol" ? e + "" : e, t), t);
+var Ut = Object.defineProperty;
+var Vt = (o, e, t) => e in o ? Ut(o, e, { enumerable: !0, configurable: !0, writable: !0, value: t }) : o[e] = t;
+var le = (o, e, t) => (Vt(o, typeof e != "symbol" ? e + "" : e, t), t);
 var ct = typeof globalThis < "u" ? globalThis : typeof window < "u" ? window : typeof global < "u" ? global : typeof self < "u" ? self : {};
-function Vt(o) {
+function $t(o) {
   if (o.__esModule)
     return o;
   var e = o.default;
@@ -33,41 +33,41 @@ var je = {}, De = {}, yt = {}, Ue = {}, Ve = {};
 Object.defineProperty(Ve, "__esModule", {
   value: !0
 });
-Ve.default = Qt;
+Ve.default = Gt;
 let Fe;
-const $t = new Uint8Array(16);
-function Qt() {
+const Qt = new Uint8Array(16);
+function Gt() {
   if (!Fe && (Fe = typeof crypto < "u" && crypto.getRandomValues && crypto.getRandomValues.bind(crypto), !Fe))
     throw new Error("crypto.getRandomValues() not supported. See https://github.com/uuidjs/uuid#getrandomvalues-not-supported");
-  return Fe($t);
+  return Fe(Qt);
 }
 var Ae = {}, Ce = {}, $e = {};
 Object.defineProperty($e, "__esModule", {
   value: !0
 });
 $e.default = void 0;
-var Gt = /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000)$/i;
-$e.default = Gt;
+var qt = /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000)$/i;
+$e.default = qt;
 Object.defineProperty(Ce, "__esModule", {
   value: !0
 });
 Ce.default = void 0;
-var qt = Wt($e);
-function Wt(o) {
+var Wt = Ht($e);
+function Ht(o) {
   return o && o.__esModule ? o : { default: o };
 }
-function Ht(o) {
-  return typeof o == "string" && qt.default.test(o);
+function Yt(o) {
+  return typeof o == "string" && Wt.default.test(o);
 }
-var Yt = Ht;
-Ce.default = Yt;
+var zt = Yt;
+Ce.default = zt;
 Object.defineProperty(Ae, "__esModule", {
   value: !0
 });
 Ae.default = void 0;
 Ae.unsafeStringify = wt;
-var zt = Jt(Ce);
-function Jt(o) {
+var Jt = Xt(Ce);
+function Xt(o) {
   return o && o.__esModule ? o : { default: o };
 }
 const de = [];
@@ -76,30 +76,30 @@ for (let o = 0; o < 256; ++o)
 function wt(o, e = 0) {
   return (de[o[e + 0]] + de[o[e + 1]] + de[o[e + 2]] + de[o[e + 3]] + "-" + de[o[e + 4]] + de[o[e + 5]] + "-" + de[o[e + 6]] + de[o[e + 7]] + "-" + de[o[e + 8]] + de[o[e + 9]] + "-" + de[o[e + 10]] + de[o[e + 11]] + de[o[e + 12]] + de[o[e + 13]] + de[o[e + 14]] + de[o[e + 15]]).toLowerCase();
 }
-function Xt(o, e = 0) {
+function Zt(o, e = 0) {
   const t = wt(o, e);
-  if (!(0, zt.default)(t))
+  if (!(0, Jt.default)(t))
     throw TypeError("Stringified UUID is invalid");
   return t;
 }
-var Zt = Xt;
-Ae.default = Zt;
+var ei = Zt;
+Ae.default = ei;
 Object.defineProperty(Ue, "__esModule", {
   value: !0
 });
 Ue.default = void 0;
-var ei = ii(Ve), ti = Ae;
-function ii(o) {
+var ti = ni(Ve), ii = Ae;
+function ni(o) {
   return o && o.__esModule ? o : { default: o };
 }
 let dt, st, ot = 0, at = 0;
-function ni(o, e, t) {
+function ri(o, e, t) {
   let i = e && t || 0;
   const r = e || new Array(16);
   o = o || {};
   let n = o.node || dt, a = o.clockseq !== void 0 ? o.clockseq : st;
   if (n == null || a == null) {
-    const P = o.random || (o.rng || ei.default)();
+    const P = o.random || (o.rng || ti.default)();
     n == null && (n = dt = [P[0] | 1, P[1], P[2], P[3], P[4], P[5]]), a == null && (a = st = (P[6] << 8 | P[7]) & 16383);
   }
   let p = o.msecs !== void 0 ? o.msecs : Date.now(), g = o.nsecs !== void 0 ? o.nsecs : at + 1;
@@ -113,38 +113,38 @@ function ni(o, e, t) {
   r[i++] = S >>> 8 & 255, r[i++] = S & 255, r[i++] = S >>> 24 & 15 | 16, r[i++] = S >>> 16 & 255, r[i++] = a >>> 8 | 128, r[i++] = a & 255;
   for (let P = 0; P < 6; ++P)
     r[i + P] = n[P];
-  return e || (0, ti.unsafeStringify)(r);
+  return e || (0, ii.unsafeStringify)(r);
 }
-var ri = ni;
-Ue.default = ri;
+var si = ri;
+Ue.default = si;
 var Qe = {}, Te = {}, Pe = {};
 Object.defineProperty(Pe, "__esModule", {
   value: !0
 });
 Pe.default = void 0;
-var si = oi(Ce);
-function oi(o) {
+var oi = ai(Ce);
+function ai(o) {
   return o && o.__esModule ? o : { default: o };
 }
-function ai(o) {
-  if (!(0, si.default)(o))
+function li(o) {
+  if (!(0, oi.default)(o))
     throw TypeError("Invalid UUID");
   let e;
   const t = new Uint8Array(16);
   return t[0] = (e = parseInt(o.slice(0, 8), 16)) >>> 24, t[1] = e >>> 16 & 255, t[2] = e >>> 8 & 255, t[3] = e & 255, t[4] = (e = parseInt(o.slice(9, 13), 16)) >>> 8, t[5] = e & 255, t[6] = (e = parseInt(o.slice(14, 18), 16)) >>> 8, t[7] = e & 255, t[8] = (e = parseInt(o.slice(19, 23), 16)) >>> 8, t[9] = e & 255, t[10] = (e = parseInt(o.slice(24, 36), 16)) / 1099511627776 & 255, t[11] = e / 4294967296 & 255, t[12] = e >>> 24 & 255, t[13] = e >>> 16 & 255, t[14] = e >>> 8 & 255, t[15] = e & 255, t;
 }
-var li = ai;
-Pe.default = li;
+var ui = li;
+Pe.default = ui;
 Object.defineProperty(Te, "__esModule", {
   value: !0
 });
 Te.URL = Te.DNS = void 0;
-Te.default = pi;
-var ui = Ae, ci = fi(Pe);
-function fi(o) {
+Te.default = di;
+var ci = Ae, fi = hi(Pe);
+function hi(o) {
   return o && o.__esModule ? o : { default: o };
 }
-function hi(o) {
+function pi(o) {
   o = unescape(encodeURIComponent(o));
   const e = [];
   for (let t = 0; t < o.length; ++t)
@@ -155,10 +155,10 @@ const _t = "6ba7b810-9dad-11d1-80b4-00c04fd430c8";
 Te.DNS = _t;
 const Et = "6ba7b811-9dad-11d1-80b4-00c04fd430c8";
 Te.URL = Et;
-function pi(o, e, t) {
+function di(o, e, t) {
   function i(r, n, a, p) {
     var g;
-    if (typeof r == "string" && (r = hi(r)), typeof n == "string" && (n = (0, ci.default)(n)), ((g = n) === null || g === void 0 ? void 0 : g.length) !== 16)
+    if (typeof r == "string" && (r = pi(r)), typeof n == "string" && (n = (0, fi.default)(n)), ((g = n) === null || g === void 0 ? void 0 : g.length) !== 16)
       throw TypeError("Namespace must be array-like (16 iterable integer values, 0-255)");
     let m = new Uint8Array(16 + r.length);
     if (m.set(n), m.set(r, n.length), m = t(m), m[6] = m[6] & 15 | e, m[8] = m[8] & 63 | 128, a) {
@@ -167,7 +167,7 @@ function pi(o, e, t) {
         a[p + L] = m[L];
       return a;
     }
-    return (0, ui.unsafeStringify)(m);
+    return (0, ci.unsafeStringify)(m);
   }
   try {
     i.name = o;
@@ -180,16 +180,16 @@ Object.defineProperty(Ge, "__esModule", {
   value: !0
 });
 Ge.default = void 0;
-function di(o) {
+function vi(o) {
   if (typeof o == "string") {
     const e = unescape(encodeURIComponent(o));
     o = new Uint8Array(e.length);
     for (let t = 0; t < e.length; ++t)
       o[t] = e.charCodeAt(t);
   }
-  return vi(mi(gi(o), o.length * 8));
+  return mi(gi(yi(o), o.length * 8));
 }
-function vi(o) {
+function mi(o) {
   const e = [], t = o.length * 32, i = "0123456789abcdef";
   for (let r = 0; r < t; r += 8) {
     const n = o[r >> 5] >>> r % 32 & 255, a = parseInt(i.charAt(n >>> 4 & 15) + i.charAt(n & 15), 16);
@@ -200,7 +200,7 @@ function vi(o) {
 function bt(o) {
   return (o + 64 >>> 9 << 4) + 14 + 1;
 }
-function mi(o, e) {
+function gi(o, e) {
   o[e >> 5] |= 128 << e % 32, o[bt(e) - 1] = e;
   let t = 1732584193, i = -271733879, r = -1732584194, n = 271733878;
   for (let a = 0; a < o.length; a += 16) {
@@ -209,7 +209,7 @@ function mi(o, e) {
   }
   return [t, i, r, n];
 }
-function gi(o) {
+function yi(o) {
   if (o.length === 0)
     return [];
   const e = o.length * 8, t = new Uint32Array(bt(e));
@@ -221,11 +221,11 @@ function xe(o, e) {
   const t = (o & 65535) + (e & 65535);
   return (o >> 16) + (e >> 16) + (t >> 16) << 16 | t & 65535;
 }
-function yi(o, e) {
+function wi(o, e) {
   return o << e | o >>> 32 - e;
 }
 function qe(o, e, t, i, r, n) {
-  return xe(yi(xe(xe(e, o), xe(i, n)), r), t);
+  return xe(wi(xe(xe(e, o), xe(i, n)), r), t);
 }
 function ve(o, e, t, i, r, n, a) {
   return qe(e & t | ~e & i, o, e, r, n, a);
@@ -239,58 +239,58 @@ function ge(o, e, t, i, r, n, a) {
 function ye(o, e, t, i, r, n, a) {
   return qe(t ^ (e | ~i), o, e, r, n, a);
 }
-var wi = di;
-Ge.default = wi;
+var _i = vi;
+Ge.default = _i;
 Object.defineProperty(Qe, "__esModule", {
   value: !0
 });
 Qe.default = void 0;
-var _i = kt(Te), Ei = kt(Ge);
+var Ei = kt(Te), bi = kt(Ge);
 function kt(o) {
   return o && o.__esModule ? o : { default: o };
 }
-const bi = (0, _i.default)("v3", 48, Ei.default);
-var ki = bi;
-Qe.default = ki;
+const ki = (0, Ei.default)("v3", 48, bi.default);
+var Oi = ki;
+Qe.default = Oi;
 var We = {}, He = {};
 Object.defineProperty(He, "__esModule", {
   value: !0
 });
 He.default = void 0;
-const Oi = typeof crypto < "u" && crypto.randomUUID && crypto.randomUUID.bind(crypto);
-var Li = {
-  randomUUID: Oi
+const Li = typeof crypto < "u" && crypto.randomUUID && crypto.randomUUID.bind(crypto);
+var xi = {
+  randomUUID: Li
 };
-He.default = Li;
+He.default = xi;
 Object.defineProperty(We, "__esModule", {
   value: !0
 });
 We.default = void 0;
-var vt = Ot(He), xi = Ot(Ve), Ti = Ae;
+var vt = Ot(He), Ti = Ot(Ve), Ai = Ae;
 function Ot(o) {
   return o && o.__esModule ? o : { default: o };
 }
-function Ai(o, e, t) {
+function Si(o, e, t) {
   if (vt.default.randomUUID && !e && !o)
     return vt.default.randomUUID();
   o = o || {};
-  const i = o.random || (o.rng || xi.default)();
+  const i = o.random || (o.rng || Ti.default)();
   if (i[6] = i[6] & 15 | 64, i[8] = i[8] & 63 | 128, e) {
     t = t || 0;
     for (let r = 0; r < 16; ++r)
       e[t + r] = i[r];
     return e;
   }
-  return (0, Ti.unsafeStringify)(i);
+  return (0, Ai.unsafeStringify)(i);
 }
-var Si = Ai;
-We.default = Si;
+var Ci = Si;
+We.default = Ci;
 var Ye = {}, ze = {};
 Object.defineProperty(ze, "__esModule", {
   value: !0
 });
 ze.default = void 0;
-function Ci(o, e, t, i) {
+function Ii(o, e, t, i) {
   switch (o) {
     case 0:
       return e & t ^ ~e & i;
@@ -305,7 +305,7 @@ function Ci(o, e, t, i) {
 function lt(o, e) {
   return o << e | o >>> 32 - e;
 }
-function Ii(o) {
+function Ri(o) {
   const e = [1518500249, 1859775393, 2400959708, 3395469782], t = [1732584193, 4023233417, 2562383102, 271733878, 3285377520];
   if (typeof o == "string") {
     const a = unescape(encodeURIComponent(o));
@@ -331,49 +331,49 @@ function Ii(o) {
       p[I] = lt(p[I - 3] ^ p[I - 8] ^ p[I - 14] ^ p[I - 16], 1);
     let g = t[0], m = t[1], L = t[2], S = t[3], P = t[4];
     for (let I = 0; I < 80; ++I) {
-      const T = Math.floor(I / 20), R = lt(g, 5) + Ci(T, m, L, S) + P + e[T] + p[I] >>> 0;
+      const T = Math.floor(I / 20), R = lt(g, 5) + Ii(T, m, L, S) + P + e[T] + p[I] >>> 0;
       P = S, S = L, L = lt(m, 30) >>> 0, m = g, g = R;
     }
     t[0] = t[0] + g >>> 0, t[1] = t[1] + m >>> 0, t[2] = t[2] + L >>> 0, t[3] = t[3] + S >>> 0, t[4] = t[4] + P >>> 0;
   }
   return [t[0] >> 24 & 255, t[0] >> 16 & 255, t[0] >> 8 & 255, t[0] & 255, t[1] >> 24 & 255, t[1] >> 16 & 255, t[1] >> 8 & 255, t[1] & 255, t[2] >> 24 & 255, t[2] >> 16 & 255, t[2] >> 8 & 255, t[2] & 255, t[3] >> 24 & 255, t[3] >> 16 & 255, t[3] >> 8 & 255, t[3] & 255, t[4] >> 24 & 255, t[4] >> 16 & 255, t[4] >> 8 & 255, t[4] & 255];
 }
-var Ri = Ii;
-ze.default = Ri;
+var Ni = Ri;
+ze.default = Ni;
 Object.defineProperty(Ye, "__esModule", {
   value: !0
 });
 Ye.default = void 0;
-var Ni = Lt(Te), Pi = Lt(ze);
+var Pi = Lt(Te), Bi = Lt(ze);
 function Lt(o) {
   return o && o.__esModule ? o : { default: o };
 }
-const Bi = (0, Ni.default)("v5", 80, Pi.default);
-var Fi = Bi;
-Ye.default = Fi;
+const Fi = (0, Pi.default)("v5", 80, Bi.default);
+var Mi = Fi;
+Ye.default = Mi;
 var Je = {};
 Object.defineProperty(Je, "__esModule", {
   value: !0
 });
 Je.default = void 0;
-var Mi = "00000000-0000-0000-0000-000000000000";
-Je.default = Mi;
+var Ki = "00000000-0000-0000-0000-000000000000";
+Je.default = Ki;
 var Xe = {};
 Object.defineProperty(Xe, "__esModule", {
   value: !0
 });
 Xe.default = void 0;
-var Ki = ji(Ce);
-function ji(o) {
+var ji = Di(Ce);
+function Di(o) {
   return o && o.__esModule ? o : { default: o };
 }
-function Di(o) {
-  if (!(0, Ki.default)(o))
+function Ui(o) {
+  if (!(0, ji.default)(o))
     throw TypeError("Invalid UUID");
   return parseInt(o.slice(14, 15), 16);
 }
-var Ui = Di;
-Xe.default = Ui;
+var Vi = Ui;
+Xe.default = Vi;
 (function(o) {
   Object.defineProperty(o, "__esModule", {
     value: !0
@@ -431,7 +431,7 @@ Xe.default = Ui;
 var Ze = {};
 Object.defineProperty(Ze, "__esModule", { value: !0 });
 Ze.RandomStringConfig = void 0;
-class Vi {
+class $i {
   /**
    * Create a new instance.
    */
@@ -510,11 +510,11 @@ class Vi {
     return this.config.symbols;
   }
 }
-Ze.RandomStringConfig = Vi;
+Ze.RandomStringConfig = $i;
 var et = {};
 Object.defineProperty(et, "__esModule", { value: !0 });
 et.RandomStringBuilder = void 0;
-class $i {
+class Qi {
   /**
    * Create a new random string builder instance.
    */
@@ -556,19 +556,19 @@ class $i {
     return this.config.useSymbols(), this;
   }
 }
-et.RandomStringBuilder = $i;
+et.RandomStringBuilder = Qi;
 var tt = {};
-const Qi = {}, Gi = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const Gi = {}, qi = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  default: Qi
-}, Symbol.toStringTag, { value: "Module" })), qi = /* @__PURE__ */ Vt(Gi);
-var Wi = ct && ct.__importDefault || function(o) {
+  default: Gi
+}, Symbol.toStringTag, { value: "Module" })), Wi = /* @__PURE__ */ $t(qi);
+var Hi = ct && ct.__importDefault || function(o) {
   return o && o.__esModule ? o : { default: o };
 };
 Object.defineProperty(tt, "__esModule", { value: !0 });
 tt.RandomStringGenerator = void 0;
-const Hi = Wi(qi);
-class Yi {
+const Yi = Hi(Wi);
+class zi {
   /**
    * Create a new random string generator instance.
    */
@@ -620,18 +620,18 @@ class Yi {
     if (!e)
       throw new Error("You must specify the character set when using the string builder in Str.random(builder => …)");
     let t = this.config.length();
-    const i = Hi.default.randomBytes(t), r = e.length - 1;
+    const i = Yi.default.randomBytes(t), r = e.length - 1;
     let n = "";
     for (; t--; )
       n += e[i[t] & r];
     return n;
   }
 }
-tt.RandomStringGenerator = Yi;
+tt.RandomStringGenerator = zi;
 var it = {};
 Object.defineProperty(it, "__esModule", { value: !0 });
 it.StringReplacer = void 0;
-class zi {
+class Ji {
   /**
    * Create a new string replacer instance.
    */
@@ -665,10 +665,10 @@ class zi {
     }
   }
 }
-it.StringReplacer = zi;
+it.StringReplacer = Ji;
 Object.defineProperty(De, "__esModule", { value: !0 });
 De.Str = void 0;
-const mt = yt, Ji = Ze, Xi = et, Zi = tt, ut = it;
+const mt = yt, Xi = Ze, Zi = et, en = tt, ut = it;
 class te {
   /**
    * Create a new String instance providing chainable string operations.
@@ -1180,7 +1180,7 @@ class te {
    * @returns {String}
    */
   random(e) {
-    const t = new Ji.RandomStringConfig(), i = new Xi.RandomStringBuilder(t);
+    const t = new Xi.RandomStringConfig(), i = new Zi.RandomStringBuilder(t);
     return e || i.characters().numbers().symbols(), typeof e == "function" && e(i), typeof e == "number" && i.characters().numbers().symbols().length(e), this.generateRandom(t);
   }
   /**
@@ -1191,7 +1191,7 @@ class te {
    * @returns {String}
    */
   generateRandom(e) {
-    return new Zi.RandomStringGenerator(te, e).generate();
+    return new en.RandomStringGenerator(te, e).generate();
   }
   replace(e, t) {
     return t == null ? new ut.StringReplacer(this, e) : new te(this.value.replace(e, t));
@@ -1485,15 +1485,15 @@ class te {
 De.Str = te;
 Object.defineProperty(je, "__esModule", { value: !0 });
 je.Str = void 0;
-const en = De, be = (o) => new en.Str(o);
+const tn = De, be = (o) => new tn.Str(o);
 je.Str = be;
 be.uuid = () => be().uuid();
 be.random = (o) => be().random(o);
 be.isString = (o) => be().isString(o);
 be.isAlphaNumeric = (o) => be().isAlphaNumeric(o);
 be.isSymbol = (o) => be().isSymbol(o);
-var tn = je.default = be;
-const gt = () => process.env.NODE_ENV === "test", nn = () => "id-" + (Math.random() + 1).toString(36).substring(7), xt = (o) => tn(o).isCamel(), Tt = (o) => /^([a-z]{1,})(_[a-z0-9]{1,})*$/.test(o), At = (o) => {
+var nn = je.default = be;
+const gt = () => process.env.NODE_ENV === "test", rn = () => "id-" + (Math.random() + 1).toString(36).substring(7), xt = (o) => nn(o).isCamel(), Tt = (o) => /^([a-z]{1,})(_[a-z0-9]{1,})*$/.test(o), At = (o) => {
   let e = null;
   return Object.entries(o).forEach(([t, i]) => {
     if (i.type === "repeat") {
@@ -1510,7 +1510,7 @@ const gt = () => process.env.NODE_ENV === "test", nn = () => "id-" + (Math.rando
       return r;
   })).filter(Boolean);
   return t.length && i.push(...t), i;
-}, rn = (o) => {
+}, sn = (o) => {
   var i;
   const e = St(o);
   if (e.length)
@@ -1519,7 +1519,7 @@ const gt = () => process.env.NODE_ENV === "test", nn = () => "id-" + (Math.rando
   if (t)
     throw new Error(`ID must be in camel case: ${t}`);
   return !0;
-}, sn = (o, e, t) => o < e ? (gt() || console.warn(`Value ${o} is lower than min ${e}. Returning min.`), e) : o > t ? (gt() || console.warn(`Value ${o} is higher than max ${t}. Returning max.`), t) : o, on = (o, e) => {
+}, on = (o, e, t) => o < e ? (gt() || console.warn(`Value ${o} is lower than min ${e}. Returning min.`), e) : o > t ? (gt() || console.warn(`Value ${o} is higher than max ${t}. Returning max.`), t) : o, an = (o, e) => {
   if (e.type === "repeat" && isNaN(o))
     throw new Error("Value of repeat question must be a number");
 }, pt = class {
@@ -1545,18 +1545,18 @@ const gt = () => process.env.NODE_ENV === "test", nn = () => "id-" + (Math.rando
 };
 let Me = pt;
 le(Me, "nextId", 0);
-const an = {
+const ln = {
   text: !0,
   multipleChoice: !0,
   number: !0,
   date: !0,
   repeat: !0
-}, ln = (o, e = !1) => {
-  if (!an[o.type])
+}, un = (o, e = !1) => {
+  if (!ln[o.type])
     throw new Error("Invalid question type");
-  const t = o.id || nn();
+  const t = o.id || rn();
   let i;
-  return o.type === "text" ? i = ft(o) : o.type === "date" ? i = un(o) : o.type === "multipleChoice" ? i = cn(o) : o.type === "repeat" ? i = fn(o) : i = ft(o), {
+  return o.type === "text" ? i = ft(o) : o.type === "date" ? i = cn(o) : o.type === "multipleChoice" ? i = fn(o) : o.type === "repeat" ? i = hn(o) : i = ft(o), {
     id: t,
     type: o.type,
     title: o.title || "",
@@ -1571,10 +1571,10 @@ const an = {
   required: Boolean(o.required),
   placeholder: o.placeholder || "",
   subType: o.subType || ""
-}), un = (o) => ({
+}), cn = (o) => ({
   format: o.format || "dd/mm/yyyy",
   ...ft(o)
-}), cn = (o) => {
+}), fn = (o) => {
   var e, t;
   if (o.subType === "multiSelect") {
     const i = o.values || [];
@@ -1593,18 +1593,18 @@ const an = {
     choices: o.choices || [],
     subType: o.subType || "radio"
   };
-}, fn = (o) => ({
+}, hn = (o) => ({
   value: o.value || "",
   range: o.range || { min: 0, max: 0 },
   questions: o.questions || {}
-}), hn = (o, e, t = null) => {
+}), pn = (o, e, t = null) => {
   const i = JSON.parse(JSON.stringify(o));
   return Object.entries(i).forEach(([r, n]) => {
     const a = e + 1;
     n.title && (n.title = n.title.replace(/\<%= index %>/g, a.toString())), t ? n.indexInsideRepeat = t + `.${a}` : n.indexInsideRepeat = a.toString();
   }), i;
 };
-var Ke = {}, pn = {
+var Ke = {}, dn = {
   get exports() {
     return Ke;
   },
@@ -2235,11 +2235,11 @@ var Ke = {}, pn = {
             }
             var re = H.prototype;
             return re.init = function(oe, fe) {
-              for (var _e = arguments, Se = this, Ne = arguments.length, Mt = new Array(Ne > 2 ? Ne - 2 : 0), Be = 2; Be < Ne; Be++)
-                Mt[Be - 2] = arguments[Be];
-              this.lineno = oe, this.colno = fe, this.fields.forEach(function(Kt, jt) {
-                var rt = _e[jt + 2];
-                rt === void 0 && (rt = null), Se[Kt] = rt;
+              for (var _e = arguments, Se = this, Ne = arguments.length, Kt = new Array(Ne > 2 ? Ne - 2 : 0), Be = 2; Be < Ne; Be++)
+                Kt[Be - 2] = arguments[Be];
+              this.lineno = oe, this.colno = fe, this.fields.forEach(function(jt, Dt) {
+                var rt = _e[Dt + 2];
+                rt === void 0 && (rt = null), Se[jt] = rt;
               });
             }, re.findAll = function(oe, fe) {
               var _e = this;
@@ -2348,16 +2348,16 @@ var Ke = {}, pn = {
             fields: ["target"]
           }), he = T.extend("BinOp", {
             fields: ["left", "right"]
-          }), Oe = he.extend("In"), O = he.extend("Is"), M = he.extend("Or"), V = he.extend("And"), U = we.extend("Not"), Y = he.extend("Add"), J = he.extend("Concat"), ae = he.extend("Sub"), ee = he.extend("Mul"), ue = he.extend("Div"), Ee = he.extend("FloorDiv"), ke = he.extend("Mod"), Le = he.extend("Pow"), Rt = we.extend("Neg"), Nt = we.extend("Pos"), Pt = T.extend("Compare", {
+          }), Oe = he.extend("In"), O = he.extend("Is"), M = he.extend("Or"), V = he.extend("And"), U = we.extend("Not"), Y = he.extend("Add"), J = he.extend("Concat"), ae = he.extend("Sub"), ee = he.extend("Mul"), ue = he.extend("Div"), Ee = he.extend("FloorDiv"), ke = he.extend("Mod"), Le = he.extend("Pow"), Nt = we.extend("Neg"), Pt = we.extend("Pos"), Bt = T.extend("Compare", {
             fields: ["expr", "ops"]
-          }), Bt = T.extend("CompareOperand", {
+          }), Ft = T.extend("CompareOperand", {
             fields: ["expr", "type"]
           }), nt = T.extend("CallExtension", {
             init: function(H, re, ne, oe) {
               this.parent(), this.extName = H.__name || H, this.prop = re, this.args = ne || new s(), this.contentArgs = oe || [], this.autoescape = H.autoescape;
             },
             fields: ["extName", "prop", "args", "contentArgs"]
-          }), Ft = nt.extend("CallExtensionAsync");
+          }), Mt = nt.extend("CallExtensionAsync");
           function Ie(W, H, re) {
             var ne = W.split(`
 `);
@@ -2441,12 +2441,12 @@ var Ke = {}, pn = {
             FloorDiv: Ee,
             Mod: ke,
             Pow: Le,
-            Neg: Rt,
-            Pos: Nt,
-            Compare: Pt,
-            CompareOperand: Bt,
+            Neg: Nt,
+            Pos: Pt,
+            Compare: Bt,
+            CompareOperand: Ft,
             CallExtension: nt,
-            CallExtensionAsync: Ft,
+            CallExtensionAsync: Mt,
             printNodes: Re
           };
         },
@@ -5175,27 +5175,27 @@ else {`), this._emit("cb()")), this._emitLine("}");
       ])
     );
   });
-})(pn);
-const dn = (o, e, t = { cleanHtml: !1 }) => {
+})(dn);
+const vn = (o, e, t = { cleanHtml: !1 }) => {
   const i = Ct(o);
   Ke.configure({ autoescape: !0 });
   let r = e;
-  return t != null && t.cleanHtml && (r = gn(e)), Ke.renderString(r, i);
+  return t != null && t.cleanHtml && (r = It(e)), Ke.renderString(r, i);
 }, Ct = (o) => {
   const e = {};
   return Object.entries(o).forEach(([t, i]) => {
-    if (vn(i)) {
+    if (mn(i)) {
       const r = Object.values(i.content);
       e[t] = r.filter((n) => !(n != null && n.hidden)).map((n) => Ct(n.questions));
       return;
     }
-    if (mn(i)) {
+    if (gn(i)) {
       e[t] = i.values;
       return;
     }
     e[t] = i.value;
   }), e;
-}, vn = (o) => Boolean(o.content), mn = (o) => Boolean(o.values), gn = (o) => {
+}, mn = (o) => Boolean(o.content), gn = (o) => Boolean(o.values), It = (o) => {
   const e = (n) => {
     let a = n.replace(/<mark(.*?)>/gm, "");
     return a = a.replace(/<\/mark>/gm, ""), a;
@@ -5354,6 +5354,7 @@ class ht {
   async backToPreviousActive() {
     const e = this.nested;
     if (e.length) {
+      console.log("----"), console.log(e), console.log("----");
       const t = e[e.length - 1].split(this.separator)[0];
       let i = await this.getQuestion();
       for (; i.id !== t; )
@@ -5403,7 +5404,7 @@ class ht {
     return await this.copyQuestion(!0), await this.happyPath(), this.transform(), this.createResult(), this.result;
   }
 }
-class It {
+class Rt {
   constructor(e = "empty", t = { isRoot: !0, data: null, isLastContentInterviewOfRepeat: !1 }) {
     le(this, "interview", /* @__PURE__ */ new Map());
     le(this, "events");
@@ -5425,7 +5426,7 @@ class It {
   init(e) {
     if (e === null)
       throw new Error("Interview init param is null");
-    rn(e);
+    sn(e);
     for (const t of Object.values(e))
       this.add(t);
   }
@@ -5436,7 +5437,7 @@ class It {
     }), e;
   }
   add(e, t = !1) {
-    const i = ln(e);
+    const i = un(e);
     return i.type === "repeat" && this.buildContentForRepeatQuestion(i), this.interview.set(i.id, i), this.setValue(i.id, i.value), this.events.dispatch("question-added", i), i;
   }
   remove(e) {
@@ -5701,7 +5702,7 @@ class It {
     const r = this.interview.get(e);
     if (!r)
       throw new Error("No question with id:" + e);
-    on(t, r), r.subType !== "multiSelect" && (r.value = t), (r == null ? void 0 : r.type) === "multipleChoice" && this.setRadioChecked(r, t, i), (r == null ? void 0 : r.type) === "repeat" && this.buildContentForRepeatQuestion(r, t), this.data[e] ? this.data[e].value = r.value : this.data[e] = { value: r.value }, r.subType === "multiSelect" && (this.data[e].values = r.values), this.events.dispatch("set-value", this.interview.get(e));
+    an(t, r), r.subType !== "multiSelect" && (r.value = t), (r == null ? void 0 : r.type) === "multipleChoice" && this.setRadioChecked(r, t, i), (r == null ? void 0 : r.type) === "repeat" && this.buildContentForRepeatQuestion(r, t), this.data[e] ? this.data[e].value = r.value : this.data[e] = { value: r.value }, r.subType === "multiSelect" && (this.data[e].values = r.values), this.events.dispatch("set-value", this.interview.get(e));
   }
   on(e, t) {
     this.events.register(e, t);
@@ -5740,14 +5741,14 @@ class It {
   }
   buildContentForRepeatQuestion(e, t = null) {
     const { range: i, id: r, questions: n, indexInsideRepeat: a } = e, { min: p, max: g } = i;
-    t = t && parseInt(t), t = sn(e.value, p, g), e.value = t, e.content || (e.content = {}), this.data[r] ? this.data[r].value = t : this.data[r] = { value: t, content: {} };
+    t = t && parseInt(t), t = on(e.value, p, g), e.value = t, e.content || (e.content = {}), this.data[r] ? this.data[r].value = t : this.data[r] = { value: t, content: {} };
     for (let S = 0; S < t; S++) {
       if (e.content[S]) {
         e.content[S].hidden = !1, this.data[r].content[S].hidden = !1;
         continue;
       }
       this.data[r].content[S] = { hidden: !1, questions: {} };
-      const P = new It(hn(n, S, a), {
+      const P = new Rt(pn(n, S, a), {
         isRoot: !1,
         events: this.events,
         data: this.data[r].content[S].questions
@@ -5772,7 +5773,12 @@ class It {
   makeTemplate(e, t = !1) {
     if (!e)
       throw new Error("No template provided");
-    return dn(this.data, e, { cleanHtml: t });
+    return vn(this.data, e, { cleanHtml: t });
+  }
+  getCleanHTML(e) {
+    if (!e)
+      throw new Error("No template provided");
+    return It(e);
   }
   getStepById(e) {
     const t = this.interview.get(e);
@@ -5863,5 +5869,5 @@ class It {
   }
 }
 export {
-  It as GuidedInterview
+  Rt as GuidedInterview
 };

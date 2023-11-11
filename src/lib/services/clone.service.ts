@@ -261,6 +261,10 @@ export class Cloner {
   async backToPreviousActive() {
     const nested = this.nested;
     if (nested.length) {
+      // mantener para copy machine
+      console.log('----')
+      console.log(nested)
+      console.log('----')
       const lastActive = nested[nested.length - 1].split(this.separator)[0];
       let question = await this.getQuestion();
       while (question.id !== lastActive) {

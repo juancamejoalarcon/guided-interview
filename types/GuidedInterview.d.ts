@@ -44,6 +44,7 @@ export declare class GuidedInterview {
     buildContentForRepeatQuestion(repeatQuestion: Repeat, value?: number | null): void;
     applyDataToQuestions(data: DataSaved): void;
     makeTemplate(template: string, cleanHtml?: boolean): string;
+    getCleanHTML(template: string): string;
     getStepById(id: string): GenericQuestion | null;
     checkIfIdIsValid(id: string): {
         isValid: boolean;
