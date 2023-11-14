@@ -18,6 +18,8 @@ export class Cloner {
   endsForRepeat: any = {};
   result: any = {}
 
+  alreadyCopiedRepeats: any = {}
+
   questionsInsideRepeat: GenericQuestion[] = [];
 
   getQuestion!: (options?: any) => Promise<copiedQuestion>;
@@ -183,6 +185,7 @@ export class Cloner {
     const ids2 = await this.goToEndAndGetIdsAndGoBack();
     await this.setValueOfRepeat(repeatId, 1, { checkAfterIdsGotten: true });
 
+    console.log('Custom ends for repeat: ', this.endsForRepeat)
     if (this.endsForRepeat[repeatId]) {
       repeatEnd = this.endsForRepeat[repeatId]
     } else {
@@ -220,13 +223,16 @@ export class Cloner {
       this.goToEndAndGetIdsAndGoBack,
       this.setValueOfRepeat,
       this.waitPreviousActive,
-      this.ignoreIds
+      this.ignoreIds,
+      this.endsForRepeat
     )
 
     await this.nextQuestion();
 
     (question as any).questions = await cloner.copy();
     console.log('--END Copy repeat: ' + question.id);
+
+    this.alreadyCopiedRepeats[question.id as string] = repeatEnd
 
     this.questionsInsideRepeat = [...this.questionsInsideRepeat, ...cloner.interview]
 
@@ -264,6 +270,12 @@ export class Cloner {
         this.applyLogicToQuestion(
           this.getQuestionInInterview(questionID) as any
         );
+        // si es repeat
+        if (current.type === "repeat") {
+          console.log('--REPEAT EXISTS---')
+          console.log('--YOU SHOULD GO TO NEXT QUESTION---')
+          console.log(this.alreadyCopiedRepeats)
+        }
       }
     } else {
       if (start) await this.start(current);

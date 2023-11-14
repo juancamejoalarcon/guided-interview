@@ -14,6 +14,7 @@ export declare class Cloner {
     ignoreIds: string[];
     endsForRepeat: any;
     result: any;
+    alreadyCopiedRepeats: any;
     questionsInsideRepeat: GenericQuestion[];
     getQuestion: (options?: any) => Promise<copiedQuestion>;
     isLastRadio: () => Promise<boolean>;
