@@ -128,6 +128,12 @@ describe("Cloner", () => {
       });
     }
 
+    const waitPreviousActive = () => {
+      return Promise.resolve()
+    }
+
+    const ignoreIds: any = []
+
     const cloner = new Cloner(
       getQuestion,
       isLastRadio,
@@ -139,7 +145,9 @@ describe("Cloner", () => {
       previousQuestion,
       isRepeat,
       goToEndAndGetIdsAndGoBack,
-      setValueOfRepeat
+      setValueOfRepeat,
+      waitPreviousActive,
+      ignoreIds
     )
 
     const result = await cloner.copy()
