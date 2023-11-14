@@ -12,6 +12,7 @@ export declare class Cloner {
     interview: GenericQuestion[];
     nested: string[];
     ignoreIds: string[];
+    endsForRepeat: any;
     result: any;
     questionsInsideRepeat: GenericQuestion[];
     getQuestion: (options?: any) => Promise<copiedQuestion>;
@@ -39,7 +40,7 @@ export declare class Cloner {
     }>, checkFirstRadio: (id: string) => Promise<{
         id: string;
         label: string;
-    }>, isEnd: () => Promise<boolean>, nextQuestion: () => Promise<void>, previousQuestion: () => Promise<void>, isRepeat: (id: string) => Promise<boolean>, goToEndAndGetIdsAndGoBack: () => Promise<string[]>, setValueOfRepeat: (id: string, value: number, options?: any) => Promise<void>, waitPreviousActive: () => Promise<void>, ignoreIds?: string[]);
+    }>, isEnd: () => Promise<boolean>, nextQuestion: () => Promise<void>, previousQuestion: () => Promise<void>, isRepeat: (id: string) => Promise<boolean>, goToEndAndGetIdsAndGoBack: () => Promise<string[]>, setValueOfRepeat: (id: string, value: number, options?: any) => Promise<void>, waitPreviousActive: () => Promise<void>, ignoreIds?: string[], endsForRepeat?: any);
     start(question: copiedQuestion): Promise<void>;
     insertQuestionInInterview(question: GenericQuestion, percentageOfCompletion: string | number): void;
     applyLogicToQuestion(question: GenericQuestion): void;

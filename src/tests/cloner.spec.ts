@@ -133,6 +133,7 @@ describe("Cloner", () => {
     }
 
     const ignoreIds: any = []
+    const endsForRepeat: any = {}
 
     const cloner = new Cloner(
       getQuestion,
@@ -147,7 +148,8 @@ describe("Cloner", () => {
       goToEndAndGetIdsAndGoBack,
       setValueOfRepeat,
       waitPreviousActive,
-      ignoreIds
+      ignoreIds,
+      endsForRepeat
     )
 
     const result = await cloner.copy()

@@ -15,6 +15,7 @@ export class Cloner {
   interview: GenericQuestion[] = [];
   nested: string[] = [];
   ignoreIds: string[] = [];
+  endsForRepeat: any = {};
   result: any = {}
 
   questionsInsideRepeat: GenericQuestion[] = [];
@@ -48,7 +49,8 @@ export class Cloner {
     goToEndAndGetIdsAndGoBack: () => Promise<string[]>,
     setValueOfRepeat: (id: string, value: number, options?: any) => Promise<void>,
     waitPreviousActive: () => Promise<void>,
-    ignoreIds: string[] = []
+    ignoreIds: string[] = [],
+    endsForRepeat: any = {}
   ) {
     this.getQuestion = getQuestion;
     this.isLastRadio = isLastRadio;
@@ -62,7 +64,8 @@ export class Cloner {
     this.goToEndAndGetIdsAndGoBack = goToEndAndGetIdsAndGoBack;
     this.setValueOfRepeat = setValueOfRepeat;
     this.waitPreviousActive = waitPreviousActive;
-    this.ignoreIds = ignoreIds
+    this.ignoreIds = ignoreIds;
+    this.endsForRepeat = endsForRepeat;
   }
 
   async start(question: copiedQuestion) {
@@ -173,19 +176,25 @@ export class Cloner {
   async copyRepeat(question: copiedQuestion) {
     console.log('--Copy repeat with id: ' + question.id)
     const repeatId = question.id as string;
+    let repeatEnd = '';
     await this.setValueOfRepeat(repeatId, 1);
     const ids1 = await this.goToEndAndGetIdsAndGoBack();
     await this.setValueOfRepeat(repeatId, 2);
     const ids2 = await this.goToEndAndGetIdsAndGoBack();
     await this.setValueOfRepeat(repeatId, 1, { checkAfterIdsGotten: true });
 
-    let repeatEnd = '';
-    for (let i = 0; i < ids1.length; i++) {
-      if (ids1[i] !== ids2[i]) {
-        repeatEnd = ids1[i]
-        break;
+    if (this.endsForRepeat[repeatId]) {
+      repeatEnd = this.endsForRepeat[repeatId]
+    } else {
+      for (let i = 0; i < ids1.length; i++) {
+        if (ids1[i] !== ids2[i]) {
+          repeatEnd = ids1[i]
+          break;
+        }
       }
     }
+
+    console.log('End for repeat ' + repeatId + ' = '  + repeatEnd)
 
     const isEnd = async () => {
       const thisIsEnd = await this.isEnd()
