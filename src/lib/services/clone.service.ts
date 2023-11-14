@@ -14,6 +14,7 @@ export type copiedQuestion = {
 export class Cloner {
   interview: GenericQuestion[] = [];
   nested: string[] = [];
+  ignoreIds: string[] = [];
   result: any = {}
 
   questionsInsideRepeat: GenericQuestion[] = [];
@@ -29,6 +30,7 @@ export class Cloner {
   isRepeat!: (id: string) => Promise<boolean>;
   goToEndAndGetIdsAndGoBack!: () => Promise<string[]>;
   setValueOfRepeat!: (id: string, value: number, options?: any) => Promise<void>;
+  waitPreviousActive!: () => Promise<void>;
 
   separator = '->';
 
@@ -44,7 +46,9 @@ export class Cloner {
     previousQuestion: () => Promise<void>,
     isRepeat: (id: string) => Promise<boolean>,
     goToEndAndGetIdsAndGoBack: () => Promise<string[]>,
-    setValueOfRepeat: (id: string, value: number, options?: any) => Promise<void>
+    setValueOfRepeat: (id: string, value: number, options?: any) => Promise<void>,
+    waitPreviousActive: () => Promise<void>,
+    ignoreIds: string[] = []
   ) {
     this.getQuestion = getQuestion;
     this.isLastRadio = isLastRadio;
@@ -57,6 +61,8 @@ export class Cloner {
     this.isRepeat = isRepeat;
     this.goToEndAndGetIdsAndGoBack = goToEndAndGetIdsAndGoBack;
     this.setValueOfRepeat = setValueOfRepeat;
+    this.waitPreviousActive = waitPreviousActive;
+    this.ignoreIds = ignoreIds
   }
 
   async start(question: copiedQuestion) {
@@ -128,7 +134,9 @@ export class Cloner {
 
   setActiveMultipleOption(id: string, label: string, subType: string = '') {
     if (this.nested.length && this.nested[this.nested.length - 1].includes(id)) {
-      this.nested.pop();
+      const elToDelete = this.nested[this.nested.length - 1]
+      const idToDelete = elToDelete.split(this.separator)[0]
+      if (idToDelete === id) this.nested.pop();
     }
     if (subType === 'multiSelect') {
       this.nested.push(`${id}${this.separator}${label}(multiSelect)`);
@@ -163,6 +171,7 @@ export class Cloner {
   }
 
   async copyRepeat(question: copiedQuestion) {
+    console.log('--Copy repeat with id: ' + question.id)
     const repeatId = question.id as string;
     await this.setValueOfRepeat(repeatId, 1);
     const ids1 = await this.goToEndAndGetIdsAndGoBack();
@@ -200,12 +209,15 @@ export class Cloner {
       this.previousQuestion,
       this.isRepeat,
       this.goToEndAndGetIdsAndGoBack,
-      this.setValueOfRepeat
+      this.setValueOfRepeat,
+      this.waitPreviousActive,
+      this.ignoreIds
     )
 
     await this.nextQuestion();
 
-    (question as any).questions = await cloner.copy()
+    (question as any).questions = await cloner.copy();
+    console.log('--END Copy repeat: ' + question.id);
 
     this.questionsInsideRepeat = [...this.questionsInsideRepeat, ...cloner.interview]
 
@@ -214,6 +226,12 @@ export class Cloner {
   async copyQuestion(start = false, happyPath = false) {
     const current = await this.getQuestion();
     const questionID = current.id as string;
+    if (questionID) {
+      if (this.ignoreIds.includes(questionID)) {
+        console.log('Ignore: ' + questionID)
+        return
+      }
+    }
     if (this.getQuestionInsideRepeat(questionID)) return
     if (this.questionExistsInInterview(questionID)) {
       if (current.type === "multipleChoice") {
@@ -267,7 +285,7 @@ export class Cloner {
       console.log('----')
       const lastActive = nested[nested.length - 1].split(this.separator)[0];
       let question = await this.getQuestion();
-      while (question.id !== lastActive) {
+      while (question?.id !== lastActive) {
         await this.previousQuestion();
         question = await this.getQuestion();
       }
@@ -290,6 +308,7 @@ export class Cloner {
       isEnd = await this.isEnd();
     }
     if (this.nested.length) {
+      if (this.waitPreviousActive) await this.waitPreviousActive()
       await this.backToPreviousActive();
       await this.happyPath();
     }
