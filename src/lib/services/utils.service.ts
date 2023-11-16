@@ -16,7 +16,7 @@ export const isCamelCase = (str: string): boolean => {
 }
 
 export const isSnakeCase = (str: string): boolean => {
-  const snakeCaseRegex = /^([a-z]{1,})(_[a-z0-9]{1,})*$/;
+  const snakeCaseRegex = /^([a-z0-9]{1,})(_[a-z0-9]{1,})*$/;
   return snakeCaseRegex.test(str);
 }
 

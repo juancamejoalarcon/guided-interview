@@ -558,11 +558,7 @@ class Qi {
 }
 et.RandomStringBuilder = Qi;
 var tt = {};
-const Gi = new Proxy({}, {
-  get(o, e) {
-    throw new Error(`Module "crypto" has been externalized for browser compatibility. Cannot access "crypto.${e}" in client code.  See http://vitejs.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.`);
-  }
-}), Wi = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const Gi = {}, Wi = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: Gi
 }, Symbol.toStringTag, { value: "Module" })), qi = /* @__PURE__ */ $t(Wi);
@@ -1497,7 +1493,7 @@ be.isString = (o) => be().isString(o);
 be.isAlphaNumeric = (o) => be().isAlphaNumeric(o);
 be.isSymbol = (o) => be().isSymbol(o);
 var nn = je.default = be;
-const gt = () => process.env.NODE_ENV === "test", rn = () => "id-" + (Math.random() + 1).toString(36).substring(7), xt = (o) => nn(o).isCamel(), Tt = (o) => /^([a-z]{1,})(_[a-z0-9]{1,})*$/.test(o), At = (o) => {
+const gt = () => process.env.NODE_ENV === "test", rn = () => "id-" + (Math.random() + 1).toString(36).substring(7), xt = (o) => nn(o).isCamel(), Tt = (o) => /^([a-z0-9]{1,})(_[a-z0-9]{1,})*$/.test(o), At = (o) => {
   let e = null;
   return Object.entries(o).forEach(([t, i]) => {
     if (i.type === "repeat") {
