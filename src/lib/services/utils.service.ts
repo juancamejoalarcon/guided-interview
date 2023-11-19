@@ -80,4 +80,9 @@ export const validateSetValue = (value: string | number | string[], question: G
       throw new Error("Value of repeat question must be a number");
     }
   }
+  if (question.type === 'number') {
+    if (isNaN(value as number) || value === '') {
+      throw new Error("Value of 'number' question must be a number");
+    }
+  }
 }

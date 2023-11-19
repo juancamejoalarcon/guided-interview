@@ -507,7 +507,11 @@ export class GuidedInterview {
     const question = this.interview.get(id);
     if (!question) throw new Error("No question with id:" + id);
     validateSetValue(value, question)
-    if (question.subType !== 'multiSelect') question!.value = value as string | number;
+    
+    if (question.subType !== 'multiSelect') {
+      if (question.type === 'number') question.value = typeof value === 'number' ? value : parseFloat(value as string)
+      else question!.value = value as string | number;
+    }
     
     if (question?.type === 'multipleChoice') {
       this.setRadioChecked(question as MultipleChoice, value as string, options)

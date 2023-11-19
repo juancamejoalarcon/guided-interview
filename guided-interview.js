@@ -1522,6 +1522,8 @@ const gt = () => process.env.NODE_ENV === "test", rn = () => "id-" + (Math.rando
 }, on = (o, e, t) => o < e ? (gt() || console.warn(`Value ${o} is lower than min ${e}. Returning min.`), e) : o > t ? (gt() || console.warn(`Value ${o} is higher than max ${t}. Returning max.`), t) : o, an = (o, e) => {
   if (e.type === "repeat" && isNaN(o))
     throw new Error("Value of repeat question must be a number");
+  if (e.type === "number" && (isNaN(o) || o === ""))
+    throw new Error("Value of 'number' question must be a number");
 }, pt = class {
   constructor() {
     ae(this, "subscribers");
@@ -1556,7 +1558,7 @@ const ln = {
     throw new Error("Invalid question type");
   const t = o.id || rn();
   let i;
-  return o.type === "text" ? i = ft(o) : o.type === "date" ? i = cn(o) : o.type === "multipleChoice" ? i = fn(o) : o.type === "repeat" ? i = hn(o) : i = ft(o), {
+  return o.type === "text" && (i = ft(o)), o.type === "number" ? i = cn(o) : o.type === "date" ? i = fn(o) : o.type === "multipleChoice" ? i = hn(o) : o.type === "repeat" ? i = pn(o) : i = ft(o), {
     id: t,
     type: o.type,
     title: o.title || "",
@@ -1572,9 +1574,15 @@ const ln = {
   placeholder: o.placeholder || "",
   subType: o.subType || ""
 }), cn = (o) => ({
+  // Number will be validated in setValue function
+  value: o.value,
+  required: Boolean(o.required),
+  placeholder: o.placeholder || "",
+  subType: o.subType || ""
+}), fn = (o) => ({
   format: o.format || "dd/mm/yyyy",
   ...ft(o)
-}), fn = (o) => {
+}), hn = (o) => {
   var e, t;
   if (o.subType === "multiSelect") {
     const i = o.values || [];
@@ -1593,18 +1601,18 @@ const ln = {
     choices: o.choices || [],
     subType: o.subType || "radio"
   };
-}, hn = (o) => ({
+}, pn = (o) => ({
   value: o.value || "",
   range: o.range || { min: 0, max: 0 },
   questions: o.questions || {}
-}), pn = (o, e, t = null) => {
+}), dn = (o, e, t = null) => {
   const i = JSON.parse(JSON.stringify(o));
   return Object.entries(i).forEach(([r, n]) => {
     const a = e + 1;
     n.title && (n.title = n.title.replace(/\<%= index %>/g, a.toString())), t ? n.indexInsideRepeat = t + `.${a}` : n.indexInsideRepeat = a.toString();
   }), i;
 };
-var Ke = {}, dn = {
+var Ke = {}, vn = {
   get exports() {
     return Ke;
   },
@@ -5175,8 +5183,8 @@ else {`), this._emit("cb()")), this._emitLine("}");
       ])
     );
   });
-})(dn);
-const vn = (o, e, t = { cleanHtml: !1 }) => {
+})(vn);
+const mn = (o, e, t = { cleanHtml: !1 }) => {
   const i = Ct(o);
   Ke.configure({ autoescape: !0 });
   let r = e;
@@ -5184,18 +5192,18 @@ const vn = (o, e, t = { cleanHtml: !1 }) => {
 }, Ct = (o) => {
   const e = {};
   return Object.entries(o).forEach(([t, i]) => {
-    if (mn(i)) {
+    if (gn(i)) {
       const r = Object.values(i.content);
       e[t] = r.filter((n) => !(n != null && n.hidden)).map((n) => Ct(n.questions));
       return;
     }
-    if (gn(i)) {
+    if (yn(i)) {
       e[t] = i.values;
       return;
     }
     e[t] = i.value;
   }), e;
-}, mn = (o) => Boolean(o.content), gn = (o) => Boolean(o.values), Rt = (o) => {
+}, gn = (o) => Boolean(o.content), yn = (o) => Boolean(o.values), Rt = (o) => {
   const e = (n) => {
     let a = n.replace(/<mark(.*?)>/gm, "");
     return a = a.replace(/<\/mark>/gm, ""), a;
@@ -5717,7 +5725,7 @@ class It {
     const r = this.interview.get(e);
     if (!r)
       throw new Error("No question with id:" + e);
-    an(t, r), r.subType !== "multiSelect" && (r.value = t), (r == null ? void 0 : r.type) === "multipleChoice" && this.setRadioChecked(r, t, i), (r == null ? void 0 : r.type) === "repeat" && this.buildContentForRepeatQuestion(r, t), this.data[e] ? this.data[e].value = r.value : this.data[e] = { value: r.value }, r.subType === "multiSelect" && (this.data[e].values = r.values), this.events.dispatch("set-value", this.interview.get(e));
+    an(t, r), r.subType !== "multiSelect" && (r.type === "number" ? r.value = typeof t == "number" ? t : parseFloat(t) : r.value = t), (r == null ? void 0 : r.type) === "multipleChoice" && this.setRadioChecked(r, t, i), (r == null ? void 0 : r.type) === "repeat" && this.buildContentForRepeatQuestion(r, t), this.data[e] ? this.data[e].value = r.value : this.data[e] = { value: r.value }, r.subType === "multiSelect" && (this.data[e].values = r.values), this.events.dispatch("set-value", this.interview.get(e));
   }
   on(e, t) {
     this.events.register(e, t);
@@ -5763,7 +5771,7 @@ class It {
         continue;
       }
       this.data[r].content[S] = { hidden: !1, questions: {} };
-      const P = new It(pn(n, S, a), {
+      const P = new It(dn(n, S, a), {
         isRoot: !1,
         events: this.events,
         data: this.data[r].content[S].questions
@@ -5788,7 +5796,7 @@ class It {
   makeTemplate(e, t = !1) {
     if (!e)
       throw new Error("No template provided");
-    return vn(this.data, e, { cleanHtml: t });
+    return mn(this.data, e, { cleanHtml: t });
   }
   getCleanHTML(e) {
     if (!e)

@@ -7,6 +7,12 @@ export declare const buildTextQuestion: (params: QuestionProp) => {
     placeholder: string;
     subType: string;
 };
+export declare const buildNumberQuestion: (params: QuestionProp) => {
+    value: any;
+    required: boolean;
+    placeholder: string;
+    subType: string;
+};
 export declare const buildDateQuestion: (params: DateProp) => {
     value: string;
     required: boolean;

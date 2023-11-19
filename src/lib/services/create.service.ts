@@ -30,6 +30,7 @@ export const getQuestion = (
   let typeParams;
 
   if (params.type === "text") typeParams = buildTextQuestion(params);
+  if (params.type === "number") typeParams = buildNumberQuestion(params);
   else if (params.type === "date") typeParams = buildDateQuestion(params as DateProp);
   else if (params.type === "multipleChoice") typeParams = buildMultipleChoiceQuestion(params as MultipleChoiceProp);
   else if (params.type === "repeat") typeParams = buildRepeatQuestion(params as RepeatProp);
@@ -53,6 +54,18 @@ export const buildTextQuestion = (params: QuestionProp) => {
 
   return {
     value: params.value || "",
+    required: Boolean(params.required),
+    placeholder: params.placeholder || "",
+    subType: params.subType || "",
+  };
+  
+};
+
+export const buildNumberQuestion = (params: QuestionProp) => {
+
+  return {
+    // Number will be validated in setValue function
+    value: params.value as any,
     required: Boolean(params.required),
     placeholder: params.placeholder || "",
     subType: params.subType || "",
