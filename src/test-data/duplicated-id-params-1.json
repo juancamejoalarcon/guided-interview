@@ -1,0 +1,17 @@
+{
+    "name": {
+        "id": "name",
+        "type": "text",
+        "title": "What is your name?",
+        "value": "",
+        "required": true
+    },
+    "age": {
+        "id": "name",
+        "type": "text",
+        "title": "How old are you?",
+        "logic": {
+            "showIf": "name.value === 'Juan'"
+        }
+    }
+}

@@ -1,6 +1,6 @@
 export interface Question {
     id: string;
-    type: 'text' | 'number' | 'date' | 'multipleChoice' | 'repeat';
+    type: 'text' | 'number' | 'date' | 'multipleChoice' | 'repeat';
     subType?: string;
     title: string;
     required?: boolean;

@@ -1,6 +1,12 @@
-import { MultipleChoice, Repeat, Question, QuestionProp } from "../interfaces";
+import { MultipleChoice, Repeat, Question, QuestionProp, RepeatProp } from "../interfaces";
 
-export type interviewParams = { [id: string]: QuestionProp };
+export type interviewParams = { 
+    [id: string]: {
+        id: string,
+        type: string,
+    }
+    
+};
 
 export type DataSaved = { 
     [id: string]: { 

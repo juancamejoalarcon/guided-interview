@@ -1,8 +1,11 @@
 export default {
   preset: "ts-jest",
   testEnvironment: "node",
-  testMatch: ["<rootDir>/**/tests/**/*.spec.ts"],
-  testPathIgnorePatterns: ["/node_modules/", "/src/demo/", "/src/lib/", "/src/data/"],
+  testMatch: [
+    "<rootDir>/**/tests/**/*.spec.ts",
+    "<rootDir>/**/lib/**/*.spec.ts"
+  ],
+  testPathIgnorePatterns: ["/node_modules/", "/src/demo/", "/src/data/"],
   coverageDirectory: "./coverage",
   coveragePathIgnorePatterns: [
     "node_modules",
