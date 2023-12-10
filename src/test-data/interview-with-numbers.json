@@ -1,0 +1,29 @@
+{
+    "age": {
+        "id": "age",
+        "type": "number",
+        "title": "How old are you?",
+        "placeholder": "",
+        "value": 0,
+        "required": true
+    },
+    "adultQuestion": {
+        "id": "adultQuestion",
+        "type": "text",
+        "title": "Driving license",
+        "placeholder": "Ej. 1234567",
+        "value": "",
+        "required": true,
+        "logic": {
+            "showIf": "age.value >= 18"
+        }
+    },
+    "endQuestion": {
+        "id": "endQuestion",
+        "type": "text",
+        "title": "End question",
+        "placeholder": "",
+        "value": "",
+        "required": false
+    }
+}

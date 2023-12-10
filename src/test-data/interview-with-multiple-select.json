@@ -1,0 +1,54 @@
+{
+    "q1": {
+        "id": "q1",
+        "type": "multipleChoice",
+        "title": "q1",
+        "value": "",
+        "values": [],
+        "subType": "multiSelect",
+        "choices": [
+            {
+                "label": "a",
+                "checked": true
+            },
+            {
+                "label": "b",
+                "checked": true
+            },
+            {
+                "label": "c",
+                "checked": false
+            }
+        ]
+    },
+    "q2": {
+        "id": "q2",
+        "type": "text",
+        "title": "q2",
+        "value": "",
+        "required": false,
+        "logic": {
+            "showIf": "q1.values.includes('a')"
+        }
+    },
+    "q3": {
+        "id": "q3",
+        "type": "text",
+        "title": "q3",
+        "value": "",
+        "required": false,
+        "logic": {
+            "showIf": "q1.values.includes('a') && q1.values.includes('b')"
+        }
+    },
+    "q4": {
+        "id": "q4",
+        "type": "text",
+        "title": "q4",
+        "value": "",
+        "required": false,
+        "logic": {
+            "showIf": "q1.values.includes('b')"
+        }
+    }
+}
