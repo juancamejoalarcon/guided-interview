@@ -138,6 +138,43 @@ describe("GuidedInterview.class", () => {
             expect(question?.choices[0].label).toEqual("un hombre updated");
         });
 
+        // test("Change default value of multiple choice", () => {
+        //     const id = "sexoEmpleador";
+        //     interview.setDefaultCheckedChoice(id, 0);
+        //     const question = interview.getStepById(id) as MultipleChoice;
+        //     expect(question?.choices[0].checked).toEqual(true);
+        //     expect(question?.choices[1].checked).toEqual(false);
+        // });
+    
+        // test("Change default value of multiple choice", () => {
+        //     const id = "sexoEmpleador";
+        //     interview.setDefaultCheckedChoice(id, 0);
+        //     const question = interview.getStepById(id) as MultipleChoice;
+        //     expect(question?.choices[0].checked).toEqual(true);
+        //     expect(question?.choices[1].checked).toEqual(false);
+        // });
+    
+        // test("Change ID of Question", () => {
+        //     const id = "sexoEmpleador";
+    
+    
+        //     const t = () => {  interview.changeIdOfQuestion(id, id) };
+        //     expect(t).toThrow("Id already exists");
+        //     expect(interview.getStepById(id)?.id).toEqual(id);
+    
+        //     const snakeTestId = 'not_in_camel_but_snake'
+        //     interview.changeIdOfQuestion(id, snakeTestId)
+        //     // const t2 = () => {  interview.changeIdOfQuestion(id, snakeTest) };
+        //     // expect(t2).toThrow("Id must be in camel case");
+        //     expect(interview.getStepById(snakeTestId)?.id).toEqual(snakeTestId);
+    
+        //     interview.changeIdOfQuestion(snakeTestId, "newId");
+        //     const question = interview.getStepById(id);
+        //     expect(question).toEqual(null);
+        //     const newQuestion = interview.getStepById("newId");
+        //     expect(newQuestion?.id).toEqual("newId");
+        // })
+
         test("Set question as required", () => {
             const id = "sexoEmpleador";
             guidedInterview.addOrUpdateParamOfQuestion(id, {name: 'required', value: true });
