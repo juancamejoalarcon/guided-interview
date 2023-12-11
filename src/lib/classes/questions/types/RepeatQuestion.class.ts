@@ -74,6 +74,7 @@ export class RepeatQuestion extends Question {
                 continue;
             }
 
+            this.addIndexToNestedQuestions(i)
             const nestedInterview = new GuidedInterview({ interviewParams: this._questions }, false)
 
             this._content[i] = { hidden: false, nestedInterview }
@@ -93,6 +94,17 @@ export class RepeatQuestion extends Question {
             interview.nestedInterview.isLastContentInterviewOfRepeat = (index + 1) === this._value
         })
 
+    }
+
+    addIndexToNestedQuestions(i: number) {
+        Object.values(this._questions).forEach((question) => {
+            const index = i + 1
+            if (this.indexInsideRepeat !== null) {
+                question.indexInsideRepeat = this.indexInsideRepeat + `.${index}`
+            } else {
+                question.indexInsideRepeat = index.toString()
+            }
+        })
     }
 
     getParams() {

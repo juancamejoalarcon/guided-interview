@@ -75,8 +75,7 @@ export class Navigation {
         const interviewList = this._interview.getAsArray()
         for (let i = interviewList.length - 1; i >= 0; i--) {
             const question = interviewList[i][1]
-            const questionCanBeShown = question.canBeShown()
-            if (questionCanBeShown) {
+            if (question.canBeShown()) {
                 if (question.type === 'repeat') {
                     const repeat = question as RepeatQuestion
                     for (let j = parseInt(question.value as string) - 1; j >= 0; j--) {

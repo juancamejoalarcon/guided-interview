@@ -16,6 +16,7 @@ export type QuestionParams = {
         showIf?: string;
         hideIf?: string;
     }
+    indexInsideRepeat?: string | null
 }
 
 export abstract class Question implements Observer {
@@ -38,7 +39,7 @@ export abstract class Question implements Observer {
     public isCurrent: boolean = false
     public isEnd: boolean = false
     public exitRepeat: boolean = false
-    public indexInsideRepeat: number = 0
+    public indexInsideRepeat: string | null = null
     public isLast: boolean = false
     public isNotLastOfRepeatContent: boolean = false
     public isPrevious: boolean = false
@@ -53,6 +54,7 @@ export abstract class Question implements Observer {
         this._placeholder = params.placeholder || ''
         this._required = params.required || false
         this._logic = params.logic || {}
+        this.indexInsideRepeat = params.indexInsideRepeat || null
 
     }
 
@@ -80,6 +82,10 @@ export abstract class Question implements Observer {
 
     public get title() {
         return this._title
+    }
+
+    public get state() {
+        return this.getStateOfQuestion()
     }
 
     idIsNotInCamelCaseOrSnakeCase(id: string): void {
@@ -115,10 +121,20 @@ export abstract class Question implements Observer {
     }
 
     updateState() {
-        this._interview.state.setPropertyInState(this._id, {
-            title: this._title,
+        this._interview.state.setPropertyInState(this._id, this.getStateOfQuestion())
+    }
+
+    getStateOfQuestion() {
+        return {
+            title: this.getTitleForState(),
             value: this._value
-        })
+        }
+    }
+
+    getTitleForState() {
+        const index = this.indexInsideRepeat?.split('.').pop()
+        if (index) return this._title.replace(/<%= index %>/g, index.toString())
+        else return this._title
     }
 
     getParams() {
