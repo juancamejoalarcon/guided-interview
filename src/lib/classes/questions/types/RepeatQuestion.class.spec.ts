@@ -1,4 +1,4 @@
-import { GuidedInterview } from '@/lib/GuidedInterview2'
+import { GuidedInterview } from '@/lib/GuidedInterview'
 import { RepeatQuestion } from './RepeatQuestion.class';
 
 import * as duplicatedErrorJson from "@/test-data/interview-with-repeat-questions-1.json";

@@ -1,6 +1,6 @@
 import { Interview, interviewParams } from '../../Interview.class';
 import { Question, QuestionParams } from '../Question.class';
-import { GuidedInterview } from '@/lib/GuidedInterview2';
+import { GuidedInterview } from '@/lib/GuidedInterview';
 
 export type RepeatQuestionParams = {
     range: {

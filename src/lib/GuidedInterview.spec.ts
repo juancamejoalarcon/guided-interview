@@ -1,4 +1,4 @@
-import { GuidedInterview } from './GuidedInterview2'
+import { GuidedInterview } from './GuidedInterview'
 
 import * as happyPath from "@/test-data/happy-path.json";
 import * as solicitudDeVacaciones from "@/data/forms/solicitud-vacaciones.json";

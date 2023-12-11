@@ -4,45 +4,31 @@ import { resolve } from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
-  if (mode === 'production') {
-    return {
-      build: {
-        copyPublicDir: false,
-        outDir: '.',
-        lib: {
-          entry: resolve(__dirname, 'src/lib/GuidedInterview.ts'),
-          name: 'Guided Interview',
-          fileName: (format, entryName) => {
-            if (format === 'umd') {
-              return 'guided-interview.umd.js'
-            } else {
-              return 'guided-interview.js'
-            }
-          },
-        },
-        // rollupOptions: {},
-      },
+    if (mode === 'production') {
+        return {
+            build: {
+                copyPublicDir: false,
+                outDir: '.',
+                lib: {
+                    entry: resolve(__dirname, 'src/lib/GuidedInterview.ts'),
+                    name: 'Guided Interview',
+                    fileName: (format, entryName) => {
+                        if (format === 'umd') {
+                            return 'guided-interview.umd.js'
+                        } else {
+                            return 'guided-interview.js'
+                        }
+                    },
+                },
+            // rollupOptions: {},
+            },
+        }
     }
-  }
-
-  if (mode === 'demo') {
     return {
-      plugins: [react()],
-      resolve: {
-        alias: {
-          "@": resolve(__dirname, "./src"),
+        resolve: {
+            alias: {
+                "@": resolve(__dirname, "./src"),
+            },
         },
-      },
-      build: {
-        outDir: 'demo'
-      }
     }
-  }
-  return {
-    resolve: {
-      alias: {
-        "@": resolve(__dirname, "./src"),
-      },
-    },
-  }
 });

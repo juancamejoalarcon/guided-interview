@@ -15,10 +15,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && npm run build-types && vite build --mode production",
-    "build-demo": "tsc && vite build --mode demo --base=/guided-interview/demo",
     "build-types": "tsc -t es5 src/lib/GuidedInterview.ts --declaration --emitDeclarationOnly --downlevelIteration && npm run build-types-folder",
     "build-types-folder": "node build-types-folder.js",
-    "preview": "vite preview",
     "test": "jest"
   },
   "dependencies": {

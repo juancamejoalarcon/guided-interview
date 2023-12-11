@@ -1,4 +1,4 @@
-import { GuidedInterview } from '@/lib/GuidedInterview2'
+import { GuidedInterview } from '@/lib/GuidedInterview'
 import * as interviewData from "@/test-data/interview-with-numbers.json";
 
 let guidedInterview: GuidedInterview;

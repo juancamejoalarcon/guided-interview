@@ -1,4 +1,4 @@
-import { GuidedInterview } from '../../GuidedInterview2'
+import { GuidedInterview } from '../../GuidedInterview'
 
 import * as repeatExample from "@/test-data/interview-with-repeat-questions-4.json";
 import * as repeatExample2 from "@/test-data/interview-with-repeat-questions-6.json";
