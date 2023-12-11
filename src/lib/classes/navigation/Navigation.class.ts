@@ -8,7 +8,7 @@ export class Navigation {
 
     private _interview: Interview;
     private _isRoot: boolean;
-    private _currentQuestion: Question;
+    private _currentQuestion!: Question;
 
     constructor(interview: Interview, isRoot: boolean) {
         this._isRoot = isRoot

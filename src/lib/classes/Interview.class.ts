@@ -1,4 +1,3 @@
-import { RepeatProp, InterviewInterface } from "@/lib/interfaces";
 import { ValidationError } from "./ValidationError.class";
 import { QuestionParams, Question } from './questions/Question.class'
 import { QuestionFactory } from "./questions/QuestionFactory.class";
@@ -108,7 +107,7 @@ export class Interview extends Subject {
         question.changeLabelOfChoice(index, label)
     }
 
-    addOrUpdateParamOfQuestion(id: string, param: { name: string, value: any}) {
+    addOrUpdateParamOfQuestion(id: string, param: { name: string, value: unknown}) {
         const question = this.getQuestionById(id) as Question
         question.addOrUpdateParam(param?.name, param?.value)
 

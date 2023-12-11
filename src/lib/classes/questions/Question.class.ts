@@ -162,7 +162,7 @@ export abstract class Question implements Observer {
         return true
     }
 
-    addOrUpdateParam(name: string, value: any): void {
+    addOrUpdateParam(name: string, value: unknown): void {
         if (name === 'required') {
             this._required = Boolean(value)
         }

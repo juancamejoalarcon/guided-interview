@@ -27,9 +27,9 @@ export const getPreviousQuestion = (
         const question = interviewList[i][1]
         const questionCanBeShown = question.canBeShown()
         // remove trash created in next question
-        if (question.exitRepeat) delete question.exitRepeat
-        if (question.isLast) delete question.isLast
-        if (question.isNotLastOfRepeatContent) delete question.isNotLastOfRepeatContent
+        if (question.exitRepeat) question.exitRepeat = false
+        if (question.isLast) question.isLast = false
+        if (question.isNotLastOfRepeatContent) question.isNotLastOfRepeatContent = false
         if (!question.isCurrent) {
             if (questionCanBeShown) previousQuestion = question
             if (question.type === 'repeat') {

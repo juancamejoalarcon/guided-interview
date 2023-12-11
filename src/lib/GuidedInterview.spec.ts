@@ -1,7 +1,7 @@
 import { GuidedInterview } from './GuidedInterview'
 
 import * as happyPath from "@/test-data/happy-path.json";
-import * as solicitudDeVacaciones from "@/data/forms/solicitud-vacaciones.json";
+import * as solicitudDeVacaciones from "@/test-data/happy-path-2.json";
 import { MultipleChoiceQuestion } from './classes/questions/types/MultipleChoiceQuestion.class';
 
 let guidedInterview: GuidedInterview;

@@ -81,7 +81,7 @@ export const getNextQuestion = (interview: Interview, isRoot: boolean): Question
                     newCurrent = repeat.content[j].nestedInterview.getNextQuestion()
                     if (newCurrent) {
                         // Fixme: should check here for next question
-                        const isLast = repeat.content[j].nestedInterview.isQuestionTheLastOfInterview(newCurrent.id, repeat.content[j].nestedInterview._interview)
+                        const isLast = repeat.content[j].nestedInterview.isQuestionTheLastOfInterview(newCurrent.id)
                         if (isLast) {
                             if (repeatIsFinished && nextQuestionExists) {
                                 const current = newCurrent
@@ -94,7 +94,7 @@ export const getNextQuestion = (interview: Interview, isRoot: boolean): Question
                                     if (!newCurrent.canBeShown()) {
                                         newCurrent = getNextQuestion(interview, isRoot)
                                     }
-                                    delete current.exitRepeat
+                                    current.exitRepeat = false
                                     break
                                 } else {
                                     current.exitRepeat = true
@@ -135,7 +135,7 @@ export const getNextQuestion = (interview: Interview, isRoot: boolean): Question
                             if (!repeatIsFinished && !newCurrent) {
                                 const lastQuestion = repeat.content[j].nestedInterview.getInterviewAsArray().find((q) => q[1].isLast)
                                 if (lastQuestion) {
-                                    delete lastQuestion[1].isLast
+                                    lastQuestion[1].isLast = false
 
                                     const firstOfNextNestedInterview = repeat.content[j + 1].nestedInterview.getInterviewAsArray()
                                     if (!firstOfNextNestedInterview[0][1].isCurrent) {

@@ -12,7 +12,7 @@ export class DateQuestion extends Question {
     constructor(params: DateQuestionParams, interview: Interview) {
         super(params, interview)
         this._format = params.format || "dd/mm/yyyy"
-        this.setValue(params.value || '')
+        this.setValue(params.value as string || '')
     }
     
 }

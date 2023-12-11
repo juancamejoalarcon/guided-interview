@@ -1,5 +1,5 @@
 import { Interview, interviewParams } from '../../Interview.class';
-import { Question, QuestionParams } from '../Question.class';
+import { Question, QuestionParams } from '../Question.class';
 import { GuidedInterview } from '@/lib/GuidedInterview';
 
 export type RepeatQuestionParams = {
