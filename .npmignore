@@ -2,7 +2,6 @@
 node_modules
 src
 .gitignore
-svelte.config.js
 tsconfig.json
 tsconfig.node.json
 vite.config.ts

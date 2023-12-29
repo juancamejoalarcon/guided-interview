@@ -1,9 +1,13 @@
 import { ValidationError } from "./ValidationError.class";
-import { QuestionParams, Question } from './questions/Question.class'
-import { QuestionFactory } from "./questions/QuestionFactory.class";
+import { 
+    QuestionParams, 
+    Question, 
+    QuestionFactory, 
+    MultipleChoiceQuestion, 
+    Choice 
+} from './questions'
 import { Subject } from "./observable/Subject.class";
 import { State } from './state/State.class'
-import { Choice, MultipleChoiceQuestion } from "./questions/types/MultipleChoiceQuestion.class";
 
 export type interviewParams = { 
     [id: string]: QuestionParams

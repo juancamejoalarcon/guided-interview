@@ -1,6 +1,5 @@
 import { Interview } from '../Interview.class';
-import { Question } from '../questions/Question.class';
-import { RepeatQuestion } from '../questions/types/RepeatQuestion.class';
+import { Question, RepeatQuestion } from '../questions';
 import { getNextQuestion } from './next-question'
 import { getPreviousQuestion } from './previous-question'
 
