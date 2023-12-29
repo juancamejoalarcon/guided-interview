@@ -1,6 +1,3 @@
-import { Repeat } from "../interfaces";
-import { GenericQuestion } from "../types/General";
-
 export type copiedQuestion = {
   id: string | undefined;
   title: string | undefined;
@@ -12,7 +9,7 @@ export type copiedQuestion = {
 };
 
 export class Cloner {
-    interview: GenericQuestion[] = [];
+    interview: any[] = [];
     nested: string[] = [];
     ignoreIds: string[] = [];
     endsForRepeat: any = {};
@@ -20,7 +17,7 @@ export class Cloner {
 
     alreadyCopiedRepeats: any = {}
 
-    questionsInsideRepeat: GenericQuestion[] = [];
+    questionsInsideRepeat: any[] = [];
 
     getQuestion!: (options?: any) => Promise<copiedQuestion>;
     isLastRadio!: () => Promise<boolean>;
@@ -78,7 +75,7 @@ export class Cloner {
     }
 
     insertQuestionInInterview(
-        question: GenericQuestion,
+        question: any,
         percentageOfCompletion: string | number
     ) {
         this.interview.push(question);
@@ -89,7 +86,7 @@ export class Cloner {
         );
     }
 
-    applyLogicToQuestion(question: GenericQuestion) {
+    applyLogicToQuestion(question: any) {
         const q = question as any;
 
         if (!q.preLogic) q.preLogic = [];
@@ -159,7 +156,7 @@ export class Cloner {
         percentageOfCompletion: string | number
     ) {
         const { id = "", title = "", value = "", type = "", subType = "", indications = "", placeholder = "", questions = {}, other = {} } = questionProps as any;
-        const question: GenericQuestion & { other: any } = { id, title, value, type, indications, placeholder, subType, questions, other };
+        const question: any & { other: any } = { id, title, value, type, indications, placeholder, subType, questions, other };
 
         // start or referenceQuestion
         if (percentageOfCompletion !== "start") this.applyLogicToQuestion(question);

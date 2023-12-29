@@ -1,7 +1,6 @@
 import { Interview, interviewParams } from './classes/Interview.class';
 import { Navigation } from './classes/navigation/Navigation.class';
-import { Question } from './classes/questions/Question.class';
-import { Choice } from './classes/questions/types/MultipleChoiceQuestion.class';
+import { Question, Choice } from './classes/questions';
 type GuidedInterviewParams = {
     interviewParams: interviewParams;
 };
