@@ -12,10 +12,12 @@ export default defineConfig(({ mode }) => {
         },
         plugins: [dts({
             outDir: 'types',
-            beforeWriteFile: (filePath, content) => ({
-                filePath: filePath.replace('lib/', ''),
-                content,
-            }),
+            beforeWriteFile: (filePath, content) => {
+                if (filePath?.includes('.spec')) return false
+                return {
+                    filePath: filePath.replace('lib/', ''),
+                    content,
+                }},
         })],
         build: {
             copyPublicDir: false,
