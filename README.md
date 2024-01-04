@@ -29,6 +29,21 @@ The answers to these questions are saved in variables that can be used in subseq
 
 You can use these results saved in variables to not show some questions.
 
+### Install
+
+```
+npm install guided-interview
+```
+
+### Usage
+
+``` javascript
+import { GuidedInterview } from 'guided-interview'
+
+const guidedInterview = new GuidedInterview({ interviewParams: params })
+```
+
+
 ### Publish package
 
 Build library
