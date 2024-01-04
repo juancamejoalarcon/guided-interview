@@ -1,759 +1,144 @@
-import { 
-  Question, 
-  QuestionProp,
-  MultipleChoice,
-  MultipleChoiceProp, 
-  DateProp, 
-  Repeat, 
-  RepeatProp,
-  Choice
-} from "./interfaces";
-import { GenericQuestion, interviewParams, DataSaved } from "./types/General";
-import { validateParams, getValueBetweenRanges, validateSetValue, isCamelCase, isSnakeCase } from "./services/utils.service";
-import { EventBus, EventList } from "./services/event-bus.service";
-import { getQuestion, replaceIndexInQuestionsOfRepeatQuestion } from "./services/create.service";
-import { makeTemplate, getCleanHtml } from "./services/templating.service";
-import { Cloner } from "./services/clone.service"
-
-export * from "./interfaces";
-
-export class GuidedInterview {
-  public interview = new Map<string, Question | MultipleChoice | Repeat>();
-  private events!: EventBus;
-  private current!: GenericQuestion;
-  private isRoot: boolean = true;
-  private isLastContentInterviewOfRepeat: boolean = false
-  public data: any = {};
-  public Cloner = Cloner
-
-  constructor(interview: any = "empty", options: any = { isRoot: true, data: null, isLastContentInterviewOfRepeat: false }) {
-    this.events = options.events || new EventBus();
-    this.isRoot = options.isRoot;
-    this.data = options.data || this.data
-    this.isLastContentInterviewOfRepeat = options.isLastContentInterviewOfRepeat || false
-    // FIXME: This is a hack to avoid the data to be modified by reference
-    const copyOFData = options.data ? JSON.parse(JSON.stringify(this.data)) : null
-    if (interview !== "empty") this.init(interview);
-    if (copyOFData) this.applyDataToQuestions(copyOFData)
-  }
-
-  public get questionsMap(): Map<string, Question | MultipleChoice | Repeat> {
-    return this.interview;
-  }
-
-  setInterview(interview: Map<string, Question | MultipleChoice | Repeat>) {
-    this.interview = interview
-  }
-
-  init(interviewParams: interviewParams) {
-    if (interviewParams === null) throw new Error("Interview init param is null");
-    if (!validateParams(interviewParams)) return
-    
-    for (const value of Object.values(interviewParams)) {
-      this.add(value);
-    }
-  }
-
-  getInterviewParams(): interviewParams {
-    const interviewParams: interviewParams = {};
-    this.interview.forEach((value, key) => {
-      interviewParams[key] = value as QuestionProp | MultipleChoiceProp | DateProp | RepeatProp;
-      if (value.type === 'repeat') {
-        (interviewParams[key] as RepeatProp).content = {}
-      }
-    });
-    return interviewParams;
-  }
-
-  add(params: QuestionProp | MultipleChoiceProp | DateProp | RepeatProp, setAsCurrent: boolean = false) {
-    const question = getQuestion(params);
-    if (question.type === 'repeat') this.buildContentForRepeatQuestion(question as Repeat)
-    this.interview.set(question.id, question);
-    this.setValue(question.id, question.value);
-    this.events.dispatch("question-added", question);
-    return question;
-  }
-
-  remove(id: string) {
-    if (!this.interview.has(id)) throw new Error("No question with id:" + id);
-    this.interview.delete(id);
-  }
-
-  getNestedInterview(id: string, index: number): GuidedInterview {
-    const question = this.interview.get(id) as Repeat
-    if (!question) throw new Error("No question with id:" + id);
-    if (question?.type !== 'repeat') throw new Error("Question with id " + id + " is not a repeat question")
-    return question.content[index].nestedInterview
-  }
-  
-  canBeShown(question: Question): boolean {
-    if (question.logic?.showIf) {
-        const keys = this.interview.keys()
-        const values = this.interview.values()
-        const showIfFunct = Function(...keys, `return ${question.logic.showIf}`).bind(this)
-        const result = showIfFunct(...values)
-        if (!result) return false
-    }
-    if (question.logic?.hideIf) {
-        const keys = this.interview.keys()
-        const values = this.interview.values()
-        const hideIfFunct = Function(...keys, `return ${question.logic.hideIf}`).bind(this)
-        const result = !hideIfFunct(...values)
-        if (!result) return false
-    }
-    return true
-  }
-  // This question should be private
-  setCurrent(question: GenericQuestion) {
-    if (!question) {
-      throw new Error("No question provided");
-    }
-    if (typeof question !== 'object') {
-      throw new Error("No question provided");
-    }
-    this.current = question;
-    this.events.dispatch("set-current", this.getCurrent());
-  }
-
-  next() {
-    let nextQuestion = this.getNextQuestion()
-    if (nextQuestion) this.setCurrent(nextQuestion)
-    // Fixes when nextQuestion is null
-    else this.getCurrent().isCurrent = true
-    this.getCurrent().isEnd = false
-  }
-  
-  getNextQuestion(): GenericQuestion | null {
-    let newCurrent;
-    let nextQuestionExists;
-    const interviewList = Array.from(this.interview)
-    for (let i = 0; i < interviewList.length ; i++) {
-      const question = interviewList[i][1]
-      const isCurrent = question?.isCurrent
-      const isRepeat = question?.type === 'repeat'
-      nextQuestionExists = interviewList[i + 1] && interviewList[i + 1][1]
-
-
-      if (isCurrent && !isRepeat && !nextQuestionExists && !this.isRoot) {
-        if (this.canBeShown(question)) {
-          question.isEnd = true
-          newCurrent = question
-          break
-        }
-        question.isCurrent = false
-        // Find exit repeat
-        for (let j = 0; j < interviewList.length ; j++) {
-          const q: any = interviewList[j][1]
-          if (q.exitRepeat) {
-            newCurrent = q
-            break
-          }
-        }
-      }
-      if (isCurrent && !isRepeat && nextQuestionExists ) {
-        question.isCurrent = false
-        newCurrent = interviewList[i + 1][1]
-        newCurrent.isCurrent = true
-        if (!this.canBeShown(newCurrent)) {
-          newCurrent = this.getNextQuestion()
-        }
-        break
-      }
-      if (isCurrent && isRepeat && this.canBeShown(question)) {
-        const repeat = question as Repeat
-        repeat.isCurrent = false;
-        const firstNestedInterview = Array.from(repeat.content[0].nestedInterview.interview) as any
-        newCurrent = firstNestedInterview[0][1]
-        newCurrent.isCurrent = true
-        break
-      }
-
-      if (isCurrent && isRepeat && !this.canBeShown(question) && nextQuestionExists) {
-        question.isCurrent = false
-        newCurrent = interviewList[i + 1][1]
-        newCurrent.isCurrent = true
-        if (!this.canBeShown(newCurrent)) {
-          newCurrent = this.getNextQuestion()
-        }
-        break
-      }
-
-      if (isCurrent && isRepeat && !this.canBeShown(question) && !nextQuestionExists) {
-        question.isEnd = true
-        newCurrent = question
-        break
-      }
-
-      if (!isCurrent && isRepeat && !this.canBeShown(question) && !nextQuestionExists) {
-        question.isEnd = true
-        newCurrent = question
-        break
-      }
-
-
-      if (!isCurrent && isRepeat && this.canBeShown(question)) {
-        let shouldContinue = false
-        const repeat = question as Repeat
-        for (let j = 0; j < parseInt(question.value as string) ; j++) {
-          
-          if (!repeat.content[j].hidden) {
-
-            const repeatIsFinished = !repeat.content[j + 1] || repeat.content[j + 1]?.hidden
-
-            newCurrent = repeat.content[j].nestedInterview.getNextQuestion()
-            if (newCurrent) {
-              // Fixme: should check here for next question
-              const isLast = repeat.content[j].nestedInterview.isQuestionTheLastOfInterview(newCurrent.id)
-              if (isLast) {
-                if (repeatIsFinished && nextQuestionExists) {
-                  const current = newCurrent as any
-                  // si tiene EXIT REPEAT
-                  if (current.exitRepeat) {
-                    current.isEnd = false
-                    current.isCurrent = false
-                    newCurrent = interviewList[i + 1][1]
-                    newCurrent.isCurrent = true
-                    if (!this.canBeShown(newCurrent)) {
-                        newCurrent = this.getNextQuestion()
-                    }
-                    delete current.exitRepeat
-                    break
-                  } else {
-                    current.exitRepeat = true
-                  }
-                } else {
-                  if (!repeatIsFinished) {
-                    newCurrent.isLast = true
-                  }
-                }
-              }
-
-              if (newCurrent?.isEnd) {
-                if ((j + 1) < parseInt(question.value as string)) {
-                  if (!newCurrent.isCurrent) {
-                    newCurrent.isEnd = false
-                    newCurrent = null
-                  } else {
-                    const firstOfNextNestedInterview = Array.from(repeat.content[j + 1].nestedInterview.interview) as any
-                    newCurrent.isCurrent = false
-                    newCurrent.isEnd = false
-                    newCurrent = firstOfNextNestedInterview[0][1]
-                    newCurrent.isCurrent = true
-                  }
-                } else {
-                  const canBeShown = repeat.content[j].nestedInterview.canBeShown(newCurrent)
-                  if (newCurrent.isEnd && !canBeShown) {
-                    newCurrent.isCurrent = false
-                    newCurrent = null
-                  }
-                }
-              }
-              if (newCurrent) break
-
-            } else {
-              if (repeatIsFinished && nextQuestionExists) {
-                shouldContinue = true
-              } else {
-                if (!repeatIsFinished && !newCurrent) {
-                  const lastQuestion: any = Array.from(repeat.content[j].nestedInterview.interview).find((q: any) => q[1].isLast)
-                  if (lastQuestion) {
-                    delete lastQuestion[1].isLast
-                    const firstOfNextNestedInterview = Array.from(repeat.content[j + 1].nestedInterview.interview) as any
-                    if (!firstOfNextNestedInterview[0][1].isCurrent) {
-                      firstOfNextNestedInterview[0][1].isCurrent = true
-                      newCurrent = firstOfNextNestedInterview[0][1]
-                      break
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-        if (shouldContinue) continue
-        else break
-      }
-    }
-    return newCurrent
-  }
-
-  previous() {
-    let previousQuestion: any = this.getPreviousQuestion()
-    if (previousQuestion) this.setCurrent(previousQuestion)
-  }
-
-  getPreviousQuestion(previous: GenericQuestion | null = null): GenericQuestion | null {
-    const interviewList = Array.from(this.interview)
-    const firstQuestion = interviewList[0][1]
-    if (firstQuestion.isCurrent) {
-      if (this.isRoot) {
-        return firstQuestion
-      } else {
-        if (previous) previous.isCurrent = true
-        firstQuestion.isCurrent = false
-        return previous
-      }
-    }
-
-    let previousQuestion = firstQuestion
-    let newCurrent;
-    let nextQuestionExists;
-    for (let i = 0; i < interviewList.length ; i++) {
-      const question = interviewList[i][1]
-      const questionCanBeShown = this.canBeShown(question)
-      nextQuestionExists = interviewList[i + 1] && interviewList[i + 1][1]
-      // remove trash created in next question
-      if ((question as any).exitRepeat) delete (question as any).exitRepeat
-      if ((question as any).isLast) delete (question as any).isLast
-      if ((question as any).isNotLastOfRepeatContent) delete (question as any).isNotLastOfRepeatContent
-      if (!question.isCurrent) {
-        if (questionCanBeShown) previousQuestion = question
-        if (question.type === 'repeat') {
-          const repeat = question as Repeat
-          for (let j = 0; j < parseInt(question.value as string) ; j++) {
-            if (!repeat.content[j].hidden) {
-              newCurrent = repeat.content[j].nestedInterview.getPreviousQuestion(previousQuestion)
-              // update previous
-              if (newCurrent?.isPrevious) {
-                newCurrent.isPrevious = false
-                previousQuestion = newCurrent
-                newCurrent = null
-              }
-              if (newCurrent && newCurrent.isCurrent) break
-            }
-          }
-          if (newCurrent && newCurrent.isCurrent) break
-        }
-      } else {
-        previousQuestion.isCurrent = true
-        newCurrent = previousQuestion
-        question.isCurrent = false
-        break
-      }
-    }
-    if (previous && !newCurrent) {
-      const found = this.reversePreviousUtil(interviewList)
-      if (found) newCurrent = found
-    }
-    if (newCurrent && !this.isRoot) {
-      if (this.isQuestionTheLastOfInterview(newCurrent.id)) {
-        if (this.isLastContentInterviewOfRepeat) {
-          newCurrent.isLast = true
-          newCurrent.exitRepeat = true
-        } else {
-          newCurrent.isNotLastOfRepeatContent = true
-        }
-      }
-    }
-    if (newCurrent && this.isRoot && newCurrent.indexInsideRepeat && newCurrent.isNotLastOfRepeatContent) {
-      newCurrent.isLast = true
-    }
- 
-    return newCurrent
-  }
-  
-  // traverse interview backwards to find previous question
-  reversePreviousUtil(interviewList: [string, Question | MultipleChoice | Repeat][]) {
-    let newCurrent;
-    for (let i = interviewList.length - 1; i >= 0; i--) {
-      const question = interviewList[i][1]
-      const questionCanBeShown = this.canBeShown(question)
-      if (questionCanBeShown) {
-        if (question.type === 'repeat') {
-          const repeat = question as Repeat
-          // let j = parseInt(question.value as string) - 1; j >= 0; j--
-          for (let j = parseInt(question.value as string) - 1; j >= 0; j--) {
-            if (!repeat.content[j].hidden) {
-              const nestedInterviewList = Array.from(repeat.content[j].nestedInterview.interview) as [string, Question | MultipleChoice | Repeat][] 
-              newCurrent = repeat.content[j].nestedInterview.reversePreviousUtil(nestedInterviewList)
-              if (newCurrent) {
-                newCurrent.isPrevious = true
-              }
-              if (newCurrent) break
-            }
-          }
-          if (newCurrent) break
-        } else {
-          newCurrent = question as any
-          newCurrent.isPrevious = true
-          break
-        }
-      }
-    }
-    return newCurrent
-  }
-
-    // Returns an object whith the current total questions 
-  // and the position you are in it
-  getProgress(): { total: number, currentPosition: number, percentageOfCompletion: number } {
-    let total = 0;
-    let currentPosition = 0
-    const interviewList = Array.from(this.interview)
-    interviewList.forEach(([id, question]) => {
-      total += 1
-      if (question.isCurrent) currentPosition = total
-      if (question.type === 'repeat') {
-        const repeat = question as Repeat
-        Object.values(repeat.content).forEach(content => {
-          if (!content.hidden) {
-            const progress = content.nestedInterview.getProgress()
-            if (progress.currentPosition !== 0) {
-              currentPosition = total + progress.currentPosition
-            }
-            total += progress.total
-          }
-        })
-      }
-    })
-    return {
-      total,
-      currentPosition,
-      percentageOfCompletion: Math.round((currentPosition * 100) / total)
-    }
-  }
-
-  // returns true if you are at the first question
-  isStart() {
-    const interviewList = Array.from(this.interview)
-    const idOfFirstQuestion = interviewList[0][1].id
-    const idOfCurrent = this.getCurrent().id
-    return idOfFirstQuestion === idOfCurrent
-  }
-
-  // returns true if you reach the last question
-  isEnd() {
-    const lastQuestion = this.getLastQuestionOfInterview()
-    const current = this.getCurrent()
-    if (current.indexInsideRepeat !== null) {
-      return current.id === lastQuestion?.id && current.indexInsideRepeat === lastQuestion.indexInsideRepeat
-    }
-    return lastQuestion?.id === current.id
-  }
-
-  isQuestionTheLastOfInterview (id: string) {
-    const lastQuestion = this.getLastQuestionOfInterview()
-    const question = this.getStepById(id)
-    if (question?.indexInsideRepeat !== null) {
-      return question?.id === lastQuestion?.id && question?.indexInsideRepeat === lastQuestion?.indexInsideRepeat
-    }
-    return lastQuestion?.id === question.id
-  }
-
-  getLastQuestionOfInterview(): GenericQuestion | null {
-    let found = null;
-    const interviewList = Array.from(this.interview)
-    for (let i = interviewList.length - 1; i >= 0; i--) {
-      const question = interviewList[i][1]
-      const questionCanBeShown = this.canBeShown(question)
-      if (questionCanBeShown) {
-        if (question.type === 'repeat') {
-          const repeat = question as Repeat
-          for (let j = parseInt(question.value as string) - 1; j >= 0; j--) {
-            if (!repeat.content[j].hidden) {
-              found = repeat.content[j].nestedInterview.getLastQuestionOfInterview()
-              if (found) break
-            }
-          }
-          if (!found) found = question
-          break
-        } else {
-          found = question
-          break
-        }
-      }
-    }
-    return found
-  }
-
-  // Returns interview of current question
-  getCurrentGuidedInterview(): GuidedInterview | null {
-    const interviewList = Array.from(this.interview)
-    let current: GuidedInterview | null = null;
-    for (let i = 0; i < interviewList.length ; i++) {
-      const question = interviewList[i][1];
-      if (question.isCurrent) {
-        current = this
-        break
-      }
-      if (question.type === 'repeat') {
-        const repeat = question as Repeat
-        for (let j = 0; j < parseInt(question.value as string) ; j++) {
-          if (!repeat.content[j].hidden) {
-            current = repeat.content[j].nestedInterview.getCurrentGuidedInterview()
-            if (current) break
-          }
-        }
-      }
-      if (current) break
-    }
-    if (this.isRoot && !current) current = this
-    return current
-  }
-
-  getCurrent(): Question | MultipleChoice | Repeat {
-    if (!this.current) {
-      this.current = Array.from(this.interview)[0][1]
-      if (this.isRoot) {
-        Array.from(this.interview)[0][1].isCurrent = true
-      }
-    }
-    return this.current;
-  }
-
-  setValue(id: string, value: string | number | string[], options: any = {}) {
-    if (!this.interview.has(id)) {
-      throw new Error("No question with id:" + id);
-    }
-    const question = this.interview.get(id);
-    if (!question) throw new Error("No question with id:" + id);
-    validateSetValue(value, question)
-    
-    if (question.subType !== 'multiSelect') {
-      if (question.type === 'number') question.value = typeof value === 'number' ? value : parseFloat(value as string)
-      else question!.value = value as string | number;
-    }
-    
-    if (question?.type === 'multipleChoice') {
-      this.setRadioChecked(question as MultipleChoice, value as string, options)
-    }
-
-    if (question?.type === 'repeat') {
-      this.buildContentForRepeatQuestion(question as Repeat, value as number)
-    }
-
-    if (this.data[id]) this.data[id].value = question.value;
-    else this.data[id] = { value: question.value };
-
-    if (question.subType === 'multiSelect') {
-      this.data[id].values = (question as MultipleChoice).values;
-    }
-
-    
-    this.events.dispatch("set-value", this.interview.get(id));
-  }
-
-  on(event: EventList, callback: Function) {
-    this.events.register(event, callback);
-  }
-
-  getData() {
-    return this.data;
-  }
-
-
-  setRadioChecked(question: MultipleChoice, value: string, options: any = {}) {
-    // Multiselect
-    if (question.subType === 'multiSelect') {
-      if (Array.isArray(value)) {
-        question.values = value
-        question.choices.forEach(choice => {
-          choice.checked = value.includes(choice.label)
-        })
-      } else {
-        if (!question.values) question.values = []
-        if (!question.values.includes(value) && value) {
-          const valueExists = question.choices.find((q) => q.label === value)
-          if (!valueExists) throw new Error("Value does not exists");
-          question.values.push(value)
-          question.choices.forEach(choice => {
-            choice.checked = question.values.includes(choice.label)
-          })
-        }
-        if (options.unselect) {
-          const valueExists = question.choices.find((q) => q.label === value)
-          if (!valueExists) throw new Error("Value does not exists");
-          const index = question.values.indexOf(valueExists.label);
-          if (index !== -1) question.values.splice(index, 1);
-          valueExists.checked = false
-          return
-        }
-      }
-      return
-    }
-    
-    question.choices.forEach(choice => {
-      choice.checked = choice.label === value
-    })
-  }
-
-  buildContentForRepeatQuestion(repeatQuestion: Repeat, value: number | null = null): void {
-
-    const { range, id, questions, indexInsideRepeat } = repeatQuestion
-    const { min, max } = range
-
-    value = value ? parseInt(value as any) : value
-    value = getValueBetweenRanges(repeatQuestion.value, min, max)
-
-    repeatQuestion.value = value
-
-    if (!repeatQuestion.content) repeatQuestion.content = {}
-    if (!this.data[id]) this.data[id] = { value: value, content: {} }
-    else this.data[id].value = value
-     
-    for (let i = 0; i < value; i++) {
-      if (repeatQuestion.content[i]) {
-        // Añadir logica de hidden
-        repeatQuestion.content[i].hidden = false
-        this.data[id].content[i].hidden = false
-        continue
-      }
-      this.data[id].content[i] = { hidden: false, questions: {} }
-
-      const nestedInterview = new GuidedInterview(replaceIndexInQuestionsOfRepeatQuestion(questions, i, indexInsideRepeat), { 
-        isRoot: false, 
-        events: this.events,
-        data: this.data[id].content[i].questions
-      })
-      repeatQuestion.content[i] = { hidden: false, nestedInterview }
-    }
-    // Hide remaining questions
-    const totalLength = Object.keys(repeatQuestion.content)
-    if (value < totalLength.length) {
-      for (let i = value; i < totalLength.length; i++) {
-        repeatQuestion.content[i].hidden = true
-        this.data[id].content[i].hidden = true
-      }
-    }
-    const allInterviews = Object.values(repeatQuestion.content)
-    allInterviews.forEach((interview, index) => {
-      if ((index + 1) === parseInt(value as any)) {
-        interview.nestedInterview.isLastContentInterviewOfRepeat = true
-      } else {
-        interview.nestedInterview.isLastContentInterviewOfRepeat = false
-      }
-    })
-  }
-
-  applyDataToQuestions(data: DataSaved) {
-    Object.entries(data).forEach(([key, { value, content }]) => {
-      this.setValue(key, value)
-      if (content) {
-        Object.values(content).forEach((contentValue: {
-          hidden?: boolean | undefined;
-          questions: DataSaved;
-      }, index) => {
-          if (!contentValue.hidden) {
-            this.getNestedInterview(key, index).applyDataToQuestions(contentValue.questions)
-          }
-        })
-      }
-    })
-  }
-
-  makeTemplate(template: string, cleanHtml: boolean = false): string {
-    if (!template) throw new Error("No template provided")
-    return makeTemplate(this.data, template, { cleanHtml })
-  }
-
-  getCleanHTML(template: string): string {
-    if (!template) throw new Error("No template provided")
-    return getCleanHtml(template)
-  }
-
-  getStepById(id: string): GenericQuestion | null {
-    const question = this.interview.get(id)
-    if (!question) return null;
-    return question
-  }
-
-  checkIfIdIsValid(id: string): { isValid: boolean, message: string } {
-    if (!id) throw new Error("No id provided")
-    // Check if id ALREADY EXISTS IN NESTED QUESTIONS
-    if (this.interview.has(id)) return { isValid: false, message: "Id already exists" }
-    if (!isCamelCase(id) && !isSnakeCase(id)) return { isValid: false, message: "Id must be in camel case" }
-    return { isValid: true, message: '' }
-  }
-
-  changeIdOfQuestion(id: string, newId: string) {
-    const question = this.interview.get(id)
-    if (!question) throw new Error("No question with id:" + id);
-    const idValidation = this.checkIfIdIsValid(newId)
-    if (!idValidation.isValid) throw new Error(idValidation.message)
-    const interviewToArray = Array.from(this.interview, ([name, value]) => ({ name, value }));
-    interviewToArray.forEach((question, index) => {
-      if (question.name === id) {
-        interviewToArray[index].value.id = newId
-        interviewToArray[index].name = newId
-      }
-    })
-    const newInterview = new Map<string, Question | MultipleChoice | Repeat>();
-    interviewToArray.forEach(question => {
-      newInterview.set(question.name, question.value)
-    })
-    this.interview = newInterview
-  }
-
-  findQuestionById(id: string): Question | MultipleChoice | Repeat {
-    const question = this.interview.get(id)
-    if (!question) throw new Error("No question with id:" + id);
-    return question
-  }
-
-  findMultipleChoiceById(id: string): MultipleChoice {
-    const question = this.interview.get(id)
-    if (!question) throw new Error("No question with id:" + id);
-    if (question?.type !== 'multipleChoice') throw new Error("Question with id " + id + " is not a multiple choice question");
-    return question as MultipleChoice
-  }
-
-  addChoiceToMultipleChoice(id: string, choice: Choice) {
-    const question = this.findMultipleChoiceById(id);
-    (question as MultipleChoice).choices.push(choice)
-  }
-
-  removeChoiceFromMultipleChoice(id: string, index: number) {
-    const question = this.findMultipleChoiceById(id);
-    (question as MultipleChoice).choices.splice(index, 1)
-  }
-
-  changeLabelOfChoice(id: string, index: number, label: string) {
-    const question = this.findMultipleChoiceById(id);
-    if (!label) throw new Error("No label provided");
-    if (!(question as MultipleChoice).choices[index]) throw new Error("No choice with index:" + index);
-    (question as MultipleChoice).choices[index].label = label
-  }
-
-  setDefaultCheckedChoice(id: string, index: number) {
-    const question = this.findMultipleChoiceById(id);
-    if (!(question as MultipleChoice).choices[index]) throw new Error("No choice with index:" + index);
-    (question as MultipleChoice).choices.forEach(choice => choice.checked = false);
-    (question as MultipleChoice).choices[index].checked = true
-  }
-
-  setQuestionAsRequired(id: string, required: boolean) {
-    const question = this.findQuestionById(id);
-    question.required = required
-  }
-
-  setTitleOfQuestion(id: string, title: string) {
-    const question = this.findQuestionById(id);
-    question.title = title
-  }
-
-  setPlaceholder(id: string, placeholder: string) {
-    const question = this.findQuestionById(id);
-    question.placeholder = placeholder
-  }
-
-  setExtraOption(id: string, param: string, value: any) {
-    const question = this.findQuestionById(id);
-    if (!question.options) question.options = {}
-    question.options[param] = value
-  }
-
-  setIndications(id: string, indications: string) {
-    const question = this.findQuestionById(id);
-    question.indications = indications
-  }
-
-  setLogic(id: string, logic: { showIf?: any; hideIf?: any; }) {
-    this.findQuestionById(id).logic = logic
-  }
-
-  setRange(id: string, range: { min: number; max: number; }) {
-    const question = this.findQuestionById(id) as Repeat;
-    if (question?.type !== 'repeat') throw new Error("Question with id " + id + " is not a repeat question")
-    question.range = range
-  }
-
+import { Interview, interviewParams } from '@/lib/classes/Interview.class'
+import { Navigation } from '@/lib/classes/navigation/Navigation.class'
+import { Question, RepeatQuestion, Choice } from '@/lib/classes/questions';
+
+type GuidedInterviewParams = {
+    interviewParams: interviewParams
 }
+export class GuidedInterview {
+
+    public _interview: Interview;
+    private _isRoot;
+
+    public navigation: Navigation;
+
+    public isLastContentInterviewOfRepeat: boolean = false
+
+    constructor(params: GuidedInterviewParams = { interviewParams: {} }, isRoot = true) {
+        this._interview = new Interview(params.interviewParams)
+        this._isRoot = isRoot
+        this.navigation = new Navigation(this._interview, this._isRoot)
+    }
+
+    get interview () {
+        return this._interview
+    }
+
+    setValue(id: string, value: string | number) {
+        this._interview.setValueOfQuestion(id, value as string)
+    }
+
+    getCurrent() {
+        return this.navigation.getCurrent()
+    }
+
+    next() {
+        this.navigation.next()
+    }
+
+    getNextQuestion() {
+        return this.navigation.getNextQuestion()
+    }
+
+    previous() {
+        this.navigation.previous()
+    }
+
+    getPreviousQuestion(previous: Question | null = null) {
+        return this.navigation.getPreviousQuestion(previous, this.isLastContentInterviewOfRepeat)
+    }
+
+    getLastQuestionOfInterview() {
+        return this.navigation.getLastQuestionOfInterview()
+    }
+
+    isQuestionTheLastOfInterview(id: string) {
+        return this.navigation.isQuestionTheLastOfInterview(id)
+    }
+
+    getProgress(): { total: number, currentPosition: number, percentageOfCompletion: number } {
+        return this.navigation.getProgress()
+    }
+
+    // returns true if you are at the first question
+    // FIXME, rename to isStartOfInterview
+    isStart() {
+        return this.navigation.isStartOfInterview()
+    }
+
+    // returns true if you reach the last question
+    // FIXME, rename to isEndOfInterview
+    isEnd() {
+        return this.navigation.isEndOfInterview()
+    }
+
+    getInterviewAsArray() {
+        return this._interview.getAsArray()
+    }
+
+    getInterviewParams() {
+        return this._interview.getInterviewParams()
+    }
+
+    getNestedInterview(id: string, index: number): GuidedInterview {
+        const question = this._interview.getQuestionById(id) as RepeatQuestion
+        if (question?.type !== 'repeat') throw new Error("Question with id " + id + " is not a repeat question")
+        return question.content[index].nestedInterview
+    }
+
+    // Returns interview of current question
+    getCurrentGuidedInterview(): GuidedInterview | null {
+        const interviewList = this.getInterviewAsArray()
+        let current: GuidedInterview | null = null;
+        for (let i = 0; i < interviewList.length ; i++) {
+            const question = interviewList[i][1];
+            if (question.isCurrent) {
+                // eslint-disable-next-line @typescript-eslint/no-this-alias
+                current = this
+                break
+            }
+            if (question.type === 'repeat') {
+                const repeat = question as RepeatQuestion
+                for (let j = 0; j < parseInt(question.value as string) ; j++) {
+                    if (!repeat.content[j].hidden) {
+                        current = repeat.content[j].nestedInterview.getCurrentGuidedInterview()
+                        if (current) break
+                    }
+                }
+            }
+            if (current) break
+        }
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
+        if (this._isRoot && !current) current = this
+        return current
+    }
+
+    changeIdOfQuestion(oldId: string, newId: string) {
+        this._interview.changeIdOfQuestion(oldId, newId)
+    }
+
+    findQuestionById(id: string) {
+        return this._interview.getQuestionById(id)
+    }
+
+    addChoiceToMultipleChoiceQuestion(id: string, choice: Choice) {
+        this._interview.addChoiceToMultipleChoiceQuestion(id, choice)
+    }
+
+    removeChoiceFromMultipleChoice(id: string, choice: Choice | number | string) {
+        this._interview.removeChoiceFromMultipleChoice(id, choice)
+    }
+
+    changeLabelOfChoice(id: string, index: number, label: string) {
+        this._interview.changeLabelOfChoice(id, index, label)
+    }
+
+    addOrUpdateParamOfQuestion(id: string, param: { name: string, value: any}) {
+        this._interview.addOrUpdateParamOfQuestion(id, param)
+    }
+
+    getState() {
+        return this._interview.getState()
+    }
+
+} 

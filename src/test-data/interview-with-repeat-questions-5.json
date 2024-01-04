@@ -1,0 +1,204 @@
+{
+    "name": {
+        "id": "name",
+        "type": "text",
+        "title": "Nombre completo del trabajador que solicita las vacaciones:",
+        "placeholder": "Ej. Luz Mena Varo, Pedro Páramo Ortiz",
+        "value": "",
+        "required": true
+    },
+    "personasPropietarias": {
+        "id": "personasPropietarias",
+        "type": "repeat",
+        "title": "Número de arrendadores:",
+        "value": "3",
+        "range": {
+            "min": 1,
+            "max": 10
+        },
+        "questions": {
+            "tipoPersona": {
+                "id": "tipoPersona",
+                "type": "multipleChoice",
+                "title": "La persona arrendadora <%= index %> (propietaria) es",
+                "value": "",
+                "required": true,
+                "choices": [
+                    {
+                        "label": "Persona física",
+                        "checked": true
+                    },
+                    {
+                        "label": "Persona jurídica",
+                        "checked": false
+                    }
+                ]
+            },
+            "actuaComo": {
+                "id": "actuaComo",
+                "type": "multipleChoice",
+                "title": "La persona arrendadora <%= index %> (propietaria) para realizar el contrato, actúa:",
+                "value": "",
+                "required": true,
+                "choices": [
+                    {
+                        "label": "en su propio nombre y representación",
+                        "checked": true
+                    },
+                    {
+                        "label": "por medio de un representante (legal o voluntario)",
+                        "checked": false
+                    }
+                ],
+                "logic": {
+                    "showIf": "tipoPersona.value === 'Persona jurídica'"
+                }
+            },
+            "nombreArrendador": {
+                "id": "nombreArrendador",
+                "type": "text",
+                "title": "Nombre completo del arrendador <%= index %> (propietario), incluyendo los apellidos:",
+                "placeholder": "Ej. Luz Mena Varo",
+                "value": "",
+                "required": true,
+                "logic": {
+                    "showIf": "tipoPersona.value === 'Persona física'"
+                }
+            },
+            "direccionArrendador": {
+                "id": "direccionArrendador",
+                "type": "text",
+                "title": "Dirección del lugar donde reside el arrendador (propietario):",
+                "placeholder": "P. ej: Paseo de las Yeserías 11, Escalera 2, 4.º B, 28005, Madrid, España",
+                "value": "",
+                "required": true,
+                "logic": {
+                    "showIf": "tipoPersona.value === 'Persona física'"
+                }
+            },
+            "tipoDocumento": {
+                "id": "tipoDocumento",
+                "type": "multipleChoice",
+                "title": "Tipo de documento de identificación del arrendador (propietario):",
+                "value": "",
+                "required": true,
+                "choices": [
+                    {
+                        "label": "DNI",
+                        "checked": true
+                    },
+                    {
+                        "label": "NIE",
+                        "checked": false
+                    },
+                    {
+                        "label": "Pasaporte",
+                        "checked": false
+                    }
+                ],
+                "logic": {
+                    "showIf": "tipoPersona.value === 'Persona física'"
+                }
+            },
+            "numeroDocAnterior": {
+                "id": "numeroDocAnterior",
+                "type": "text",
+                "title": "Número del documento seleccionado en la pregunta anterior",
+                "placeholder": "P. ej: 83558071Z",
+                "value": "",
+                "required": true,
+                "logic": {
+                    "showIf": "tipoPersona.value === 'Persona física'"
+                }
+            },
+            "nombreRepresentanteLegal": {
+                "id": "nombreRepresentanteLegal",
+                "type": "text",
+                "title": "Número del documento seleccionado en la pregunta anterior",
+                "placeholder": "P. ej: 83558071Z",
+                "value": "",
+                "required": true,
+                "logic": {
+                    "showIf": "tipoPersona.value === 'Persona física' && actuaComo.value === 'por medio de un representante (legal o voluntario)'"
+                }
+            },
+            "documentoRepresentanteLegal": {
+                "id": "documentoRepresentanteLegal",
+                "type": "multipleChoice",
+                "title": "Documento de identificación de la persona que firma el contrato en nombre y representación arrendador (propietario):",
+                "value": "",
+                "required": true,
+                "choices": [
+                    {
+                        "label": "DNI",
+                        "checked": true
+                    },
+                    {
+                        "label": "NIE",
+                        "checked": false
+                    },
+                    {
+                        "label": "Pasaporte",
+                        "checked": false
+                    }
+                ],
+                "logic": {
+                    "showIf": "tipoPersona.value === 'Persona física' && actuaComo.value === 'por medio de un representante (legal o voluntario)'"
+                }
+            },
+            "numeroDocRepresentanteLegal": {
+                "id": "numeroDocRepresentanteLegal",
+                "type": "text",
+                "title": "Número del documento seleccionado en la pregunta anterior:",
+                "placeholder": "P. ej: 83558071Z",
+                "value": "",
+                "required": true,
+                "logic": {
+                    "showIf": "tipoPersona.value === 'Persona física' && actuaComo.value === 'por medio de un representante (legal o voluntario)'"
+                }
+            },
+            "nombrePersonaJuridica": {
+                "id": "nombrePersonaJuridica",
+                "type": "text",
+                "title": "Nombre o razón social de esta persona jurídica arrendadora (propietaria):",
+                "placeholder": "P. ej: Formidable Docs S.L.",
+                "value": "",
+                "required": true,
+                "logic": {
+                    "showIf": "tipoPersona.value === 'Persona jurídica'"
+                }
+            },
+            "personasQueFirmanPersonJuridica": {
+                "id": "personasQueFirmanPersonJuridica",
+                "type": "repeat",
+                "title": "¿Cuántas personas firmarán el contrato en nombre y representación de la persona jurídica?",
+                "value": "2",
+                "range": {
+                    "min": 1,
+                    "max": 10
+                },
+                "logic": {
+                    "showIf": "tipoPersona.value === 'Persona jurídica'"
+                },
+                "questions": {
+                    "nombreRepresentantePersonaJuridica": {
+                        "id": "nombreRepresentantePersonaJuridica",
+                        "type": "text",
+                        "title": "Nombre completo, incluyendo apellidos, del representante <%= index %> de la persona jurídica:",
+                        "placeholder": "P. ej: 83558071Z",
+                        "value": "",
+                        "required": true
+                    },
+                    "funcionRepresentantePersonaJuridica": {
+                        "id": "funcionRepresentantePersonaJuridica",
+                        "type": "text",
+                        "title": "Función del representante de la persona jurídica <%= index %>:",
+                        "placeholder": "P. ej. administradora única",
+                        "value": "",
+                        "required": true
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,48 +1,39 @@
 import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
 import { resolve } from 'path'
+import dts from 'vite-plugin-dts';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
-  if (mode === 'production') {
     return {
-      build: {
-        copyPublicDir: false,
-        outDir: '.',
-        lib: {
-          entry: resolve(__dirname, 'src/lib/GuidedInterview.ts'),
-          name: 'Guided Interview',
-          fileName: (format, entryName) => {
-            if (format === 'umd') {
-              return 'guided-interview.umd.js'
-            } else {
-              return 'guided-interview.js'
-            }
-          },
+        resolve: {
+            alias: {
+                "@": resolve(__dirname, "./src"),
+            },
         },
-        // rollupOptions: {},
-      },
-    }
-  }
-
-  if (mode === 'demo') {
-    return {
-      plugins: [react()],
-      resolve: {
-        alias: {
-          "@": resolve(__dirname, "./src"),
+        plugins: [dts({
+            outDir: 'types',
+            beforeWriteFile: (filePath, content) => {
+                if (filePath?.includes('.spec')) return false
+                return {
+                    filePath: filePath.replace('lib/', ''),
+                    content,
+                }},
+        })],
+        build: {
+            copyPublicDir: false,
+            outDir: '.',
+            lib: {
+                entry: resolve(__dirname, 'src/lib/GuidedInterview.ts'),
+                name: 'Guided Interview',
+                fileName: (format, entryName) => {
+                    if (format === 'umd') {
+                        return 'guided-interview.umd.js'
+                    } else {
+                        return 'guided-interview.js'
+                    }
+                },
+            },
+            // rollupOptions: {},
         },
-      },
-      build: {
-        outDir: 'demo'
-      }
     }
-  }
-  return {
-    resolve: {
-      alias: {
-        "@": resolve(__dirname, "./src"),
-      },
-    },
-  }
 });

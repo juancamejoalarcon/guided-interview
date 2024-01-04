@@ -1,4 +1,3 @@
-import { GenericQuestion } from "../types/General";
 export type copiedQuestion = {
     id: string | undefined;
     title: string | undefined;
@@ -9,13 +8,13 @@ export type copiedQuestion = {
     subType?: string;
 };
 export declare class Cloner {
-    interview: GenericQuestion[];
+    interview: any[];
     nested: string[];
     ignoreIds: string[];
     endsForRepeat: any;
     result: any;
     alreadyCopiedRepeats: any;
-    questionsInsideRepeat: GenericQuestion[];
+    questionsInsideRepeat: any[];
     getQuestion: (options?: any) => Promise<copiedQuestion>;
     isLastRadio: () => Promise<boolean>;
     isEnd: () => Promise<boolean>;
@@ -43,11 +42,11 @@ export declare class Cloner {
         label: string;
     }>, isEnd: () => Promise<boolean>, nextQuestion: () => Promise<void>, previousQuestion: () => Promise<void>, isRepeat: (id: string) => Promise<boolean>, goToEndAndGetIdsAndGoBack: () => Promise<string[]>, setValueOfRepeat: (id: string, value: number, options?: any) => Promise<void>, waitPreviousActive: () => Promise<void>, ignoreIds?: string[], endsForRepeat?: any);
     start(question: copiedQuestion): Promise<void>;
-    insertQuestionInInterview(question: GenericQuestion, percentageOfCompletion: string | number): void;
-    applyLogicToQuestion(question: GenericQuestion): void;
-    questionExistsInInterview(id: string): GenericQuestion;
-    getQuestionInInterview(id: string): GenericQuestion;
-    getQuestionInsideRepeat(id: string): GenericQuestion;
+    insertQuestionInInterview(question: any, percentageOfCompletion: string | number): void;
+    applyLogicToQuestion(question: any): void;
+    questionExistsInInterview(id: string): any;
+    getQuestionInInterview(id: string): any;
+    getQuestionInsideRepeat(id: string): any;
     setActiveMultipleOption(id: string, label: string, subType?: string): void;
     removeActiveMultipleOption(): void;
     addQuestion(questionProps: copiedQuestion, percentageOfCompletion: string | number): void;

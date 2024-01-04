@@ -1,31 +1,24 @@
-import { Question, QuestionProp, MultipleChoice, MultipleChoiceProp, DateProp, Repeat, RepeatProp, Choice } from "./interfaces";
-import { GenericQuestion, interviewParams, DataSaved } from "./types/General";
-import { EventList } from "./services/event-bus.service";
-import { Cloner } from "./services/clone.service";
-export * from "./interfaces";
+import { Interview, interviewParams } from './classes/Interview.class';
+import { Navigation } from './classes/navigation/Navigation.class';
+import { Question, Choice } from './classes/questions';
+type GuidedInterviewParams = {
+    interviewParams: interviewParams;
+};
 export declare class GuidedInterview {
-    interview: Map<string, Question | MultipleChoice | Repeat>;
-    private events;
-    private current;
-    private isRoot;
-    private isLastContentInterviewOfRepeat;
-    data: any;
-    Cloner: typeof Cloner;
-    constructor(interview?: any, options?: any);
-    get questionsMap(): Map<string, Question | MultipleChoice | Repeat>;
-    setInterview(interview: Map<string, Question | MultipleChoice | Repeat>): void;
-    init(interviewParams: interviewParams): void;
-    getInterviewParams(): interviewParams;
-    add(params: QuestionProp | MultipleChoiceProp | DateProp | RepeatProp, setAsCurrent?: boolean): Question | MultipleChoice | Repeat;
-    remove(id: string): void;
-    getNestedInterview(id: string, index: number): GuidedInterview;
-    canBeShown(question: Question): boolean;
-    setCurrent(question: GenericQuestion): void;
+    _interview: Interview;
+    private _isRoot;
+    navigation: Navigation;
+    isLastContentInterviewOfRepeat: boolean;
+    constructor(params?: GuidedInterviewParams, isRoot?: boolean);
+    get interview(): Interview;
+    setValue(id: string, value: string | number): void;
+    getCurrent(): Question;
     next(): void;
-    getNextQuestion(): GenericQuestion | null;
+    getNextQuestion(): Question | null | undefined;
     previous(): void;
-    getPreviousQuestion(previous?: GenericQuestion | null): GenericQuestion | null;
-    reversePreviousUtil(interviewList: [string, Question | MultipleChoice | Repeat][]): any;
+    getPreviousQuestion(previous?: Question | null): Question | null | undefined;
+    getLastQuestionOfInterview(): Question | null;
+    isQuestionTheLastOfInterview(id: string): boolean;
     getProgress(): {
         total: number;
         currentPosition: number;
@@ -33,41 +26,19 @@ export declare class GuidedInterview {
     };
     isStart(): boolean;
     isEnd(): boolean;
-    isQuestionTheLastOfInterview(id: string): boolean;
-    getLastQuestionOfInterview(): GenericQuestion | null;
+    getInterviewAsArray(): [string, Question][];
+    getInterviewParams(): interviewParams;
+    getNestedInterview(id: string, index: number): GuidedInterview;
     getCurrentGuidedInterview(): GuidedInterview | null;
-    getCurrent(): Question | MultipleChoice | Repeat;
-    setValue(id: string, value: string | number | string[], options?: any): void;
-    on(event: EventList, callback: Function): void;
-    getData(): any;
-    setRadioChecked(question: MultipleChoice, value: string, options?: any): void;
-    buildContentForRepeatQuestion(repeatQuestion: Repeat, value?: number | null): void;
-    applyDataToQuestions(data: DataSaved): void;
-    makeTemplate(template: string, cleanHtml?: boolean): string;
-    getCleanHTML(template: string): string;
-    getStepById(id: string): GenericQuestion | null;
-    checkIfIdIsValid(id: string): {
-        isValid: boolean;
-        message: string;
-    };
-    changeIdOfQuestion(id: string, newId: string): void;
-    findQuestionById(id: string): Question | MultipleChoice | Repeat;
-    findMultipleChoiceById(id: string): MultipleChoice;
-    addChoiceToMultipleChoice(id: string, choice: Choice): void;
-    removeChoiceFromMultipleChoice(id: string, index: number): void;
+    changeIdOfQuestion(oldId: string, newId: string): void;
+    findQuestionById(id: string): Question;
+    addChoiceToMultipleChoiceQuestion(id: string, choice: Choice): void;
+    removeChoiceFromMultipleChoice(id: string, choice: Choice | number | string): void;
     changeLabelOfChoice(id: string, index: number, label: string): void;
-    setDefaultCheckedChoice(id: string, index: number): void;
-    setQuestionAsRequired(id: string, required: boolean): void;
-    setTitleOfQuestion(id: string, title: string): void;
-    setPlaceholder(id: string, placeholder: string): void;
-    setExtraOption(id: string, param: string, value: any): void;
-    setIndications(id: string, indications: string): void;
-    setLogic(id: string, logic: {
-        showIf?: any;
-        hideIf?: any;
+    addOrUpdateParamOfQuestion(id: string, param: {
+        name: string;
+        value: any;
     }): void;
-    setRange(id: string, range: {
-        min: number;
-        max: number;
-    }): void;
+    getState(): any;
 }
+export {};

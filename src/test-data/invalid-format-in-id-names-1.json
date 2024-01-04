@@ -1,0 +1,38 @@
+{
+    "UPPERCASEID": {
+        "id": "UPPERCASEID",
+        "type": "text",
+        "title": "What is your name?",
+        "value": "",
+        "required": true
+    },
+    "lowercaseid": {
+        "id": "lowercaseid",
+        "type": "text",
+        "title": "How old are you?",
+        "logic": {
+            "showIf": "name.value === 'Juan'"
+        }
+    },
+    "SCREAMING_SNAKE_CASE": {
+        "id": "SCREAMING_SNAKE_CASE",
+        "type": "text",
+        "title": "Where do you live?",
+        "value": "",
+        "required": false
+    },
+    "PascalCase": {
+        "id": "PascalCase",
+        "type": "text",
+        "title": "Random title",
+        "value": "",
+        "required": false
+    },
+    "train-case": {
+        "id": "train-case",
+        "type": "text",
+        "title": "Where do you live?",
+        "value": "",
+        "required": false
+    }
+}
